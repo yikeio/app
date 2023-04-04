@@ -1,4 +1,4 @@
-# Easy Chat
+# Yike Chat
 
 ## dev
 

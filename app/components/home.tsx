@@ -101,7 +101,7 @@ function _Home() {
         className={styles.sidebar + ` ${showSideBar && styles["sidebar-show"]}`}
       >
         <div className={styles["sidebar-header"]}>
-          <div className={styles["sidebar-title"]}>Easy Chat</div>
+          <div className={styles["sidebar-title"]}>Yike Chat</div>
           <div className={styles["sidebar-sub-title"]}>
             0000 用户
           </div>
