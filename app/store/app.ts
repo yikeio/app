@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { type ChatCompletionResponseMessage } from "openai";
+import { createConversation, getConversationList } from "../api/conversations";
 import {
   ControllerPool,
   requestChatStream,
@@ -146,21 +147,13 @@ const DEFAULT_CONFIG: ChatConfig = {
   },
 };
 
-export interface ChatStat {
-  tokenCount: number;
-  wordCount: number;
-  charCount: number;
-}
-
 export interface ChatSession {
   id: number;
-  topic: string;
+  title: string;
   memoryPrompt: string;
   context: Message[];
   messages: Message[];
-  stat: ChatStat;
-  lastUpdate: string;
-  lastSummarizeIndex: number;
+  updated_at: string;
 }
 
 const DEFAULT_TOPIC = Locale.Store.DefaultTopic;
@@ -175,17 +168,11 @@ function createEmptySession(): ChatSession {
 
   return {
     id: Date.now(),
-    topic: DEFAULT_TOPIC,
+    title: DEFAULT_TOPIC,
     memoryPrompt: "",
     context: [],
     messages: [],
-    stat: {
-      tokenCount: 0,
-      wordCount: 0,
-      charCount: 0,
-    },
-    lastUpdate: createDate,
-    lastSummarizeIndex: 0,
+    updated_at: createDate,
   };
 }
 
@@ -193,6 +180,7 @@ interface ChatStore {
   config: ChatConfig;
   sessions: ChatSession[];
   currentSessionIndex: number;
+  getConversationList: () => Promise<void>;
   clearSessions: () => void;
   removeSession: (index: number) => void;
   selectSession: (index: number) => void;
@@ -201,7 +189,6 @@ interface ChatStore {
   onNewMessage: (message: Message) => void;
   onUserInput: (content: string) => Promise<void>;
   summarizeSession: () => void;
-  updateStat: (message: Message) => void;
   updateCurrentSession: (updater: (session: ChatSession) => void) => void;
   updateMessage: (
     sessionIndex: number,
@@ -229,6 +216,23 @@ export const useChatStore = create<ChatStore>()(
       currentSessionIndex: 0,
       config: {
         ...DEFAULT_CONFIG,
+      },
+
+      async getConversationList() {
+        const res = await getConversationList("595329602813952");
+
+        const list: ChatSession[] = res.result;
+
+        set(() => ({
+          sessions: list.map((conversation) => {
+            conversation.context = [];
+            conversation.messages = [];
+            conversation.updated_at = new Date(
+              conversation.updated_at,
+            ).toLocaleString();
+            return conversation;
+          }),
+        }));
       },
 
       clearSessions() {
@@ -279,10 +283,19 @@ export const useChatStore = create<ChatStore>()(
         });
       },
 
-      newSession() {
+      // 创建新的对话
+      async newSession() {
+        const res = await createConversation(DEFAULT_TOPIC);
+        const conversation = res.result;
+        conversation.context = [];
+        conversation.messages = [];
+        conversation.updated_at = new Date(
+          conversation.updated_at,
+        ).toLocaleString();
+
         set((state) => ({
           currentSessionIndex: 0,
-          sessions: [createEmptySession()].concat(state.sessions),
+          sessions: [conversation].concat(state.sessions),
         }));
       },
 
@@ -302,9 +315,8 @@ export const useChatStore = create<ChatStore>()(
 
       onNewMessage(message) {
         get().updateCurrentSession((session) => {
-          session.lastUpdate = new Date().toLocaleString();
+          session.updated_at = new Date().toLocaleString();
         });
-        get().updateStat(message);
         get().summarizeSession();
       },
 
@@ -335,7 +347,6 @@ export const useChatStore = create<ChatStore>()(
         });
 
         // make request
-        console.log("[User Input] ", sendMessages);
         requestChatStream(sendMessages, {
           onMessage(content, done) {
             // stream response
@@ -422,22 +433,20 @@ export const useChatStore = create<ChatStore>()(
         // should summarize topic after chating more than 50 words
         const SUMMARIZE_MIN_LEN = 50;
         if (
-          session.topic === DEFAULT_TOPIC &&
+          session.title === DEFAULT_TOPIC &&
           countMessages(session.messages) >= SUMMARIZE_MIN_LEN
         ) {
           requestWithPrompt(session.messages, Locale.Store.Prompt.Topic).then(
             (res) => {
               get().updateCurrentSession(
-                (session) => (session.topic = trimTopic(res)),
+                (session) => (session.title = trimTopic(res)),
               );
             },
           );
         }
 
         const config = get().config;
-        let toBeSummarizedMsgs = session.messages.slice(
-          session.lastSummarizeIndex,
-        );
+        let toBeSummarizedMsgs = session.messages.slice();
 
         const historyMsgLength = countMessages(toBeSummarizedMsgs);
 
@@ -450,8 +459,6 @@ export const useChatStore = create<ChatStore>()(
 
         // add memory prompt
         toBeSummarizedMsgs.unshift(get().getMemoryPrompt());
-
-        const lastSummarizeIndex = session.messages.length;
 
         console.log(
           "[Chat History] ",
@@ -473,7 +480,6 @@ export const useChatStore = create<ChatStore>()(
                 session.memoryPrompt = message;
                 if (done) {
                   console.log("[Memory] ", session.memoryPrompt);
-                  session.lastSummarizeIndex = lastSummarizeIndex;
                 }
               },
               onError(error) {
@@ -484,14 +490,8 @@ export const useChatStore = create<ChatStore>()(
         }
       },
 
-      updateStat(message) {
-        get().updateCurrentSession((session) => {
-          session.stat.charCount += message.content.length;
-          // TODO: should update chat count and word count
-        });
-      },
-
       updateCurrentSession(updater) {
+        console.log();
         const sessions = get().sessions;
         const index = get().currentSessionIndex;
         updater(sessions[index]);

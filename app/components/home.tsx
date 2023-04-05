@@ -19,7 +19,7 @@ import AddIcon from "../icons/add.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import CloseIcon from "../icons/close.svg";
 
-import { useChatStore } from "../store";
+import { useChatStore, useAccessStore } from "../store";
 import { isMobileScreen } from "../utils";
 import Locale from "../locales";
 import { ChatList } from "./chat-list";
@@ -74,8 +74,7 @@ const useHasHydrated = () => {
 
 const useUserLogin = () => {
   const [loginModalVisible, setLoginModalVisible] = useState(false);
-  const [config, updateConfig] = useChatStore((state) => [
-    state.config,
+  const [updateConfig] = useChatStore((state) => [
     state.updateConfig,
   ]);
 
@@ -83,14 +82,11 @@ const useUserLogin = () => {
     checkUser()
       .then((res) => {
         updateConfig((config) => (config.user = res.result));
-        localStorage.setItem("user", JSON.stringify(res.result));
       })
       .catch((error) => {
         showToast(error.result.message);
         setLoginModalVisible(true);
-
         localStorage.removeItem("login_token");
-        localStorage.removeItem("user");
       });
   }, []);
 

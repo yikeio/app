@@ -14,7 +14,7 @@ export async function checkUser() {
       },
     });
   }
-  return commonFetch("/api/user");
+  return commonFetch("user");
 }
 
 /**

@@ -43,21 +43,29 @@ export function ChatItem(props: {
 }
 
 export function ChatList() {
-  const [sessions, selectedIndex, selectSession, removeSession] = useChatStore(
-    (state) => [
-      state.sessions,
-      state.currentSessionIndex,
-      state.selectSession,
-      state.removeSession,
-    ],
-  );
+  const [
+    sessions,
+    selectedIndex,
+    selectSession,
+    removeSession,
+    getConversationList,
+  ] = useChatStore((state) => [
+    state.sessions,
+    state.currentSessionIndex,
+    state.selectSession,
+    state.removeSession,
+    state.getConversationList,
+  ]);
+  useEffect(() => {
+    getConversationList().then(() => {});
+  }, []);
 
   return (
     <div className={styles["chat-list"]}>
       {sessions.map((item, i) => (
         <ChatItem
-          title={item.topic}
-          time={item.lastUpdate}
+          title={item.title}
+          time={item.updated_at}
           count={item.messages.length}
           key={i}
           selected={i === selectedIndex}

@@ -22,7 +22,7 @@ export async function requestOpenai(req: NextRequest) {
   });
 }
 
-export function commonFetch(url: string, options?: any) {
+export function commonFetch(url: string, options: Record<string, any> = {}) {
   const token = localStorage.getItem("login_token");
 
   options.headers = {
