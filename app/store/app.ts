@@ -5,6 +5,7 @@ import {
   createConversation,
   getConversationList,
   deleteConversation,
+  getConversationMessageList,
 } from "../api/conversations";
 import { ControllerPool, requestChatStream } from "../requests";
 
@@ -96,6 +97,7 @@ interface ChatStore {
   currentSessionIndex: number;
   getConversationList: (userId: string) => Promise<void>;
   createConversation: () => Promise<ChatSession>;
+  getConversationHistory: (conversationId: string) => Promise<Message[]>;
 
   clearSessions: () => void;
   removeSession: (index: number) => void;
@@ -148,6 +150,15 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         return conversation;
       }),
     }));
+
+    // 有列表则获取当前会话历史
+    if (list.length) {
+      const conversationId = String(get().currentSession().id);
+      const messageList: Message[] = await get().getConversationHistory(
+        conversationId,
+      );
+      get().updateCurrentSession((session) => (session.messages = messageList));
+    }
   },
 
   // 创建新的对话
@@ -168,6 +179,28 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     return conversation;
   },
 
+  async getConversationHistory(conversationId) {
+    const res = await getConversationMessageList(conversationId);
+    const fetchedHistoryIds = JSON.parse(
+      sessionStorage.getItem("fetchedHistoryIds") || "[]",
+    );
+    sessionStorage.setItem(
+      "fetchHistoryIds",
+      JSON.stringify(fetchedHistoryIds.concat(conversationId)),
+    );
+
+    const historyList = res.result.map((item: any) => {
+      return {
+        role: item.role,
+        content: item.content,
+        date: item.created_at,
+        streaming: false,
+        isError: false,
+      };
+    });
+    return historyList;
+  },
+
   clearSessions() {
     set(() => ({
       sessions: [createEmptySession()],
@@ -185,10 +218,20 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     set(() => ({ config }));
   },
 
-  selectSession(index: number) {
-    set({
-      currentSessionIndex: index,
-    });
+  async selectSession(index: number) {
+    set({ currentSessionIndex: index });
+
+    const conversationId = String(get().currentSession().id);
+
+    // 判断缓存是否获取过
+    const fetchedHistoryIds = JSON.parse(
+      sessionStorage.getItem("fetchedHistoryIds") || "[]",
+    );
+    if (fetchedHistoryIds.includes(conversationId)) return;
+
+    // 获取历史消息
+    const messageList = await get().getConversationHistory(conversationId);
+    get().updateCurrentSession((session) => (session.messages = messageList));
   },
 
   removeSession(index: number) {
