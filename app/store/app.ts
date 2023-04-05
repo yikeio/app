@@ -353,6 +353,10 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       session.messages.push(botMessage);
     });
 
+    createMessage(get().currentSession, content).then((res) => {
+      console.log("res", res);
+    });
+
     // make request
     requestChatStream(sendMessages, {
       onMessage(content, done) {

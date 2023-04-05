@@ -69,44 +69,6 @@ export async function requestChat(messages: Message[]) {
   }
 }
 
-export async function requestUsage() {
-  const formatDate = (d: Date) =>
-    `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d
-      .getDate()
-      .toString()
-      .padStart(2, "0")}`;
-  const ONE_DAY = 24 * 60 * 60 * 1000;
-  const now = new Date(Date.now() + ONE_DAY);
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const startDate = formatDate(startOfMonth);
-  const endDate = formatDate(now);
-  const res = await requestOpenaiClient(
-    `dashboard/billing/usage?start_date=${startDate}&end_date=${endDate}`,
-  )(null, "GET");
-
-  try {
-    const response = (await res.json()) as {
-      total_usage: number;
-      error?: {
-        type: string;
-        message: string;
-      };
-    };
-
-    if (response.error && response.error.type) {
-      showToast(response.error.message);
-      return;
-    }
-
-    if (response.total_usage) {
-      response.total_usage = Math.round(response.total_usage) / 100;
-    }
-    return response.total_usage;
-  } catch (error) {
-    console.error("[Request usage] ", error, res.body);
-  }
-}
-
 export async function requestChatStream(
   messages: Message[],
   options?: {

@@ -16,7 +16,6 @@ import { Avatar } from "./chat";
 
 import Locale, { AllLangs, changeLang, getLang } from "../locales";
 import { SearchService, usePromptStore } from "../store";
-import { requestUsage } from "../requests";
 
 function SettingItem(props: {
   title: string;
@@ -47,27 +46,6 @@ export function Settings(props: { closeSettings: () => void }) {
       state.clearAllData,
       state.clearSessions,
     ]);
-
-  const [usage, setUsage] = useState<{
-    used?: number;
-  }>();
-  const [loadingUsage, setLoadingUsage] = useState(false);
-  function checkUsage() {
-    setLoadingUsage(true);
-    requestUsage()
-      .then((res) =>
-        setUsage({
-          used: res,
-        }),
-      )
-      .finally(() => {
-        setLoadingUsage(false);
-      });
-  }
-
-  useEffect(() => {
-    checkUsage();
-  }, []);
 
   const accessStore = useAccessStore();
   const enabledAccessControl = useMemo(
