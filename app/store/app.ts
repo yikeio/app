@@ -180,10 +180,10 @@ interface ChatStore {
   sessions: ChatSession[];
   currentSessionIndex: number;
   getConversationList: (userId: string) => Promise<void>;
+  createConversation: () => void;
   clearSessions: () => void;
   removeSession: (index: number) => void;
   selectSession: (index: number) => void;
-  newSession: () => void;
   currentSession: () => ChatSession;
   onNewMessage: (message: Message) => void;
   onUserInput: (content: string) => Promise<void>;
@@ -240,7 +240,7 @@ export const useChatStore = create<ChatStore>()(
       },
 
       // 创建新的对话
-      async newSession() {
+      async createConversation() {
         const res = await createConversation(DEFAULT_TOPIC);
         const conversation = res.result;
         conversation.context = [];

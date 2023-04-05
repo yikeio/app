@@ -106,7 +106,7 @@ interface ChatStore {
   clearSessions: () => void;
   removeSession: (index: number) => void;
   selectSession: (index: number) => void;
-  newSession: () => void;
+  createConversation: () => void;
   currentSession: () => ChatSession;
   onNewMessage: (message: Message) => void;
   onUserInput: (content: string) => Promise<void>;
@@ -190,7 +190,7 @@ export const useConversationStore = create<ChatStore>()(
       },
 
       // 创建新的对话
-      async newSession() {
+      async createConversation() {
         const res = await createConversation(DEFAULT_TOPIC);
         const conversation = res.result;
         conversation.context = [];
