@@ -38,14 +38,15 @@ function SettingItem(props: {
 
 export function Settings(props: { closeSettings: () => void }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [config, updateConfig, clearAllData, clearSessions] = useChatStore(
-    (state) => [
+  const [user, config, updateConfig, updateUser, clearAllData, clearSessions] =
+    useChatStore((state) => [
+      state.user,
       state.config,
       state.updateConfig,
+      state.updateUser,
       state.clearAllData,
       state.clearSessions,
-    ],
-  );
+    ]);
 
   const [usage, setUsage] = useState<{
     used?: number;
@@ -80,8 +81,7 @@ export function Settings(props: { closeSettings: () => void }) {
 
   function handleLogout() {
     localStorage.removeItem("login_token");
-    localStorage.removeItem("user");
-    updateConfig((config) => (config.user = {}));
+    updateUser({});
     showToast("已登出");
   }
 
@@ -117,10 +117,10 @@ export function Settings(props: { closeSettings: () => void }) {
       </div>
       <div className={styles["settings"]}>
         <List>
-          {config.user.name && (
+          {user.name && (
             <SettingItem title={Locale.Settings.User}>
               <div className={styles.user}>
-                {config.user.name}
+                {user.name}
                 <button className={styles.logout} onClick={handleLogout}>
                   退出登录
                 </button>
