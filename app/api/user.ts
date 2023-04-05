@@ -1,25 +1,25 @@
 const DOMAIN = "http://192.168.31.73:8000";
 
-function commonFetch(url: string, options: any) {
-  new Promise((resolve, reject) => {
-    fetch(url, options).then((res) => {
+export function commonFetch(url: string, options: any) {
+  return new Promise<any>((resolve, reject) => {
+    return fetch(url, options).then((res: any) => {
+      console.log("handleFetch", res);
+
       if (res.status === 204) {
-        resolve({
-          status: res.status,
-          result: res.text(),
-        });
-      }
-      if (res.status >= 200 && res.status < 300) {
-        resolve({
-          status: res.status,
-          result: res.json(),
+        return res.text().then((result: any) => {
+          resolve({ result, status: res.status });
         });
       }
 
-      reject({
-        status: res.status,
-        result: res.json(),
-      });
+      if (res.status >= 200 && res.status <= 300) {
+        res.json().then((result: any) => {
+          resolve({ result, status: res.status });
+        });
+      } else {
+        res.json().then((result: any) => {
+          reject({ result, status: res.status });
+        });
+      }
     });
   });
 }
@@ -36,17 +36,29 @@ export async function checkUser() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  }).then(handleFetch);
 }
 
 // 注册账户
-export async function createUser() {
+export async function createUser({
+  phoneNumber,
+  code,
+  inviteCode,
+}: {
+  phoneNumber: string;
+  code: string;
+  inviteCode: string;
+}) {
   return commonFetch(`${DOMAIN}/api/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({}),
+    body: JSON.stringify({
+      phone_number: phoneNumber,
+      sms_verification_code: code,
+      referral_code: inviteCode,
+    }),
   });
 }
 

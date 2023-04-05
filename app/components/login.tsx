@@ -2,7 +2,7 @@ import * as React from "react";
 import { Modal, ModalProps, Tooltip } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
-import { sendVerificationCode, loginUser } from "../api/user";
+import { sendVerificationCode, loginUser, createUser } from "../api/user";
 
 import styles from "./login.module.scss";
 import { showToast } from "./ui-lib";
@@ -28,7 +28,8 @@ export function LoginContent() {
     setCount(60);
     // 场景值
     const scene = showInviteLink ? "register" : "login";
-    sendVerificationCode({ phoneNumber: `+86:${phoneNumber}`, scene })
+    const params = { phoneNumber: `+86:${phoneNumber}`, scene };
+    sendVerificationCode(params)
       .then(() => {
         timerRef.current = setInterval(() => {
           setCount((count) => {
@@ -41,7 +42,7 @@ export function LoginContent() {
         }, 1000);
       })
       .catch((error) => {
-        showToast(error.message);
+        showToast(error.result.message);
 
         setCount(0);
         clearInterval(timerRef.current);
@@ -49,13 +50,26 @@ export function LoginContent() {
   }
 
   function handleLogin() {
-    loginUser({ phoneNumber: `+86:${phoneNumber}`, code })
+    const params = { phoneNumber: `+86:${phoneNumber}`, code };
+    loginUser(params)
       .then((res) => {
         console.log("succ", res);
       })
       .catch((error) => {
-        console.log("eee", error);
-        showToast(error.message);
+        showToast(error.result.message);
+      });
+  }
+
+  function handleRegister() {
+    if (!inviteCode) return showToast("请填写邀请码");
+
+    const params = { phoneNumber: `+86:${phoneNumber}`, code, inviteCode };
+    createUser(params)
+      .then((res) => {
+        console.log("handleRegister", res);
+      })
+      .catch((error) => {
+        showToast(error.result.message);
       });
   }
 
@@ -105,7 +119,10 @@ export function LoginContent() {
         </div>
       )}
       <div className={styles["login-dialog-item"]}>
-        <button className={styles["login-dialog-login"]} onClick={handleLogin}>
+        <button
+          className={styles["login-dialog-login"]}
+          onClick={showInviteLink ? handleRegister : handleLogin}
+        >
           {showInviteLink ? "注册并登录" : "登陆"}
         </button>
         {!showInviteLink && (
