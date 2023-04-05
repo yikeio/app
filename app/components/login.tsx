@@ -22,7 +22,13 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
   const [count, setCount] = React.useState(0);
   const timerRef = React.useRef<any>(0);
 
-  const [updateUser] = useChatStore((state) => [state.updateUser]);
+  const [updateUser, getConversationList, createConversation] = useChatStore(
+    (state) => [
+      state.updateUser,
+      state.getConversationList,
+      state.createConversation,
+    ],
+  );
 
   function resetForm() {
     setCode("");
@@ -81,7 +87,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
 
         checkUser().then((res) => {
           updateUser(res.result);
-          localStorage.setItem("user", JSON.stringify(res.result));
+          getConversationList(res.result.id);
         });
       })
       .catch((error) => {
@@ -100,6 +106,8 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
       .then((res) => {
         localStorage.setItem("login_token", res.result.token.value);
         updateUser(res.result.user);
+        getConversationList(res.result.id);
+        createConversation();
         closeModal();
         resetForm();
         showToast("登陆成功");

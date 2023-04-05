@@ -96,9 +96,9 @@ const useUserLogin = () => {
 };
 
 function _Home() {
-  const [createNewSession, currentIndex, removeSession] = useChatStore(
+  const [createConversation, currentIndex, removeSession] = useChatStore(
     (state) => [
-      state.newSession,
+      state.createConversation,
       state.currentSessionIndex,
       state.removeSession,
     ],
@@ -187,7 +187,7 @@ function _Home() {
               icon={<AddIcon />}
               text={Locale.Home.NewChat}
               onClick={() => {
-                createNewSession();
+                createConversation();
                 setShowSideBar(false);
               }}
               shadow
