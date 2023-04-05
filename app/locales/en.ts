@@ -63,6 +63,7 @@ const en: LocaleType = {
       },
     },
     User: "User",
+    UserReferral: "User Referral Code",
     Avatar: "Avatar",
     FontSize: {
       Title: "Font Size",

@@ -62,6 +62,7 @@ const cn = {
       },
     },
     User: "用户",
+    UserReferral: "邀请码",
     Avatar: "头像",
     FontSize: {
       Title: "字体大小",

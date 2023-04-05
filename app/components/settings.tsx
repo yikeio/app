@@ -94,6 +94,12 @@ export function Settings(props: { closeSettings: () => void }) {
             </SettingItem>
           )}
 
+          {user.name && (
+            <SettingItem title={Locale.Settings.UserReferral}>
+              <div className={styles.user}>{user.referral_code}</div>
+            </SettingItem>
+          )}
+
           {/* 账户余额 */}
           {/* <SettingItem
             title={Locale.Settings.Usage.Title}
