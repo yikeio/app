@@ -83,10 +83,14 @@ const useUserLogin = () => {
     checkUser()
       .then((res) => {
         updateConfig((config) => (config.user = res.result));
+        localStorage.setItem("user", JSON.stringify(res.result));
       })
       .catch((error) => {
         showToast(error.result.message);
         setLoginModalVisible(true);
+
+        localStorage.removeItem("login_token");
+        localStorage.removeItem("user");
       });
   }, []);
 
