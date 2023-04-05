@@ -1,4 +1,3 @@
-import { useEffect, useLayoutEffect } from "react";
 import DeleteIcon from "../icons/delete.svg";
 import styles from "./home.module.scss";
 
@@ -9,7 +8,7 @@ import { isMobileScreen } from "../utils";
 
 export function ChatItem(props: {
   onClick?: () => void;
-  onDelete?: () => void;
+  onDelete?: (e: React.MouseEvent) => void;
   title: string;
   count: number;
   time: string;
@@ -56,10 +55,12 @@ export function ChatList() {
           key={i}
           selected={i === selectedIndex}
           onClick={() => selectSession(i)}
-          onDelete={() =>
-            (!isMobileScreen() || confirm(Locale.Home.DeleteChat)) &&
-            removeSession(i)
-          }
+          onDelete={(e) => {
+            e.stopPropagation();
+            if (!isMobileScreen() || confirm(Locale.Home.DeleteChat)) {
+              removeSession(i);
+            }
+          }}
         />
       ))}
     </div>
