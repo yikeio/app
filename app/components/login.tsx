@@ -3,11 +3,12 @@ import { Modal, ModalProps, Tooltip } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 import { sendVerificationCode, loginUser, createUser } from "../api/user";
+import { useChatStore } from "../store";
 
 import styles from "./login.module.scss";
 import { showToast } from "./ui-lib";
 
-export function LoginContent() {
+export function LoginContent({ closeModal }: { closeModal: Function }) {
   const [showInviteLink, setShowInviteLink] = React.useState(false);
   const [phoneNumber, setPhoneNumber] = React.useState("");
   const [code, setCode] = React.useState("");
@@ -16,6 +17,11 @@ export function LoginContent() {
   const [count, setCount] = React.useState(0);
   const timerRef = React.useRef<any>(0);
 
+  const [config, updateConfig] = useChatStore((state) => [
+    state.config,
+    state.updateConfig,
+  ]);
+
   function handleRegistry() {
     setCount(0);
     setCode("");
@@ -23,6 +29,7 @@ export function LoginContent() {
   }
 
   function getCode() {
+    if (!phoneNumber) return showToast("请填写手机号");
     if (count) return;
 
     setCount(60);
@@ -49,24 +56,35 @@ export function LoginContent() {
       });
   }
 
+  // 登陆
   function handleLogin() {
+    if (!code) return showToast("请填写验证码");
+    if (!phoneNumber) return showToast("请填写手机号");
+
     const params = { phoneNumber: `+86:${phoneNumber}`, code };
     loginUser(params)
       .then((res) => {
-        console.log("succ", res);
+        localStorage.setItem("login_token", res.result.value);
+        closeModal();
       })
       .catch((error) => {
         showToast(error.result.message);
       });
   }
 
+  // 注册
   function handleRegister() {
+    if (!code) return showToast("请填写验证码");
+    if (!phoneNumber) return showToast("请填写手机号");
     if (!inviteCode) return showToast("请填写邀请码");
 
     const params = { phoneNumber: `+86:${phoneNumber}`, code, inviteCode };
     createUser(params)
       .then((res) => {
         console.log("handleRegister", res);
+        localStorage.setItem("login_token", res.result.token.value);
+        updateConfig((config) => (config.user = res.result.user));
+        closeModal();
       })
       .catch((error) => {
         showToast(error.result.message);
@@ -138,19 +156,14 @@ export function LoginContent() {
   );
 }
 
-export function LoginDialog(props: ModalProps) {
+interface LoginDialogProps extends ModalProps {
+  closeModal: Function;
+}
+
+export function LoginDialog(props: LoginDialogProps) {
   return (
     <Modal closable={false} title="手机快捷登录" footer={null} {...props}>
-      <LoginContent />
+      <LoginContent closeModal={props.closeModal} />
     </Modal>
   );
 }
-
-export const setLogin = () => {
-  Modal.info({
-    icon: null,
-    title: "手机快捷登录",
-    content: <LoginContent />,
-    footer: null,
-  });
-};

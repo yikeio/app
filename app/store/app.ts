@@ -32,7 +32,7 @@ export enum Theme {
 }
 
 export interface ChatConfig {
-  userName: string;
+  user: Record<string, any>;
   historyMessageCount: number; // -1 means all
   compressMessageLengthThreshold: number;
   sendBotMessages: boolean; // send bot's message or not
@@ -125,7 +125,7 @@ export function filterConfig(oldConfig: ModelConfig): Partial<ModelConfig> {
 }
 
 const DEFAULT_CONFIG: ChatConfig = {
-  userName: "",
+  user: {},
   historyMessageCount: 4,
   compressMessageLengthThreshold: 1000,
   sendBotMessages: true as boolean,

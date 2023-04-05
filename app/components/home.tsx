@@ -9,12 +9,7 @@ import { LoginDialog } from "./login";
 import { showToast } from "./ui-lib";
 import styles from "./home.module.scss";
 
-import {
-  checkUser,
-  createUser,
-  loginUser,
-  sendVerificationCode,
-} from "../api/user";
+import { checkUser } from "../api/user";
 
 import SettingsIcon from "../icons/settings.svg";
 import ChatGptIcon from "../icons/chatgpt.svg";
@@ -78,22 +73,25 @@ const useHasHydrated = () => {
 };
 
 const useUserLogin = () => {
-  const [user, setUser] = useState<any>(null);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [config, updateConfig] = useChatStore((state) => [
+    state.config,
+    state.updateConfig,
+  ]);
 
   useEffect(() => {
     checkUser()
       .then((res) => {
         console.log("res", res);
-        setUser(res);
+        updateConfig((config) => (config.user = res.result.user));
       })
       .catch((error) => {
-        showToast(error.message);
+        showToast(error.result.message);
         setLoginModalVisible(true);
       });
   }, []);
 
-  return { user, loginModalVisible, setLoginModalVisible };
+  return { loginModalVisible, setLoginModalVisible };
 };
 
 function _Home() {
@@ -106,7 +104,7 @@ function _Home() {
   );
   const loading = !useHasHydrated();
   const [showSideBar, setShowSideBar] = useState(true);
-  const { user, loginModalVisible, setLoginModalVisible } = useUserLogin();
+  const { loginModalVisible, setLoginModalVisible } = useUserLogin();
 
   // setting
   const [openSettings, setOpenSettings] = useState(false);
@@ -132,7 +130,7 @@ function _Home() {
         <div className={styles["sidebar-header"]}>
           <div className={styles["sidebar-title"]}>Yike Chat</div>
           <div className={styles["sidebar-sub-title"]}>
-            {config.userName || (
+            {config.user?.name || (
               <button
                 className={styles["sidebar-login-btn"]}
                 onClick={() => setLoginModalVisible(true)}
@@ -209,7 +207,10 @@ function _Home() {
           />
         )}
       </div>
-      <LoginDialog open={loginModalVisible} />
+      <LoginDialog
+        open={loginModalVisible}
+        closeModal={() => setLoginModalVisible(false)}
+      />
     </div>
   );
 }

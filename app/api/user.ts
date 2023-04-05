@@ -7,10 +7,15 @@ import { commonFetch } from "./common";
 export async function checkUser() {
   const token = localStorage.getItem("login_token");
   if (!token) {
-    throw new Error("暂未登录");
+    return Promise.reject({
+      status: 404,
+      result: {
+        message: "暂未登录",
+      },
+    });
   }
 
-  return commonFetch("/api/user", {
+  return commonFetch("user", {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -32,7 +37,7 @@ export async function createUser({
   code: string;
   inviteCode: string;
 }) {
-  return commonFetch("api/users", {
+  return commonFetch("users", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
