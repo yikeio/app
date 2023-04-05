@@ -78,6 +78,12 @@ export function Settings(props: { closeSettings: () => void }) {
   const builtinCount = SearchService.count.builtin;
   const customCount = promptStore.prompts.size ?? 0;
 
+  function handleLogout() {
+    localStorage.removeItem("login_token");
+    updateConfig((config) => (config.user = {}));
+    showToast("已登出");
+  }
+
   return (
     <>
       <div className={styles["window-header"]}>
@@ -110,6 +116,17 @@ export function Settings(props: { closeSettings: () => void }) {
       </div>
       <div className={styles["settings"]}>
         <List>
+          {config.user.name && (
+            <SettingItem title={Locale.Settings.User}>
+              <div className={styles.user}>
+                {config.user.name}
+                <button className={styles.logout} onClick={handleLogout}>
+                  退出登录
+                </button>
+              </div>
+            </SettingItem>
+          )}
+
           <SettingItem title={Locale.Settings.Avatar}>
             <Popover
               onClose={() => setShowEmojiPicker(false)}

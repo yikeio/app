@@ -108,7 +108,7 @@
   transform: translateY(0);
   position: fixed;
   left: 0;
-  bottom: 0;
+  top: 20px;
   animation: slide-in ease 0.6s;
   z-index: 99999;
 }
@@ -121,7 +121,7 @@
 
 .toast-container {
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100vw;
   display: flex;

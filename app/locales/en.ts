@@ -62,6 +62,7 @@ const en: LocaleType = {
         it: "Italiano",
       },
     },
+    User: "User",
     Avatar: "Avatar",
     FontSize: {
       Title: "Font Size",
