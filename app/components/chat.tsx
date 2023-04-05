@@ -1,6 +1,5 @@
 import { useDebouncedCallback } from "use-debounce";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
-
 import SendWhiteIcon from "../icons/send-white.svg";
 import BrainIcon from "../icons/brain.svg";
 import ExportIcon from "../icons/export.svg";
@@ -11,6 +10,7 @@ import LoadingIcon from "../icons/three-dots.svg";
 import BotIcon from "../icons/bot.svg";
 import AddIcon from "../icons/add.svg";
 import DeleteIcon from "../icons/delete.svg";
+import { updateConversation } from "../api/conversations";
 
 import { Message, SubmitKey, useChatStore, BOT_HELLO, ROLES } from "../store";
 
@@ -31,7 +31,7 @@ import { IconButton } from "./button";
 import styles from "./home.module.scss";
 import chatStyle from "./chat.module.scss";
 
-import { Modal, showModal, showToast } from "./ui-lib";
+import { Modal, showModal } from "./ui-lib";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
@@ -452,6 +452,17 @@ export function Chat(props: {
 
   const [showPromptModal, setShowPromptModal] = useState(false);
 
+  // 更新对话
+  const handleUpdate = () => {
+    const newTopic = prompt(Locale.Chat.Rename, session.title);
+    if (newTopic && newTopic !== session.title) {
+      chatStore.updateCurrentSession((session) => {
+        session.title = newTopic!;
+        updateConversation(session.id, { title: newTopic });
+      });
+    }
+  };
+
   // Auto focus
   useEffect(() => {
     if (props.sideBarShowing && isMobileScreen()) return;
@@ -467,14 +478,7 @@ export function Chat(props: {
         >
           <div
             className={`${styles["window-header-main-title"]} ${styles["chat-body-title"]}`}
-            onClick={() => {
-              // const newTopic = prompt(Locale.Chat.Rename, session.topic);
-              // if (newTopic && newTopic !== session.topic) {
-              //   chatStore.updateCurrentSession(
-              //     (session) => (session.topic = newTopic!),
-              //   );
-              // }
-            }}
+            onClick={handleUpdate}
           >
             {session.title}
           </div>

@@ -104,12 +104,13 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
     const params = { phoneNumber: `+86:${phoneNumber}`, code, inviteCode };
     createUser(params)
       .then((res) => {
+        const { result } = res;
         localStorage.setItem("login_token", res.result.token.value);
-        updateUser(res.result.user);
+        updateUser(result.user);
         closeModal();
         resetForm();
         showToast("登陆成功");
-        getConversationList(res.result.id);
+        getConversationList(result.user.id);
       })
       .catch((error) => {
         showToast(error.result.message);

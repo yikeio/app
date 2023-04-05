@@ -9,13 +9,37 @@ export async function getConversationList(user: string) {
 }
 
 /**
- * 创建新的会话
+ * 创建新的话
  * @returns
  */
 export async function createConversation(title: string) {
   return commonFetch("conversations", {
     method: "POST",
     body: JSON.stringify({ title }),
+  });
+}
+
+/**
+ * 更新对话
+ * @returns
+ */
+export async function updateConversation(
+  id: string,
+  data: Record<string, any>,
+) {
+  return commonFetch(`conversations/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * 删除对话
+ * @returns
+ */
+export async function deleteConversation(id: string) {
+  return commonFetch(`conversations/${id}`, {
+    method: "DELETE",
   });
 }
 

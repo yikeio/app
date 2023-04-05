@@ -1,7 +1,11 @@
 import { create } from "zustand";
 
 import { type ChatCompletionResponseMessage } from "openai";
-import { createConversation, getConversationList } from "../api/conversations";
+import {
+  createConversation,
+  getConversationList,
+  deleteConversation,
+} from "../api/conversations";
 import {
   ControllerPool,
   requestChatStream,
@@ -146,7 +150,7 @@ const DEFAULT_CONFIG: ChatConfig = {
 };
 
 export interface ChatSession {
-  id: number;
+  id: string;
   title: string;
   memoryPrompt: string;
   context: Message[];
@@ -165,7 +169,7 @@ function createEmptySession(): ChatSession {
   const createDate = new Date().toLocaleString();
 
   return {
-    id: Date.now(),
+    id: Date.now() + "",
     title: DEFAULT_TOPIC,
     memoryPrompt: "",
     context: [],
@@ -294,12 +298,11 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         };
       }
 
-      sessions.splice(index, 1);
-
       if (nextIndex === index) {
         nextIndex -= 1;
       }
 
+      deleteConversation(sessions[index].id);
       return {
         currentSessionIndex: nextIndex,
         sessions,
@@ -499,7 +502,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
 
   updateCurrentSession(updater) {
-    console.log();
     const sessions = get().sessions;
     const index = get().currentSessionIndex;
     updater(sessions[index]);
