@@ -19,7 +19,7 @@ import AddIcon from "../icons/add.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import CloseIcon from "../icons/close.svg";
 
-import { useChatStore } from "../store";
+import { useChatStore, useAccessStore } from "../store";
 import { isMobileScreen } from "../utils";
 import Locale from "../locales";
 import { ChatList } from "./chat-list";
@@ -74,23 +74,21 @@ const useHasHydrated = () => {
 
 const useUserLogin = () => {
   const [loginModalVisible, setLoginModalVisible] = useState(false);
-  const [config, updateConfig] = useChatStore((state) => [
-    state.config,
-    state.updateConfig,
+  const [updateUser, getConversationList] = useChatStore((state) => [
+    state.updateUser,
+    state.getConversationList,
   ]);
 
   useEffect(() => {
     checkUser()
       .then((res) => {
-        updateConfig((config) => (config.user = res.result));
-        localStorage.setItem("user", JSON.stringify(res.result));
+        updateUser(res.result);
+        getConversationList(res.result.id);
       })
       .catch((error) => {
         showToast(error.result.message);
         setLoginModalVisible(true);
-
         localStorage.removeItem("login_token");
-        localStorage.removeItem("user");
       });
   }, []);
 
@@ -111,15 +109,15 @@ function _Home() {
 
   // setting
   const [openSettings, setOpenSettings] = useState(false);
-  const config = useChatStore((state) => state.config);
+  const [user, config] = useChatStore((state) => [state.user, state.config]);
 
   useSwitchTheme();
 
   useEffect(() => {
-    if (!config.user.name && !localStorage.getItem("login_token")) {
+    if (!user.name && !localStorage.getItem("login_token")) {
       setLoginModalVisible(true);
     }
-  }, [config.user]);
+  }, [user]);
 
   if (loading) return <Loading />;
 
@@ -137,7 +135,7 @@ function _Home() {
         <div className={styles["sidebar-header"]}>
           <div className={styles["sidebar-title"]}>Yike Chat</div>
           <div className={styles["sidebar-sub-title"]}>
-            {config.user?.name || (
+            {user?.name || (
               <button
                 className={styles["sidebar-login-btn"]}
                 onClick={() => setLoginModalVisible(true)}

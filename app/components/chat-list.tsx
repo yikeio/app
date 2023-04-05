@@ -1,14 +1,8 @@
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import DeleteIcon from "../icons/delete.svg";
 import styles from "./home.module.scss";
 
-import {
-  Message,
-  SubmitKey,
-  useChatStore,
-  ChatSession,
-  BOT_HELLO,
-} from "../store";
+import { useChatStore } from "../store";
 
 import Locale from "../locales";
 import { isMobileScreen } from "../utils";
@@ -56,8 +50,8 @@ export function ChatList() {
     <div className={styles["chat-list"]}>
       {sessions.map((item, i) => (
         <ChatItem
-          title={item.topic}
-          time={item.lastUpdate}
+          title={item.title}
+          time={item.updated_at}
           count={item.messages.length}
           key={i}
           selected={i === selectedIndex}

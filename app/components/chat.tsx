@@ -24,7 +24,7 @@ import {
 import dynamic from "next/dynamic";
 
 import { ControllerPool } from "../requests";
-import { Prompt, usePromptStore } from "../store/prompt";
+import { Prompt, usePromptStore } from "../store";
 import Locale from "../locales";
 
 import { IconButton } from "./button";
@@ -206,8 +206,7 @@ function PromptToast(props: {
               </div>
               <div className={chatStyle["memory-prompt"]}>
                 <div className={chatStyle["memory-prompt-title"]}>
-                  {Locale.Memory.Title} ({session.lastSummarizeIndex} of{" "}
-                  {session.messages.length})
+                  {Locale.Memory.Title} ({1} of {session.messages.length})
                 </div>
                 <div className={chatStyle["memory-prompt-content"]}>
                   {session.memoryPrompt || Locale.Memory.EmptyContent}
@@ -469,15 +468,15 @@ export function Chat(props: {
           <div
             className={`${styles["window-header-main-title"]} ${styles["chat-body-title"]}`}
             onClick={() => {
-              const newTopic = prompt(Locale.Chat.Rename, session.topic);
-              if (newTopic && newTopic !== session.topic) {
-                chatStore.updateCurrentSession(
-                  (session) => (session.topic = newTopic!),
-                );
-              }
+              // const newTopic = prompt(Locale.Chat.Rename, session.topic);
+              // if (newTopic && newTopic !== session.topic) {
+              //   chatStore.updateCurrentSession(
+              //     (session) => (session.topic = newTopic!),
+              //   );
+              // }
             }}
           >
-            {session.topic}
+            {session.title}
           </div>
           <div className={styles["window-header-sub-title"]}>
             {Locale.Chat.SubTitle(session.messages.length)}
@@ -510,7 +509,7 @@ export function Chat(props: {
               onClick={() => {
                 exportMessages(
                   session.messages.filter((msg) => !msg.isError),
-                  session.topic,
+                  session.title,
                 );
               }}
             />
