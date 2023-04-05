@@ -4,7 +4,6 @@ import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react";
 
 import styles from "./settings.module.scss";
 
-import ResetIcon from "../icons/reload.svg";
 import CloseIcon from "../icons/close.svg";
 import ClearIcon from "../icons/clear.svg";
 import EditIcon from "../icons/edit.svg";

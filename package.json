@@ -1,6 +1,6 @@
 {
-  "name": "chatgpt-next-web",
-  "version": "1.1",
+  "name": "yike-chat",
+  "version": "0.0.1",
   "private": false,
   "license": "Anti 996",
   "scripts": {
@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "fetch": "node ./scripts/fetch-prompts.mjs",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
