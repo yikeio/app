@@ -179,7 +179,7 @@ interface ChatStore {
   sessions: ChatSession[];
   currentSessionIndex: number;
   getConversationList: (userId: string) => Promise<void>;
-  createConversation: () => void;
+  createConversation: () => Promise<ChatSession>;
 
   clearSessions: () => void;
   removeSession: (index: number) => void;
@@ -223,6 +223,11 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
     const list: ChatSession[] = res.result;
 
+    if (list.length === 0) {
+      const conversation = await get().createConversation();
+      list.push(conversation);
+    }
+
     set(() => ({
       sessions: list.map((conversation) => {
         conversation.context = [];
@@ -249,6 +254,8 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       currentSessionIndex: 0,
       sessions: [conversation].concat(state.sessions),
     }));
+
+    return conversation;
   },
 
   clearSessions() {

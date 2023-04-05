@@ -106,11 +106,10 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
       .then((res) => {
         localStorage.setItem("login_token", res.result.token.value);
         updateUser(res.result.user);
-        getConversationList(res.result.id);
-        createConversation();
         closeModal();
         resetForm();
         showToast("登陆成功");
+        getConversationList(res.result.id);
       })
       .catch((error) => {
         showToast(error.result.message);

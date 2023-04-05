@@ -19,7 +19,7 @@ import AddIcon from "../icons/add.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import CloseIcon from "../icons/close.svg";
 
-import { useChatStore, useAccessStore } from "../store";
+import { useChatStore } from "../store";
 import { isMobileScreen } from "../utils";
 import Locale from "../locales";
 import { ChatList } from "./chat-list";
