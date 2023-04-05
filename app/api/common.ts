@@ -22,11 +22,16 @@ export async function requestOpenai(req: NextRequest) {
   });
 }
 
-export function commonFetch(url: string, options: any) {
+export function commonFetch(url: string, options?: any) {
+  const token = localStorage.getItem("login_token");
+
+  options.headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+
   return new Promise<any>((resolve, reject) => {
     return fetch(`${API_DOMAIN}/api/${url}`, options).then((res: any) => {
-      console.log("handleFetch", res);
-
       if (res.status === 204) {
         return res.text().then((result: any) => {
           resolve({ result, status: res.status });

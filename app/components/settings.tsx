@@ -15,7 +15,7 @@ import { SubmitKey, useChatStore, Theme, useAccessStore } from "../store";
 import { Avatar } from "./chat";
 
 import Locale, { AllLangs, changeLang, getLang } from "../locales";
-import { SearchService, usePromptStore } from "../store/prompt";
+import { SearchService, usePromptStore } from "../store";
 import { requestUsage } from "../requests";
 
 function SettingItem(props: {

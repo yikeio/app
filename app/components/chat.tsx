@@ -24,7 +24,7 @@ import {
 import dynamic from "next/dynamic";
 
 import { ControllerPool } from "../requests";
-import { Prompt, usePromptStore } from "../store/prompt";
+import { Prompt, usePromptStore } from "../store";
 import Locale from "../locales";
 
 import { IconButton } from "./button";

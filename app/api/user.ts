@@ -14,13 +14,7 @@ export async function checkUser() {
       },
     });
   }
-
-  return commonFetch("user", {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  return commonFetch("/api/user");
 }
 
 /**
@@ -39,9 +33,6 @@ export async function createUser({
 }) {
   return commonFetch("users", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({
       phone_number: phoneNumber,
       sms_verification_code: code,
@@ -64,9 +55,6 @@ export async function loginUser({
 }) {
   return commonFetch("oauth/tokens:via-sms", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({
       phone_number: phoneNumber,
       sms_verification_code: code,
@@ -88,9 +76,6 @@ export async function sendVerificationCode({
 }) {
   return commonFetch("sms/verification-codes:send", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ scene, phone_number: phoneNumber }),
   });
 }
