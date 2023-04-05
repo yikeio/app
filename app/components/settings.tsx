@@ -80,6 +80,7 @@ export function Settings(props: { closeSettings: () => void }) {
 
   function handleLogout() {
     localStorage.removeItem("login_token");
+    localStorage.removeItem("user");
     updateConfig((config) => (config.user = {}));
     showToast("已登出");
   }

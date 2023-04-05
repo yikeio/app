@@ -88,6 +88,9 @@ const useUserLogin = () => {
       .catch((error) => {
         showToast(error.result.message);
         setLoginModalVisible(true);
+
+        localStorage.removeItem("login_token");
+        localStorage.removeItem("user");
       });
   }, []);
 
