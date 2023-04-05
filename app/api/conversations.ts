@@ -9,7 +9,7 @@ export async function getConversationList(user: string) {
 }
 
 /**
- * 创建新的回话
+ * 创建新的会话
  * @returns
  */
 export async function createConversation(title: string) {

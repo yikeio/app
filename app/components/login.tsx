@@ -22,10 +22,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
   const [count, setCount] = React.useState(0);
   const timerRef = React.useRef<any>(0);
 
-  const [config, updateConfig] = useChatStore((state) => [
-    state.config,
-    state.updateConfig,
-  ]);
+  const [updateUser] = useChatStore((state) => [state.updateUser]);
 
   function resetForm() {
     setCode("");
@@ -83,7 +80,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
         showToast("登陆成功");
 
         checkUser().then((res) => {
-          updateConfig((config) => (config.user = res.result));
+          updateUser(res.result);
           localStorage.setItem("user", JSON.stringify(res.result));
         });
       })
@@ -102,8 +99,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
     createUser(params)
       .then((res) => {
         localStorage.setItem("login_token", res.result.token.value);
-        updateConfig((config) => (config.user = res.result.user));
-        localStorage.setItem("user", JSON.stringify(res.result.user));
+        updateUser(res.result.user);
         closeModal();
         resetForm();
         showToast("登陆成功");

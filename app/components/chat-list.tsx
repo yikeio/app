@@ -1,14 +1,8 @@
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import DeleteIcon from "../icons/delete.svg";
 import styles from "./home.module.scss";
 
-import {
-  Message,
-  SubmitKey,
-  useChatStore,
-  ChatSession,
-  BOT_HELLO,
-} from "../store";
+import { useChatStore } from "../store";
 
 import Locale from "../locales";
 import { isMobileScreen } from "../utils";
@@ -44,12 +38,14 @@ export function ChatItem(props: {
 
 export function ChatList() {
   const [
+    user,
     sessions,
     selectedIndex,
     selectSession,
     removeSession,
     getConversationList,
   ] = useChatStore((state) => [
+    state.user,
     state.sessions,
     state.currentSessionIndex,
     state.selectSession,
@@ -57,7 +53,7 @@ export function ChatList() {
     state.getConversationList,
   ]);
   useEffect(() => {
-    getConversationList().then(() => {});
+    getConversationList(user.id);
   }, []);
 
   return (

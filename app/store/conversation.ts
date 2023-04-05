@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
 import { type ChatCompletionResponseMessage } from "openai";
 import { createConversation, getConversationList } from "../api/conversations";
 import {
@@ -31,30 +30,6 @@ export enum Theme {
   Dark = "dark",
   Light = "light",
 }
-
-export interface ChatConfig {
-  user: Record<string, any>;
-  historyMessageCount: number; // -1 means all
-  compressMessageLengthThreshold: number;
-  sendBotMessages: boolean; // send bot's message or not
-  submitKey: SubmitKey;
-  avatar: string;
-  fontSize: number;
-  theme: Theme;
-  tightBorder: boolean;
-  sendPreviewBubble: boolean;
-
-  disablePromptHint: boolean;
-
-  modelConfig: {
-    model: string;
-    temperature: number;
-    max_tokens: number;
-    presence_penalty: number;
-  };
-}
-
-export type ModelConfig = ChatConfig["modelConfig"];
 
 export const ROLES: Message["role"][] = ["system", "user", "assistant"];
 
@@ -95,58 +70,6 @@ export function isValidNumber(x: number, min: number, max: number) {
   return typeof x === "number" && x <= max && x >= min;
 }
 
-export function filterConfig(oldConfig: ModelConfig): Partial<ModelConfig> {
-  const config = Object.assign({}, oldConfig);
-
-  const validator: {
-    [k in keyof ModelConfig]: (x: ModelConfig[keyof ModelConfig]) => boolean;
-  } = {
-    model(x) {
-      return isValidModel(x as string);
-    },
-    max_tokens(x) {
-      return isValidNumber(x as number, 100, 32000);
-    },
-    presence_penalty(x) {
-      return isValidNumber(x as number, -2, 2);
-    },
-    temperature(x) {
-      return isValidNumber(x as number, 0, 2);
-    },
-  };
-
-  Object.keys(validator).forEach((k) => {
-    const key = k as keyof ModelConfig;
-    if (!validator[key](config[key])) {
-      delete config[key];
-    }
-  });
-
-  return config;
-}
-
-const DEFAULT_CONFIG: ChatConfig = {
-  user: {},
-  historyMessageCount: 4,
-  compressMessageLengthThreshold: 1000,
-  sendBotMessages: true as boolean,
-  submitKey: SubmitKey.CtrlEnter as SubmitKey,
-  avatar: "1f603",
-  fontSize: 14,
-  theme: Theme.Auto as Theme,
-  tightBorder: true,
-  sendPreviewBubble: true,
-
-  disablePromptHint: false,
-
-  modelConfig: {
-    model: "gpt-3.5-turbo",
-    temperature: 1,
-    max_tokens: 2000,
-    presence_penalty: 0,
-  },
-};
-
 export interface ChatSession {
   id: number;
   title: string;
@@ -177,8 +100,6 @@ function createEmptySession(): ChatSession {
 }
 
 interface ChatStore {
-  user: Record<string, any>;
-  config: ChatConfig;
   sessions: ChatSession[];
   currentSessionIndex: number;
   getConversationList: (userId: string) => Promise<void>;
@@ -198,9 +119,6 @@ interface ChatStore {
   ) => void;
   getMessagesWithMemory: () => Message[];
   getMemoryPrompt: () => Message;
-  updateUser: (user: Record<string, string>) => void;
-  getConfig: () => ChatConfig;
-  updateConfig: (updater: (config: ChatConfig) => void) => void;
   clearAllData: () => void;
 }
 
@@ -210,19 +128,11 @@ function countMessages(msgs: Message[]) {
 
 const LOCAL_KEY = "chat-next-web-store";
 
-export const useChatStore = create<ChatStore>()(
+export const useConversationStore = create<ChatStore>()(
   persist(
     (set, get) => ({
-      user: {},
       sessions: [createEmptySession()],
       currentSessionIndex: 0,
-      config: {
-        ...DEFAULT_CONFIG,
-      },
-
-      updateUser(user: Record<string, string>) {
-        set(() => ({ user }));
-      },
 
       async getConversationList(userId: string) {
         const res = await getConversationList(userId);
@@ -246,16 +156,6 @@ export const useChatStore = create<ChatStore>()(
           sessions: [createEmptySession()],
           currentSessionIndex: 0,
         }));
-      },
-
-      getConfig() {
-        return get().config;
-      },
-
-      updateConfig(updater) {
-        const config = get().config;
-        updater(config);
-        set(() => ({ config }));
       },
 
       selectSession(index: number) {
@@ -386,8 +286,8 @@ export const useChatStore = create<ChatStore>()(
               controller,
             );
           },
-          filterBot: !get().config.sendBotMessages,
-          modelConfig: get().config.modelConfig,
+          // filterBot: !get().config.sendBotMessages,
+          // modelConfig: get().config.modelConfig,
         });
       },
 
@@ -403,7 +303,6 @@ export const useChatStore = create<ChatStore>()(
 
       getMessagesWithMemory() {
         const session = get().currentSession();
-        const config = get().config;
         const messages = session.messages.filter((msg) => !msg.isError);
         const n = messages.length;
 
@@ -414,9 +313,10 @@ export const useChatStore = create<ChatStore>()(
           context.push(memoryPrompt);
         }
 
-        const recentMessages = context.concat(
-          messages.slice(Math.max(0, n - config.historyMessageCount)),
-        );
+        const recentMessages = context
+          .concat
+          // messages.slice(Math.max(0, n - config.historyMessageCount)),
+          ();
 
         return recentMessages;
       },
@@ -451,17 +351,17 @@ export const useChatStore = create<ChatStore>()(
           );
         }
 
-        const config = get().config;
+        // const config = get().config;
         let toBeSummarizedMsgs = session.messages.slice();
 
         const historyMsgLength = countMessages(toBeSummarizedMsgs);
 
-        if (historyMsgLength > get().config?.modelConfig?.max_tokens ?? 4000) {
-          const n = toBeSummarizedMsgs.length;
-          toBeSummarizedMsgs = toBeSummarizedMsgs.slice(
-            Math.max(0, n - config.historyMessageCount),
-          );
-        }
+        // if (historyMsgLength > get().config?.modelConfig?.max_tokens ?? 4000) {
+        //   const n = toBeSummarizedMsgs.length;
+        //   toBeSummarizedMsgs = toBeSummarizedMsgs.slice(
+        //     Math.max(0, n - config.historyMessageCount),
+        //   );
+        // }
 
         // add memory prompt
         toBeSummarizedMsgs.unshift(get().getMemoryPrompt());
@@ -470,30 +370,30 @@ export const useChatStore = create<ChatStore>()(
           "[Chat History] ",
           toBeSummarizedMsgs,
           historyMsgLength,
-          config.compressMessageLengthThreshold,
+          // config.compressMessageLengthThreshold,
         );
 
-        if (historyMsgLength > config.compressMessageLengthThreshold) {
-          requestChatStream(
-            toBeSummarizedMsgs.concat({
-              role: "system",
-              content: Locale.Store.Prompt.Summarize,
-              date: "",
-            }),
-            {
-              filterBot: false,
-              onMessage(message, done) {
-                session.memoryPrompt = message;
-                if (done) {
-                  console.log("[Memory] ", session.memoryPrompt);
-                }
-              },
-              onError(error) {
-                console.error("[Summarize] ", error);
-              },
-            },
-          );
-        }
+        // if (historyMsgLength > config.compressMessageLengthThreshold) {
+        //   requestChatStream(
+        //     toBeSummarizedMsgs.concat({
+        //       role: "system",
+        //       content: Locale.Store.Prompt.Summarize,
+        //       date: "",
+        //     }),
+        //     {
+        //       filterBot: false,
+        //       onMessage(message, done) {
+        //         session.memoryPrompt = message;
+        //         if (done) {
+        //           console.log("[Memory] ", session.memoryPrompt);
+        //         }
+        //       },
+        //       onError(error) {
+        //         console.error("[Summarize] ", error);
+        //       },
+        //     },
+        //   );
+        // }
       },
 
       updateCurrentSession(updater) {
