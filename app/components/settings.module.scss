@@ -18,3 +18,24 @@
 .avatar {
   cursor: pointer;
 }
+
+.user {
+  display: inline-flex;
+  gap: 4px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logout {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--primary);
+  transition: all .2s;
+  background-color: transparent;
+
+  &:hover {
+    color: var(--primary-hover);
+  }
+}

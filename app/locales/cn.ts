@@ -61,6 +61,7 @@ const cn = {
         it: "Italiano",
       },
     },
+    User: "用户",
     Avatar: "头像",
     FontSize: {
       Title: "字体大小",

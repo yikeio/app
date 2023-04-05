@@ -2,7 +2,12 @@ import * as React from "react";
 import { Modal, ModalProps, Tooltip } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
-import { sendVerificationCode, loginUser, createUser } from "../api/user";
+import {
+  sendVerificationCode,
+  loginUser,
+  createUser,
+  checkUser,
+} from "../api/user";
 import { useChatStore } from "../store";
 
 import styles from "./login.module.scss";
@@ -21,6 +26,14 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
     state.config,
     state.updateConfig,
   ]);
+
+  function resetForm() {
+    setCode("");
+    setInviteCode("");
+    setPhoneNumber("");
+    setShowInviteLink(false);
+    setCount(0);
+  }
 
   function handleRegistry() {
     setCount(0);
@@ -66,6 +79,12 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
       .then((res) => {
         localStorage.setItem("login_token", res.result.value);
         closeModal();
+        resetForm();
+        showToast("登陆成功");
+
+        checkUser().then((res) => {
+          updateConfig((config) => (config.user = res.result));
+        });
       })
       .catch((error) => {
         showToast(error.result.message);
@@ -81,10 +100,11 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
     const params = { phoneNumber: `+86:${phoneNumber}`, code, inviteCode };
     createUser(params)
       .then((res) => {
-        console.log("handleRegister", res);
         localStorage.setItem("login_token", res.result.token.value);
         updateConfig((config) => (config.user = res.result.user));
         closeModal();
+        resetForm();
+        showToast("登陆成功");
       })
       .catch((error) => {
         showToast(error.result.message);

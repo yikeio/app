@@ -82,8 +82,7 @@ const useUserLogin = () => {
   useEffect(() => {
     checkUser()
       .then((res) => {
-        console.log("res", res);
-        updateConfig((config) => (config.user = res.result.user));
+        updateConfig((config) => (config.user = res.result));
       })
       .catch((error) => {
         showToast(error.result.message);
@@ -112,9 +111,13 @@ function _Home() {
 
   useSwitchTheme();
 
-  if (loading) {
-    return <Loading />;
-  }
+  useEffect(() => {
+    if (!config.user.name && !localStorage.getItem("login_token")) {
+      setLoginModalVisible(true);
+    }
+  }, [config.user]);
+
+  if (loading) return <Loading />;
 
   return (
     <div
