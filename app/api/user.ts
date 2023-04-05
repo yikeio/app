@@ -1,37 +1,16 @@
-const DOMAIN = "http://192.168.31.73:8000";
+import { commonFetch } from "./common";
 
-export function commonFetch(url: string, options: any) {
-  return new Promise<any>((resolve, reject) => {
-    return fetch(url, options).then((res: any) => {
-      console.log("handleFetch", res);
-
-      if (res.status === 204) {
-        return res.text().then((result: any) => {
-          resolve({ result, status: res.status });
-        });
-      }
-
-      if (res.status >= 200 && res.status <= 300) {
-        res.json().then((result: any) => {
-          resolve({ result, status: res.status });
-        });
-      } else {
-        res.json().then((result: any) => {
-          reject({ result, status: res.status });
-        });
-      }
-    });
-  });
-}
-
-// 检测登陆
+/**
+ * 检测用户登陆
+ * @returns
+ */
 export async function checkUser() {
   const token = localStorage.getItem("login_token");
   if (!token) {
     throw new Error("暂未登录");
   }
 
-  return commonFetch(`${DOMAIN}/api/user`, {
+  return commonFetch("/api/user", {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -39,7 +18,11 @@ export async function checkUser() {
   });
 }
 
-// 注册账户
+/**
+ * 注册用户
+ * @param param0
+ * @returns
+ */
 export async function createUser({
   phoneNumber,
   code,
@@ -49,7 +32,7 @@ export async function createUser({
   code: string;
   inviteCode: string;
 }) {
-  return commonFetch(`${DOMAIN}/api/users`, {
+  return commonFetch("api/users", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -62,7 +45,11 @@ export async function createUser({
   });
 }
 
-// 登陆账户
+/**
+ * 用户登陆
+ * @param param0
+ * @returns
+ */
 export async function loginUser({
   phoneNumber,
   code,
@@ -70,7 +57,7 @@ export async function loginUser({
   phoneNumber: string;
   code: string;
 }) {
-  return commonFetch(`${DOMAIN}/api/oauth/tokens:via-sms`, {
+  return commonFetch("oauth/tokens:via-sms", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -82,7 +69,11 @@ export async function loginUser({
   });
 }
 
-// 获取验证码
+/**
+ * 获取验证码
+ * @param param0
+ * @returns
+ */
 export async function sendVerificationCode({
   phoneNumber,
   scene,
@@ -90,7 +81,7 @@ export async function sendVerificationCode({
   phoneNumber: string;
   scene: string;
 }) {
-  return commonFetch(`${DOMAIN}/api/sms/verification-codes:send`, {
+  return commonFetch("sms/verification-codes:send", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
