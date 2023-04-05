@@ -36,7 +36,7 @@ export async function checkUser() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  }).then(handleFetch);
+  });
 }
 
 // 注册账户
