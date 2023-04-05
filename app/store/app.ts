@@ -32,6 +32,7 @@ export enum Theme {
 }
 
 export interface ChatConfig {
+  userName: string;
   historyMessageCount: number; // -1 means all
   compressMessageLengthThreshold: number;
   sendBotMessages: boolean; // send bot's message or not
@@ -124,6 +125,7 @@ export function filterConfig(oldConfig: ModelConfig): Partial<ModelConfig> {
 }
 
 const DEFAULT_CONFIG: ChatConfig = {
+  userName: "",
   historyMessageCount: 4,
   compressMessageLengthThreshold: 1000,
   sendBotMessages: true as boolean,
@@ -131,7 +133,7 @@ const DEFAULT_CONFIG: ChatConfig = {
   avatar: "1f603",
   fontSize: 14,
   theme: Theme.Auto as Theme,
-  tightBorder: false,
+  tightBorder: true,
   sendPreviewBubble: true,
 
   disablePromptHint: false,
@@ -210,7 +212,6 @@ interface ChatStore {
   getMemoryPrompt: () => Message;
 
   getConfig: () => ChatConfig;
-  resetConfig: () => void;
   updateConfig: (updater: (config: ChatConfig) => void) => void;
   clearAllData: () => void;
 }
@@ -235,10 +236,6 @@ export const useChatStore = create<ChatStore>()(
           sessions: [createEmptySession()],
           currentSessionIndex: 0,
         }));
-      },
-
-      resetConfig() {
-        set(() => ({ config: { ...DEFAULT_CONFIG } }));
       },
 
       getConfig() {

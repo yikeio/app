@@ -1,0 +1,88 @@
+.login-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 12px 0;
+}
+
+.login-dialog-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.login-dialog-item-label {
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.login-dialog-item-value {
+  height: 36px;
+  width: 100%;
+  padding: 4px 12px;
+  border-radius: 10px;
+  border: 2px solid var(--primary);
+  box-sizing: border-box;
+  color: var(--black);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  
+  input {
+    border: none;
+    outline: none;
+    height: 100%;
+    flex: 1;
+    text-align: left;
+    background: transparent;
+    box-sizing: border-box;
+    color: var(--black);
+    color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+.login-dialog-item-code {
+  color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all .2s;
+  
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.login-dialog-login {
+  outline: none;
+  border: none;
+  background-color: var(--primary);
+  color: white;
+  transition: all .2s;
+  border-radius: 3px;
+  padding: 4px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  height: 32px;
+
+  &:hover {
+    border-color: var(--primary);
+    filter: brightness(0.9);
+  }
+}
+
+.login-dialog-registry {
+  outline: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.6);
+  transition: all .2s;
+  background-color: transparent;
+  cursor: pointer;
+  
+  &:hover {
+    color: var(--primary);
+  }
+}

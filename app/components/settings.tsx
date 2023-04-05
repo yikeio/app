@@ -12,12 +12,7 @@ import EditIcon from "../icons/edit.svg";
 import { List, ListItem, Popover, showToast } from "./ui-lib";
 
 import { IconButton } from "./button";
-import {
-  SubmitKey,
-  useChatStore,
-  Theme,
-  useAccessStore,
-} from "../store";
+import { SubmitKey, useChatStore, Theme, useAccessStore } from "../store";
 import { Avatar } from "./chat";
 
 import Locale, { AllLangs, changeLang, getLang } from "../locales";
@@ -44,14 +39,14 @@ function SettingItem(props: {
 
 export function Settings(props: { closeSettings: () => void }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [config, updateConfig, resetConfig, clearAllData, clearSessions] =
-    useChatStore((state) => [
+  const [config, updateConfig, clearAllData, clearSessions] = useChatStore(
+    (state) => [
       state.config,
       state.updateConfig,
-      state.resetConfig,
       state.clearAllData,
       state.clearSessions,
-    ]);
+    ],
+  );
 
   const [usage, setUsage] = useState<{
     used?: number;
@@ -102,14 +97,6 @@ export function Settings(props: { closeSettings: () => void }) {
               onClick={clearSessions}
               bordered
               title={Locale.Settings.Actions.ClearAll}
-            />
-          </div>
-          <div className={styles["window-action-button"]}>
-            <IconButton
-              icon={<ResetIcon />}
-              onClick={resetConfig}
-              bordered
-              title={Locale.Settings.Actions.ResetAll}
             />
           </div>
           <div className={styles["window-action-button"]}>

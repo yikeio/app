@@ -5,7 +5,16 @@ require("../polyfill");
 import { useState, useEffect } from "react";
 
 import { IconButton } from "./button";
+import { LoginDialog } from "./login";
+import { showToast } from "./ui-lib";
 import styles from "./home.module.scss";
+
+import {
+  checkUser,
+  createUser,
+  loginUser,
+  sendVerificationCode,
+} from "../api/user";
 
 import SettingsIcon from "../icons/settings.svg";
 import ChatGptIcon from "../icons/chatgpt.svg";
@@ -68,6 +77,25 @@ const useHasHydrated = () => {
   return hasHydrated;
 };
 
+const useUserLogin = () => {
+  const [user, setUser] = useState<any>(null);
+  const [loginModalVisible, setLoginModalVisible] = useState(false);
+
+  useEffect(() => {
+    checkUser()
+      .then((res) => {
+        console.log("res", res);
+        setUser(res);
+      })
+      .catch((error) => {
+        showToast(error.message);
+        setLoginModalVisible(true);
+      });
+  }, []);
+
+  return { user, loginModalVisible, setLoginModalVisible };
+};
+
 function _Home() {
   const [createNewSession, currentIndex, removeSession] = useChatStore(
     (state) => [
@@ -78,6 +106,7 @@ function _Home() {
   );
   const loading = !useHasHydrated();
   const [showSideBar, setShowSideBar] = useState(true);
+  const { user, loginModalVisible, setLoginModalVisible } = useUserLogin();
 
   // setting
   const [openSettings, setOpenSettings] = useState(false);
@@ -103,7 +132,14 @@ function _Home() {
         <div className={styles["sidebar-header"]}>
           <div className={styles["sidebar-title"]}>Yike Chat</div>
           <div className={styles["sidebar-sub-title"]}>
-            0000 用户
+            {config.userName || (
+              <button
+                className={styles["sidebar-login-btn"]}
+                onClick={() => setLoginModalVisible(true)}
+              >
+                未登录
+              </button>
+            )}
           </div>
           <div className={styles["sidebar-logo"]}>
             <ChatGptIcon />
@@ -173,6 +209,7 @@ function _Home() {
           />
         )}
       </div>
+      <LoginDialog open={loginModalVisible} />
     </div>
   );
 }
