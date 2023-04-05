@@ -8,6 +8,7 @@ import {
   requestWithPrompt,
 } from "../requests";
 import { trimTopic } from "../utils";
+import { createMessage } from "../api/conversations";
 
 import Locale from "../locales";
 
