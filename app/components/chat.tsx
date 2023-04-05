@@ -450,8 +450,6 @@ export function Chat(props: {
         : [],
     );
 
-  const [showPromptModal, setShowPromptModal] = useState(false);
-
   // 更新对话
   const handleUpdate = () => {
     const newTopic = prompt(Locale.Chat.Rename, session.title);
@@ -497,16 +495,6 @@ export function Chat(props: {
           </div>
           <div className={styles["window-action-button"]}>
             <IconButton
-              icon={<BrainIcon />}
-              bordered
-              title={Locale.Chat.Actions.CompressedHistory}
-              onClick={() => {
-                setShowPromptModal(true);
-              }}
-            />
-          </div>
-          <div className={styles["window-action-button"]}>
-            <IconButton
               icon={<ExportIcon />}
               bordered
               title={Locale.Chat.Actions.Export}
@@ -519,12 +507,6 @@ export function Chat(props: {
             />
           </div>
         </div>
-
-        <PromptToast
-          showToast={!hitBottom}
-          showModal={showPromptModal}
-          setShowModal={setShowPromptModal}
-        />
       </div>
 
       <div

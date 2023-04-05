@@ -1,110 +1,36 @@
-import type { ChatRequest, ChatReponse } from "./api/openai/typing";
-import { filterConfig, Message, ModelConfig, useAccessStore } from "./store";
 import { showToast } from "./components/ui-lib";
+import { API_DOMAIN } from "./api/common";
+import { createMessage } from "./api/conversations";
 
 const TIME_OUT_MS = 30000;
 
-const makeRequestParam = (
-  messages: Message[],
-  options?: {
-    filterBot?: boolean;
-    stream?: boolean;
-  },
-): ChatRequest => {
-  let sendMessages = messages.map((v) => ({
-    role: v.role,
-    content: v.content,
-  }));
-
-  if (options?.filterBot) {
-    sendMessages = sendMessages.filter((m) => m.role !== "assistant");
-  }
-
-  return {
-    model: "gpt-3.5-turbo",
-    messages: sendMessages,
-    stream: options?.stream,
-  };
-};
-
-function getHeaders() {
-  const accessStore = useAccessStore.getState();
-  let headers: Record<string, string> = {};
-
-  if (accessStore.enabledAccessControl()) {
-    headers["access-code"] = accessStore.accessCode;
-  }
-
-  if (accessStore.token && accessStore.token.length > 0) {
-    headers["token"] = accessStore.token;
-  }
-
-  return headers;
-}
-
-export function requestOpenaiClient(path: string) {
-  return (body: any, method = "POST") =>
-    fetch("/api/openai", {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-cache",
-        path,
-        ...getHeaders(),
-      },
-      body: body && JSON.stringify(body),
-    });
-}
-
-export async function requestChat(messages: Message[]) {
-  const req: ChatRequest = makeRequestParam(messages, { filterBot: true });
-
-  const res = await requestOpenaiClient("v1/chat/completions")(req);
-
-  try {
-    const response = (await res.json()) as ChatReponse;
-    return response;
-  } catch (error) {
-    console.error("[Request Chat] ", error, res.body);
-  }
-}
-
 export async function requestChatStream(
-  messages: Message[],
-  options?: {
+  content: string,
+  options: {
     filterBot?: boolean;
-    modelConfig?: ModelConfig;
+    conversationId: string;
     onMessage: (message: string, done: boolean) => void;
     onError: (error: Error, statusCode?: number) => void;
     onController?: (controller: AbortController) => void;
   },
 ) {
-  const req = makeRequestParam(messages, {
-    stream: true,
-    filterBot: options?.filterBot,
-  });
-
-  // valid and assign model config
-  if (options?.modelConfig) {
-    Object.assign(req, filterConfig(options.modelConfig));
-  }
-
-  console.log("[Request] ", req);
+  const token = localStorage.getItem("login_token");
 
   const controller = new AbortController();
   const reqTimeoutId = setTimeout(() => controller.abort(), TIME_OUT_MS);
 
   try {
-    const res = await fetch("/api/chat-stream", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        path: "v1/chat/completions",
-        ...getHeaders(),
+    await createMessage(options.conversationId, content);
+    const res = await fetch(
+      `${API_DOMAIN}/api/conversations/${options.conversationId}/smart-messages`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-      body: JSON.stringify(req),
-      signal: controller.signal,
-    });
+    );
     clearTimeout(reqTimeoutId);
 
     let responseText = "";
@@ -137,9 +63,6 @@ export async function requestChatStream(
       }
 
       finish();
-    } else if (res.status === 401) {
-      console.error("Anauthorized");
-      options?.onError(new Error("Anauthorized"), res.status);
     } else {
       console.error("Stream Error", res.body);
       options?.onError(new Error("Stream Error"), res.status);
@@ -148,20 +71,6 @@ export async function requestChatStream(
     console.error("NetWork Error", err);
     options?.onError(err as Error);
   }
-}
-
-export async function requestWithPrompt(messages: Message[], prompt: string) {
-  messages = messages.concat([
-    {
-      role: "user",
-      content: prompt,
-      date: new Date().toLocaleString(),
-    },
-  ]);
-
-  const res = await requestChat(messages);
-
-  return res?.choices?.at(0)?.message?.content ?? "";
 }
 
 // To store message streaming controller

@@ -6,13 +6,7 @@ import {
   getConversationList,
   deleteConversation,
 } from "../api/conversations";
-import {
-  ControllerPool,
-  requestChatStream,
-  requestWithPrompt,
-} from "../requests";
-import { trimTopic } from "../utils";
-import { createMessage } from "../api/conversations";
+import { ControllerPool, requestChatStream } from "../requests";
 
 import Locale from "../locales";
 
@@ -48,85 +42,9 @@ export interface ChatConfig {
   sendPreviewBubble: boolean;
 
   disablePromptHint: boolean;
-
-  modelConfig: {
-    model: string;
-    temperature: number;
-    max_tokens: number;
-    presence_penalty: number;
-  };
 }
-
-export type ModelConfig = ChatConfig["modelConfig"];
 
 export const ROLES: Message["role"][] = ["system", "user", "assistant"];
-
-const ENABLE_GPT4 = true;
-
-export const ALL_MODELS = [
-  {
-    name: "gpt-4",
-    available: ENABLE_GPT4,
-  },
-  {
-    name: "gpt-4-0314",
-    available: ENABLE_GPT4,
-  },
-  {
-    name: "gpt-4-32k",
-    available: ENABLE_GPT4,
-  },
-  {
-    name: "gpt-4-32k-0314",
-    available: ENABLE_GPT4,
-  },
-  {
-    name: "gpt-3.5-turbo",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-0301",
-    available: true,
-  },
-];
-
-export function isValidModel(name: string) {
-  return ALL_MODELS.some((m) => m.name === name && m.available);
-}
-
-export function isValidNumber(x: number, min: number, max: number) {
-  return typeof x === "number" && x <= max && x >= min;
-}
-
-export function filterConfig(oldConfig: ModelConfig): Partial<ModelConfig> {
-  const config = Object.assign({}, oldConfig);
-
-  const validator: {
-    [k in keyof ModelConfig]: (x: ModelConfig[keyof ModelConfig]) => boolean;
-  } = {
-    model(x) {
-      return isValidModel(x as string);
-    },
-    max_tokens(x) {
-      return isValidNumber(x as number, 100, 32000);
-    },
-    presence_penalty(x) {
-      return isValidNumber(x as number, -2, 2);
-    },
-    temperature(x) {
-      return isValidNumber(x as number, 0, 2);
-    },
-  };
-
-  Object.keys(validator).forEach((k) => {
-    const key = k as keyof ModelConfig;
-    if (!validator[key](config[key])) {
-      delete config[key];
-    }
-  });
-
-  return config;
-}
 
 const DEFAULT_CONFIG: ChatConfig = {
   historyMessageCount: 4,
@@ -140,13 +58,6 @@ const DEFAULT_CONFIG: ChatConfig = {
   sendPreviewBubble: true,
 
   disablePromptHint: false,
-
-  modelConfig: {
-    model: "gpt-3.5-turbo",
-    temperature: 1,
-    max_tokens: 2000,
-    presence_penalty: 0,
-  },
 };
 
 export interface ChatSession {
@@ -192,23 +103,17 @@ interface ChatStore {
   currentSession: () => ChatSession;
   onNewMessage: (message: Message) => void;
   onUserInput: (content: string) => Promise<void>;
-  summarizeSession: () => void;
+
   updateCurrentSession: (updater: (session: ChatSession) => void) => void;
   updateMessage: (
     sessionIndex: number,
     messageIndex: number,
     updater: (message?: Message) => void,
   ) => void;
-  getMessagesWithMemory: () => Message[];
-  getMemoryPrompt: () => Message;
   updateUser: (user: Record<string, string>) => void;
   getConfig: () => ChatConfig;
   updateConfig: (updater: (config: ChatConfig) => void) => void;
   clearAllData: () => void;
-}
-
-function countMessages(msgs: Message[]) {
-  return msgs.reduce((pre, cur) => pre + cur.content.length, 0);
 }
 
 export const useChatStore = create<ChatStore>()((set, get) => ({
@@ -311,8 +216,8 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
 
   currentSession() {
-    let index = get().currentSessionIndex;
-    const sessions = get().sessions;
+    let index: number = get().currentSessionIndex;
+    const sessions: ChatSession[] = get().sessions;
 
     if (index < 0 || index >= sessions.length) {
       index = Math.min(sessions.length - 1, Math.max(0, index));
@@ -328,7 +233,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     get().updateCurrentSession((session) => {
       session.updated_at = new Date().toLocaleString();
     });
-    get().summarizeSession();
+    // get().summarizeSession();
   },
 
   async onUserInput(content) {
@@ -345,9 +250,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       streaming: true,
     };
 
-    // get recent messages
-    const recentMessages = get().getMessagesWithMemory();
-    const sendMessages = recentMessages.concat(userMessage);
     const sessionIndex = get().currentSessionIndex;
     const messageIndex = get().currentSession().messages.length + 1;
 
@@ -357,12 +259,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       session.messages.push(botMessage);
     });
 
-    createMessage(get().currentSession, content).then((res) => {
-      console.log("res", res);
-    });
-
     // make request
-    requestChatStream(sendMessages, {
+    requestChatStream(content, {
+      conversationId: String(get().currentSession().id),
       onMessage(content, done) {
         // stream response
         if (done) {
@@ -376,11 +275,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         }
       },
       onError(error, statusCode) {
-        if (statusCode === 401) {
-          botMessage.content = Locale.Error.Unauthorized;
-        } else {
-          botMessage.content += "\n\n" + Locale.Store.Error;
-        }
+        botMessage.content += "\n\n" + Locale.Store.Error;
         botMessage.streaming = false;
         userMessage.isError = true;
         botMessage.isError = true;
@@ -392,7 +287,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         ControllerPool.addController(sessionIndex, messageIndex, controller);
       },
       filterBot: !get().config.sendBotMessages,
-      modelConfig: get().config.modelConfig,
     });
   },
 
@@ -406,26 +300,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     } as Message;
   },
 
-  getMessagesWithMemory() {
-    const session = get().currentSession();
-    const config = get().config;
-    const messages = session.messages.filter((msg) => !msg.isError);
-    const n = messages.length;
-
-    const context = session.context.slice();
-
-    if (session.memoryPrompt && session.memoryPrompt.length > 0) {
-      const memoryPrompt = get().getMemoryPrompt();
-      context.push(memoryPrompt);
-    }
-
-    const recentMessages = context.concat(
-      messages.slice(Math.max(0, n - config.historyMessageCount)),
-    );
-
-    return recentMessages;
-  },
-
   updateMessage(
     sessionIndex: number,
     messageIndex: number,
@@ -436,69 +310,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     const messages = session?.messages;
     updater(messages?.at(messageIndex));
     set(() => ({ sessions }));
-  },
-
-  summarizeSession() {
-    const session = get().currentSession();
-
-    // should summarize topic after chating more than 50 words
-    const SUMMARIZE_MIN_LEN = 50;
-    if (
-      session.title === DEFAULT_TOPIC &&
-      countMessages(session.messages) >= SUMMARIZE_MIN_LEN
-    ) {
-      requestWithPrompt(session.messages, Locale.Store.Prompt.Topic).then(
-        (res) => {
-          get().updateCurrentSession(
-            (session) => (session.title = trimTopic(res)),
-          );
-        },
-      );
-    }
-
-    const config = get().config;
-    let toBeSummarizedMsgs = session.messages.slice();
-
-    const historyMsgLength = countMessages(toBeSummarizedMsgs);
-
-    if (historyMsgLength > get().config?.modelConfig?.max_tokens ?? 4000) {
-      const n = toBeSummarizedMsgs.length;
-      toBeSummarizedMsgs = toBeSummarizedMsgs.slice(
-        Math.max(0, n - config.historyMessageCount),
-      );
-    }
-
-    // add memory prompt
-    toBeSummarizedMsgs.unshift(get().getMemoryPrompt());
-
-    console.log(
-      "[Chat History] ",
-      toBeSummarizedMsgs,
-      historyMsgLength,
-      config.compressMessageLengthThreshold,
-    );
-
-    if (historyMsgLength > config.compressMessageLengthThreshold) {
-      requestChatStream(
-        toBeSummarizedMsgs.concat({
-          role: "system",
-          content: Locale.Store.Prompt.Summarize,
-          date: "",
-        }),
-        {
-          filterBot: false,
-          onMessage(message, done) {
-            session.memoryPrompt = message;
-            if (done) {
-              console.log("[Memory] ", session.memoryPrompt);
-            }
-          },
-          onError(error) {
-            console.error("[Summarize] ", error);
-          },
-        },
-      );
-    }
   },
 
   updateCurrentSession(updater) {
