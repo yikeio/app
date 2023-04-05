@@ -185,7 +185,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       sessionStorage.getItem("fetchedHistoryIds") || "[]",
     );
     sessionStorage.setItem(
-      "fetchHistoryIds",
+      "fetchedHistoryIds",
       JSON.stringify(fetchedHistoryIds.concat(conversationId)),
     );
 
@@ -234,28 +234,13 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     get().updateCurrentSession((session) => (session.messages = messageList));
   },
 
-  removeSession(index: number) {
-    set((state) => {
-      let nextIndex = state.currentSessionIndex;
-      const sessions = state.sessions;
+  async removeSession(index: number) {
+    await deleteConversation(get().currentSession().id);
 
-      if (sessions.length === 1) {
-        return {
-          currentSessionIndex: 0,
-          sessions: [createEmptySession()],
-        };
-      }
+    let nextSessions = get().sessions.filter((_, i) => i !== index);
+    if (!nextSessions.length) nextSessions = [createEmptySession()];
 
-      if (nextIndex === index) {
-        nextIndex -= 1;
-      }
-
-      deleteConversation(sessions[index].id);
-      return {
-        currentSessionIndex: nextIndex,
-        sessions,
-      };
-    });
+    set(() => ({ sessions: nextSessions }));
   },
 
   currentSession() {
@@ -276,7 +261,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     get().updateCurrentSession((session) => {
       session.updated_at = new Date().toLocaleString();
     });
-    // get().summarizeSession();
   },
 
   async onUserInput(content) {
