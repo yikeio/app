@@ -84,6 +84,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
 
         checkUser().then((res) => {
           updateConfig((config) => (config.user = res.result));
+          localStorage.setItem("user", JSON.stringify(res.result));
         });
       })
       .catch((error) => {
@@ -102,6 +103,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
       .then((res) => {
         localStorage.setItem("login_token", res.result.token.value);
         updateConfig((config) => (config.user = res.result.user));
+        localStorage.setItem("user", JSON.stringify(res.result.user));
         closeModal();
         resetForm();
         showToast("登陆成功");
