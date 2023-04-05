@@ -37,24 +37,14 @@ export function ChatItem(props: {
 }
 
 export function ChatList() {
-  const [
-    user,
-    sessions,
-    selectedIndex,
-    selectSession,
-    removeSession,
-    getConversationList,
-  ] = useChatStore((state) => [
-    state.user,
-    state.sessions,
-    state.currentSessionIndex,
-    state.selectSession,
-    state.removeSession,
-    state.getConversationList,
-  ]);
-  useEffect(() => {
-    getConversationList(user.id);
-  }, []);
+  const [sessions, selectedIndex, selectSession, removeSession] = useChatStore(
+    (state) => [
+      state.sessions,
+      state.currentSessionIndex,
+      state.selectSession,
+      state.removeSession,
+    ],
+  );
 
   return (
     <div className={styles["chat-list"]}>

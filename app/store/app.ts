@@ -33,7 +33,6 @@ export enum Theme {
 }
 
 export interface ChatConfig {
-  user: Record<string, any>;
   historyMessageCount: number; // -1 means all
   compressMessageLengthThreshold: number;
   sendBotMessages: boolean; // send bot's message or not
@@ -126,7 +125,6 @@ export function filterConfig(oldConfig: ModelConfig): Partial<ModelConfig> {
 }
 
 const DEFAULT_CONFIG: ChatConfig = {
-  user: {},
   historyMessageCount: 4,
   compressMessageLengthThreshold: 1000,
   sendBotMessages: true as boolean,
@@ -241,6 +239,22 @@ export const useChatStore = create<ChatStore>()(
         }));
       },
 
+      // 创建新的对话
+      async newSession() {
+        const res = await createConversation(DEFAULT_TOPIC);
+        const conversation = res.result;
+        conversation.context = [];
+        conversation.messages = [];
+        conversation.updated_at = new Date(
+          conversation.updated_at,
+        ).toLocaleString();
+
+        set((state) => ({
+          currentSessionIndex: 0,
+          sessions: [conversation].concat(state.sessions),
+        }));
+      },
+
       clearSessions() {
         set(() => ({
           sessions: [createEmptySession()],
@@ -287,22 +301,6 @@ export const useChatStore = create<ChatStore>()(
             sessions,
           };
         });
-      },
-
-      // 创建新的对话
-      async newSession() {
-        const res = await createConversation(DEFAULT_TOPIC);
-        const conversation = res.result;
-        conversation.context = [];
-        conversation.messages = [];
-        conversation.updated_at = new Date(
-          conversation.updated_at,
-        ).toLocaleString();
-
-        set((state) => ({
-          currentSessionIndex: 0,
-          sessions: [conversation].concat(state.sessions),
-        }));
       },
 
       currentSession() {

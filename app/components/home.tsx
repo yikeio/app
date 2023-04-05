@@ -74,14 +74,16 @@ const useHasHydrated = () => {
 
 const useUserLogin = () => {
   const [loginModalVisible, setLoginModalVisible] = useState(false);
-  const [updateConfig] = useChatStore((state) => [
-    state.updateConfig,
+  const [updateUser, getConversationList] = useChatStore((state) => [
+    state.updateUser,
+    state.getConversationList,
   ]);
 
   useEffect(() => {
     checkUser()
       .then((res) => {
-        updateConfig((config) => (config.user = res.result));
+        updateUser(res.result);
+        getConversationList(res.result.id);
       })
       .catch((error) => {
         showToast(error.result.message);
@@ -107,15 +109,15 @@ function _Home() {
 
   // setting
   const [openSettings, setOpenSettings] = useState(false);
-  const config = useChatStore((state) => state.config);
+  const [user, config] = useChatStore((state) => [state.user, state.config]);
 
   useSwitchTheme();
 
   useEffect(() => {
-    if (!config.user.name && !localStorage.getItem("login_token")) {
+    if (!user.name && !localStorage.getItem("login_token")) {
       setLoginModalVisible(true);
     }
-  }, [config.user]);
+  }, [user]);
 
   if (loading) return <Loading />;
 
@@ -133,7 +135,7 @@ function _Home() {
         <div className={styles["sidebar-header"]}>
           <div className={styles["sidebar-title"]}>Yike Chat</div>
           <div className={styles["sidebar-sub-title"]}>
-            {config.user?.name || (
+            {user?.name || (
               <button
                 className={styles["sidebar-login-btn"]}
                 onClick={() => setLoginModalVisible(true)}
