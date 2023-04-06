@@ -181,13 +181,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
   async getConversationHistory(conversationId) {
     const res = await getConversationMessageList(conversationId);
-    const fetchedHistoryIds = JSON.parse(
-      sessionStorage.getItem("fetchedHistoryIds") || "[]",
-    );
-    sessionStorage.setItem(
-      "fetchedHistoryIds",
-      JSON.stringify(fetchedHistoryIds.concat(conversationId)),
-    );
 
     const historyList = res.result.map((item: any) => {
       return {
@@ -222,12 +215,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     set({ currentSessionIndex: index });
 
     const conversationId = String(get().currentSession().id);
-
-    // 判断缓存是否获取过
-    const fetchedHistoryIds = JSON.parse(
-      sessionStorage.getItem("fetchedHistoryIds") || "[]",
-    );
-    if (fetchedHistoryIds.includes(conversationId)) return;
 
     // 获取历史消息
     const messageList = await get().getConversationHistory(conversationId);
