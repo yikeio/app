@@ -5,12 +5,11 @@ import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react";
 import styles from "./settings.module.scss";
 
 import CloseIcon from "../icons/close.svg";
-import ClearIcon from "../icons/clear.svg";
 
 import { List, ListItem, Popover, showToast } from "./ui-lib";
 
 import { IconButton } from "./button";
-import { SubmitKey, useChatStore, Theme } from "../store";
+import { SubmitKey, useChatStore, Theme, useBillingStore } from "../store";
 import { Avatar } from "./chat";
 
 import Locale, { AllLangs, changeLang, getLang } from "../locales";
@@ -35,15 +34,24 @@ function SettingItem(props: {
 
 export function Settings(props: { closeSettings: () => void }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [user, config, updateConfig, updateUser, clearAllData, clearSessions] =
-    useChatStore((state) => [
-      state.user,
-      state.config,
-      state.updateConfig,
-      state.updateUser,
-      state.clearAllData,
-      state.clearSessions,
-    ]);
+  const [user, config, updateConfig, updateUser] = useChatStore((state) => [
+    state.user,
+    state.config,
+    state.updateConfig,
+    state.updateUser,
+  ]);
+
+  const [
+    billingModalVisible,
+    availableTokens,
+    usedTokens,
+    setBillingModalVisible,
+  ] = useBillingStore((state) => [
+    state.billingModalVisible,
+    state.availableTokens,
+    state.usedTokens,
+    state.setBillingModalVisible,
+  ]);
 
   function handleLogout() {
     localStorage.removeItem("login_token");
@@ -100,25 +108,16 @@ export function Settings(props: { closeSettings: () => void }) {
             </SettingItem>
           )}
 
-          {/* 账户余额 */}
-          {/* <SettingItem
+          <SettingItem
             title={Locale.Settings.Usage.Title}
-            subTitle={
-              loadingUsage
-                ? Locale.Settings.Usage.IsChecking
-                : Locale.Settings.Usage.SubTitle(usage?.used ?? "[?]")
-            }
+            subTitle={Locale.Settings.Usage.SubTitle(usedTokens ?? "[?]")}
           >
-            {loadingUsage ? (
-              <div />
-            ) : (
-              <IconButton
-                icon={<ResetIcon></ResetIcon>}
-                text={Locale.Settings.Usage.Check}
-                onClick={checkUsage}
-              />
-            )}
-          </SettingItem> */}
+            <span>{availableTokens}</span>
+          </SettingItem>
+
+          <SettingItem title={Locale.Settings.Combo}>
+            <span>月卡</span>
+          </SettingItem>
 
           <SettingItem title={Locale.Settings.Avatar}>
             <Popover

@@ -5,11 +5,9 @@ require("../polyfill");
 import { useState, useEffect } from "react";
 
 import { IconButton } from "./button";
+import { BillingDialog } from "./billing";
 import { LoginDialog } from "./login";
-import { showToast } from "./ui-lib";
 import styles from "./home.module.scss";
-
-import { checkUser } from "../api/user";
 
 import SettingsIcon from "../icons/settings.svg";
 import ChatGptIcon from "../icons/chatgpt.svg";
@@ -72,29 +70,6 @@ const useHasHydrated = () => {
   return hasHydrated;
 };
 
-const useUserLogin = () => {
-  const [loginModalVisible, setLoginModalVisible] = useState(false);
-  const [updateUser, getConversationList] = useChatStore((state) => [
-    state.updateUser,
-    state.getConversationList,
-  ]);
-
-  useEffect(() => {
-    checkUser()
-      .then((res) => {
-        updateUser(res.result);
-        getConversationList(res.result.id);
-      })
-      .catch((error) => {
-        showToast(error.result.message);
-        setLoginModalVisible(true);
-        localStorage.removeItem("login_token");
-      });
-  }, []);
-
-  return { loginModalVisible, setLoginModalVisible };
-};
-
 function _Home() {
   const [createConversation, currentIndex, removeSession] = useChatStore(
     (state) => [
@@ -105,19 +80,12 @@ function _Home() {
   );
   const loading = !useHasHydrated();
   const [showSideBar, setShowSideBar] = useState(true);
-  const { loginModalVisible, setLoginModalVisible } = useUserLogin();
 
   // setting
   const [openSettings, setOpenSettings] = useState(false);
   const [user, config] = useChatStore((state) => [state.user, state.config]);
 
   useSwitchTheme();
-
-  useEffect(() => {
-    if (!user.name && !localStorage.getItem("login_token")) {
-      setLoginModalVisible(true);
-    }
-  }, [user]);
 
   if (loading) return <Loading />;
 
@@ -136,12 +104,7 @@ function _Home() {
           <div className={styles["sidebar-title"]}>Yike Chat</div>
           <div className={styles["sidebar-sub-title"]}>
             {user?.name || (
-              <button
-                className={styles["sidebar-login-btn"]}
-                onClick={() => setLoginModalVisible(true)}
-              >
-                未登录
-              </button>
+              <button className={styles["sidebar-login-btn"]}>未登录</button>
             )}
           </div>
           <div className={styles["sidebar-logo"]}>
@@ -212,10 +175,8 @@ function _Home() {
           />
         )}
       </div>
-      <LoginDialog
-        open={loginModalVisible}
-        closeModal={() => setLoginModalVisible(false)}
-      />
+      <LoginDialog />
+      <BillingDialog />
     </div>
   );
 }

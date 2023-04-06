@@ -95,11 +95,12 @@ const en: LocaleType = {
     Usage: {
       Title: "Account Balance",
       SubTitle(used: any) {
-        return `Used this month $${used}`;
+        return `Used this month ${used}`;
       },
       IsChecking: "Checking...",
       Check: "Check Again",
     },
+    Combo: "Combo",
     AccessCode: {
       Title: "Access Code",
       SubTitle: "Access control enabled",

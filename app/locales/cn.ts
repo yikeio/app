@@ -92,13 +92,14 @@ const cn = {
       SubTitle: "当未压缩的历史消息超过该值时，将进行压缩",
     },
     Usage: {
-      Title: "账户余额",
+      Title: "账户剩余 token 数",
       SubTitle(used: any) {
-        return `本月已使用 $${used}`;
+        return `本月已使用 ${used}`;
       },
       IsChecking: "正在检查…",
       Check: "重新检查",
     },
+    Combo: "套餐",
     AccessCode: {
       Title: "访问码",
       SubTitle: "现在是受控访问状态",

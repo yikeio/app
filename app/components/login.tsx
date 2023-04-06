@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Modal, ModalProps, Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 import {
@@ -12,6 +12,29 @@ import { useChatStore } from "../store";
 
 import styles from "./login.module.scss";
 import { showToast } from "./ui-lib";
+
+const useUserLogin = () => {
+  const [loginModalVisible, setLoginModalVisible] = React.useState(false);
+  const [updateUser, getConversationList] = useChatStore((state) => [
+    state.updateUser,
+    state.getConversationList,
+  ]);
+
+  React.useEffect(() => {
+    checkUser()
+      .then((res) => {
+        updateUser(res.result);
+        getConversationList(res.result.id);
+      })
+      .catch((error) => {
+        showToast(error.result.message);
+        setLoginModalVisible(true);
+        localStorage.removeItem("login_token");
+      });
+  }, []);
+
+  return { loginModalVisible, setLoginModalVisible };
+};
 
 export function LoginContent({ closeModal }: { closeModal: Function }) {
   const [showInviteLink, setShowInviteLink] = React.useState(false);
@@ -182,14 +205,24 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
   );
 }
 
-interface LoginDialogProps extends ModalProps {
-  closeModal: Function;
-}
+export function LoginDialog() {
+  const { loginModalVisible, setLoginModalVisible } = useUserLogin();
+  const [user] = useChatStore((state) => [state.user]);
 
-export function LoginDialog(props: LoginDialogProps) {
+  React.useEffect(() => {
+    if (!user.name && !localStorage.getItem("login_token")) {
+      setLoginModalVisible(true);
+    }
+  }, [user]);
+
   return (
-    <Modal closable={false} title="手机快捷登录" footer={null} {...props}>
-      <LoginContent closeModal={props.closeModal} />
+    <Modal
+      closable={false}
+      title="手机快捷登录"
+      footer={null}
+      open={loginModalVisible}
+    >
+      <LoginContent closeModal={setLoginModalVisible} />
     </Modal>
   );
 }
