@@ -97,7 +97,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
       });
   }
 
-  // 登陆
+  // 登录
   function handleLogin() {
     if (!code) return showToast("请填写验证码");
     if (!phoneNumber) return showToast("请填写手机号");
@@ -108,7 +108,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
         localStorage.setItem("login_token", res.result.value);
         closeModal();
         resetForm();
-        showToast("登陆成功");
+        showToast("登录成功");
 
         checkUser().then((res) => {
           updateUser(res.result);
@@ -134,7 +134,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
         updateUser(result.user);
         closeModal();
         resetForm();
-        showToast("登陆成功");
+        showToast("登录成功");
         getConversationList(result.user.id);
       })
       .catch((error) => {
@@ -192,7 +192,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
           className={styles["login-dialog-login"]}
           onClick={showInviteLink ? handleRegister : handleLogin}
         >
-          {showInviteLink ? "注册并登录" : "登陆"}
+          {showInviteLink ? "注册并登录" : "登录"}
         </button>
         {!showInviteLink && (
           <button
