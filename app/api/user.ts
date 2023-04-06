@@ -79,3 +79,21 @@ export async function sendVerificationCode({
     body: JSON.stringify({ scene, phone_number: phoneNumber }),
   });
 }
+
+/**
+ * 获取用户所有套餐列表
+ * @param param0
+ * @returns
+ */
+export async function getUserQuotas(userId: number) {
+  return commonFetch(`users/${userId}/quotas`);
+}
+
+/**
+ * 获取用户当前套餐信息
+ * @param param0
+ * @returns
+ */
+export async function getUserAvailableQuotas(userId: number) {
+  return commonFetch(`users/${userId}/available-quotas`);
+}

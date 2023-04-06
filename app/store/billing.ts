@@ -1,12 +1,5 @@
 import { create } from "zustand";
 
-type Combo = {
-  id: number;
-  type: "week" | "half-month" | "month";
-  price: number;
-  tokens?: number;
-};
-
 interface BillingStore {
   billingModalVisible: boolean;
   setBillingModalVisible: (visible: boolean) => void;
@@ -18,7 +11,11 @@ interface BillingStore {
   setUsedTokens: (tokens: number) => void;
 
   // 当前套餐
-  currentCombo: undefined | Combo;
+  currentCombo: any;
+  setCurrentCombo: (combo: any) => void;
+  // 所有购买过的套餐
+  allCombos: any[];
+  setAllCombos: (combos: any[]) => void;
 }
 
 export const useBillingStore = create<BillingStore>()((set, get) => ({
@@ -37,5 +34,13 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
     set(() => ({ usedTokens: tokens }));
   },
 
-  currentCombo: undefined,
+  currentCombo: null,
+  setCurrentCombo: (combo: any) => {
+    set(() => ({ currentCombo: combo }));
+  },
+
+  allCombos: [],
+  setAllCombos: (combos: any[]) => {
+    set(() => ({ allCombos: combos }));
+  },
 }));

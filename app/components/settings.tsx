@@ -41,17 +41,13 @@ export function Settings(props: { closeSettings: () => void }) {
     state.updateUser,
   ]);
 
-  const [
-    billingModalVisible,
-    availableTokens,
-    usedTokens,
-    setBillingModalVisible,
-  ] = useBillingStore((state) => [
-    state.billingModalVisible,
-    state.availableTokens,
-    state.usedTokens,
-    state.setBillingModalVisible,
-  ]);
+  const [currentCombo, allCombos, setBillingModalVisible] = useBillingStore(
+    (state) => [
+      state.currentCombo,
+      state.allCombos,
+      state.setBillingModalVisible,
+    ],
+  );
 
   function handleLogout() {
     localStorage.removeItem("login_token");
@@ -110,9 +106,11 @@ export function Settings(props: { closeSettings: () => void }) {
 
           <SettingItem
             title={Locale.Settings.Usage.Title}
-            subTitle={Locale.Settings.Usage.SubTitle(usedTokens ?? "[?]")}
+            subTitle={Locale.Settings.Usage.SubTitle(
+              currentCombo?.usage?.used_tokens_count || 0,
+            )}
           >
-            <span>{availableTokens}</span>
+            <span>{currentCombo?.usage?.available_tokens_count || 0}</span>
           </SettingItem>
 
           <SettingItem title={Locale.Settings.Combo}>
