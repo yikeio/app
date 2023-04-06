@@ -11,24 +11,29 @@ export function BillingDialog() {
   );
 
   return (
-    <Modal title="服务套餐" open={billingModalVisible} footer={null}>
+    <Modal
+      title="服务套餐"
+      open={billingModalVisible}
+      footer={null}
+      onCancel={() => setBillingModalVisible(false)}
+    >
       <div className={styles["billing-modal"]}>
         <div className={styles["billing-card"]}>
           <div className={styles["billing-card-title"]}>周卡</div>
           <div className={styles["billing-card-price"]}>9.9</div>
-          <div className={styles["billing-card-token"]}>30w token</div>
+          <div className={styles["billing-card-token"]}>30万 token</div>
           <button className={styles["billing-card-btn"]}>购买</button>
         </div>
         <div className={styles["billing-card"]}>
           <div className={styles["billing-card-title"]}>半月卡</div>
           <div className={styles["billing-card-price"]}>19.9</div>
-          <div className={styles["billing-card-token"]}>70w token</div>
+          <div className={styles["billing-card-token"]}>70万 token</div>
           <button className={styles["billing-card-btn"]}>购买</button>
         </div>
         <div className={styles["billing-card"]}>
           <div className={styles["billing-card-title"]}>月卡</div>
           <div className={styles["billing-card-price"]}>29.9</div>
-          <div className={styles["billing-card-token"]}>120w token</div>
+          <div className={styles["billing-card-token"]}>120万 token</div>
           <button className={styles["billing-card-btn"]}>购买</button>
         </div>
       </div>

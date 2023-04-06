@@ -16,10 +16,6 @@
   box-shadow: var(--card-shadow);
   padding: 24px;
   transition: all .2s;
-
-  &:hover {
-    box-shadow: var(--shadow);
-  }
 }
 
 .billing-card-title {

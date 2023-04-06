@@ -1,4 +1,5 @@
 import { SubmitKey } from "../store/app";
+import { parseTime } from "../utils";
 import type { LocaleType } from "./index";
 
 const en: LocaleType = {
@@ -100,7 +101,12 @@ const en: LocaleType = {
       IsChecking: "Checking...",
       Check: "Check Again",
     },
-    Combo: "Combo",
+    Combo: {
+      Title: "Combo",
+      SubTitle(time: any) {
+        return `expired at: ${parseTime(time)}`;
+      },
+    },
     AccessCode: {
       Title: "Access Code",
       SubTitle: "Access control enabled",

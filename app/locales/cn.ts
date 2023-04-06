@@ -1,4 +1,5 @@
 import { SubmitKey } from "../store/app";
+import { parseTime } from "../utils";
 
 const cn = {
   WIP: "该功能仍在开发中……",
@@ -99,7 +100,12 @@ const cn = {
       IsChecking: "正在检查…",
       Check: "重新检查",
     },
-    Combo: "套餐",
+    Combo: {
+      Title: "套餐",
+      SubTitle(time: any) {
+        return `过期时间: ${parseTime(time)}`;
+      },
+    },
     AccessCode: {
       Title: "访问码",
       SubTitle: "现在是受控访问状态",

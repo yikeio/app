@@ -36,6 +36,18 @@ export function downloadAs(text: string, filename: string) {
   document.body.removeChild(element);
 }
 
+export function parseTime(time: string): string {
+  const date = new Date(time);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  const second = date.getSeconds();
+
+  return `${year}/${month}/${day} ${hour}:${minute}:${second}`;
+}
+
 export function isIOS() {
   const userAgent = navigator.userAgent.toLowerCase();
   return /iphone|ipad|ipod/.test(userAgent);

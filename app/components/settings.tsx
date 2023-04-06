@@ -67,14 +67,6 @@ export function Settings(props: { closeSettings: () => void }) {
           </div>
         </div>
         <div className={styles["window-actions"]}>
-          {/* <div className={styles["window-action-button"]}>
-            <IconButton
-              icon={<ClearIcon />}
-              onClick={clearSessions}
-              bordered
-              title={Locale.Settings.Actions.ClearAll}
-            />
-          </div> */}
           <div className={styles["window-action-button"]}>
             <IconButton
               icon={<CloseIcon />}
@@ -113,8 +105,18 @@ export function Settings(props: { closeSettings: () => void }) {
             <span>{currentCombo?.usage?.available_tokens_count || 0}</span>
           </SettingItem>
 
-          <SettingItem title={Locale.Settings.Combo}>
-            <span>月卡</span>
+          <SettingItem
+            title={Locale.Settings.Combo.Title}
+            subTitle={Locale.Settings.Combo.SubTitle(currentCombo?.expired_at)}
+          >
+            <div className={styles.combo}>
+              <button
+                className={styles.comboBtn}
+                onClick={() => setBillingModalVisible(true)}
+              >
+                购买套餐
+              </button>
+            </div>
           </SettingItem>
 
           <SettingItem title={Locale.Settings.Avatar}>
