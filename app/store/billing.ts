@@ -1,14 +1,9 @@
 import { create } from "zustand";
 
 interface BillingStore {
+  // 套餐弹窗
   billingModalVisible: boolean;
   setBillingModalVisible: (visible: boolean) => void;
-
-  availableTokens: number;
-  setAvailableTokens: (tokens: number) => void;
-
-  usedTokens: number;
-  setUsedTokens: (tokens: number) => void;
 
   // 当前套餐
   currentCombo: any;
@@ -22,16 +17,6 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
   billingModalVisible: false,
   setBillingModalVisible: (visible: boolean) => {
     set(() => ({ billingModalVisible: visible }));
-  },
-
-  availableTokens: 0,
-  setAvailableTokens: (tokens: number) => {
-    set(() => ({ availableTokens: tokens }));
-  },
-
-  usedTokens: 0,
-  setUsedTokens: (tokens: number) => {
-    set(() => ({ usedTokens: tokens }));
   },
 
   currentCombo: null,
