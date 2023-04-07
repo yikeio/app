@@ -11,6 +11,7 @@ import { List, ListItem, Popover, showToast } from "./ui-lib";
 import { IconButton } from "./button";
 import { SubmitKey, useChatStore, Theme, useBillingStore } from "../store";
 import { Avatar } from "./chat";
+import { message } from "antd";
 
 import Locale, { AllLangs, changeLang, getLang } from "../locales";
 
@@ -55,8 +56,19 @@ export function Settings(props: { closeSettings: () => void }) {
     showToast("已登出");
   }
 
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const handleBuy = () => {
+    if (currentCombo) {
+      messageApi.info("您还有未用尽的套餐");
+      return;
+    }
+    setBillingModalVisible(true);
+  };
+
   return (
     <>
+      {contextHolder}
       <div className={styles["window-header"]}>
         <div className={styles["window-header-title"]}>
           <div className={styles["window-header-main-title"]}>
@@ -110,10 +122,7 @@ export function Settings(props: { closeSettings: () => void }) {
             subTitle={Locale.Settings.Combo.SubTitle(currentCombo?.expired_at)}
           >
             <div className={styles.combo}>
-              <button
-                className={styles.comboBtn}
-                onClick={() => setBillingModalVisible(true)}
-              >
+              <button className={styles.comboBtn} onClick={() => handleBuy()}>
                 购买套餐
               </button>
             </div>

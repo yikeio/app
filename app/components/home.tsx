@@ -17,7 +17,7 @@ import AddIcon from "../icons/add.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import CloseIcon from "../icons/close.svg";
 
-import { useChatStore } from "../store";
+import { useChatStore, useBillingStore } from "../store";
 import { isMobileScreen } from "../utils";
 import Locale from "../locales";
 import { ChatList } from "./chat-list";
@@ -78,6 +78,8 @@ function _Home() {
       state.removeSession,
     ],
   );
+  const [currentCombo] = useBillingStore((state) => [state.currentCombo]);
+
   const loading = !useHasHydrated();
   const [showSideBar, setShowSideBar] = useState(true);
 
@@ -89,6 +91,11 @@ function _Home() {
 
   if (loading) return <Loading />;
 
+  const handleCreateConversation = () => {
+    if (!currentCombo) return;
+    createConversation();
+    setShowSideBar(false);
+  };
   return (
     <div
       className={`${
@@ -150,8 +157,7 @@ function _Home() {
               icon={<AddIcon />}
               text={Locale.Home.NewChat}
               onClick={() => {
-                createConversation();
-                setShowSideBar(false);
+                handleCreateConversation();
               }}
               shadow
             />

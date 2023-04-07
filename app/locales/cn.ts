@@ -103,7 +103,7 @@ const cn = {
     Combo: {
       Title: "套餐",
       SubTitle(time: any) {
-        return `过期时间: ${parseTime(time)}`;
+        return time ? `过期时间: ${parseTime(time)}` : "暂无可用套餐";
       },
     },
     AccessCode: {

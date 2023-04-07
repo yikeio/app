@@ -1,5 +1,7 @@
 import { useDebouncedCallback } from "use-debounce";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { message } from "antd";
+
 import SendWhiteIcon from "../icons/send-white.svg";
 import ExportIcon from "../icons/export.svg";
 import MenuIcon from "../icons/menu.svg";
@@ -9,7 +11,14 @@ import LoadingIcon from "../icons/three-dots.svg";
 import BotIcon from "../icons/bot.svg";
 import { updateConversation } from "../api/conversations";
 
-import { Message, SubmitKey, useChatStore, BOT_HELLO, ROLES } from "../store";
+import {
+  Message,
+  SubmitKey,
+  useChatStore,
+  BOT_HELLO,
+  ROLES,
+  useBillingStore,
+} from "../store";
 
 import {
   copyToClipboard,
@@ -26,7 +35,6 @@ import Locale from "../locales";
 
 import { IconButton } from "./button";
 import styles from "./home.module.scss";
-import chatStyle from "./chat.module.scss";
 
 import { showModal } from "./ui-lib";
 
@@ -167,6 +175,9 @@ export function Chat(props: {
     state.currentSession(),
     state.currentSessionIndex,
   ]);
+
+  const [currentCombo] = useBillingStore((state) => [state.currentCombo]);
+
   const fontSize = useChatStore((state) => state.config.fontSize);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -230,8 +241,14 @@ export function Chat(props: {
     }
   };
 
+  const [messageApi, contextHolder] = message.useMessage();
+
   // submit user input
   const onUserSubmit = () => {
+    if (!currentCombo) {
+      messageApi.error("当前无可用套餐，请购买套餐!");
+      return;
+    }
     if (userInput.length <= 0) return;
     setIsLoading(true);
     chatStore.onUserInput(userInput).then(() => setIsLoading(false));
@@ -337,6 +354,7 @@ export function Chat(props: {
 
   return (
     <div className={styles.chat} key={session.id}>
+      {contextHolder}
       <div className={styles["window-header"]}>
         <div
           className={styles["window-header-title"]}

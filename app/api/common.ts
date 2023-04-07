@@ -1,4 +1,4 @@
-export const API_DOMAIN = "http://9.134.124.172";
+export const API_DOMAIN = "http://43.154.70.187";
 
 export function commonFetch(url: string, options: Record<string, any> = {}) {
   const token = localStorage.getItem("login_token");
