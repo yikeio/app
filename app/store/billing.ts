@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { getUserQuotas, getUserAvailableQuotas } from "../api/user";
+import { getPayableQuotas } from "../api/pay";
 
 interface BillingStore {
   // 套餐弹窗
@@ -7,10 +9,13 @@ interface BillingStore {
 
   // 当前套餐
   currentCombo: any;
-  setCurrentCombo: (combo: any) => void;
   // 所有购买过的套餐
   allCombos: any[];
-  setAllCombos: (combos: any[]) => void;
+  getUserQuotaInfo(userId: string): Promise<void>;
+
+  // 可购买的套餐
+  payableQuotas: any[];
+  getPayableQuotas: (type: string) => Promise<void>;
 }
 
 export const useBillingStore = create<BillingStore>()((set, get) => ({
@@ -20,12 +25,23 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
   },
 
   currentCombo: null,
-  setCurrentCombo: (combo: any) => {
-    set(() => ({ currentCombo: combo }));
+  allCombos: [],
+
+  async getUserQuotaInfo(userId: string) {
+    const [currentComboRes, allCombosRes] = await Promise.all([
+      getUserQuotas(userId),
+      getUserAvailableQuotas(userId),
+    ]);
+    console.log(currentComboRes, allCombosRes);
+    set(() => ({
+      currentCombo: currentComboRes.result,
+      allCombos: allCombosRes.result,
+    }));
   },
 
-  allCombos: [],
-  setAllCombos: (combos: any[]) => {
-    set(() => ({ allCombos: combos }));
+  payableQuotas: [],
+  async getPayableQuotas(type: string) {
+    const res = await getPayableQuotas(type);
+    set(() => ({ payableQuotas: res.result }));
   },
 }));

@@ -1,25 +1,33 @@
 /* eslint-disable @next/next/no-img-element */
 import * as React from "react";
 import { Modal } from "antd";
-import { useBillingStore } from "../store";
-import { getPayableQuotas, createPayment, getPayment } from "../api/pay";
+import { useBillingStore, useChatStore } from "../store";
+import { createPayment, getPayment } from "../api/pay";
 
 import styles from "./billing.module.scss";
 
 export function BillingDialog() {
-  const [billingModalVisible, setBillingModalVisible] = useBillingStore(
-    (state) => [state.billingModalVisible, state.setBillingModalVisible],
-  );
-  const [payableQuotas, setPayableQuotas] = React.useState<any>([]);
+  const [
+    billingModalVisible,
+    setBillingModalVisible,
+    getPayableQuotas,
+    payableQuotas,
+    getUserQuotaInfo,
+  ] = useBillingStore((state) => [
+    state.billingModalVisible,
+    state.setBillingModalVisible,
+    state.getPayableQuotas,
+    state.payableQuotas,
+    state.getUserQuotaInfo,
+  ]);
   const [payStatus, setPayStatus] = React.useState<number>(0); // 0：未创建订单，1:创建订单，暂时支付二维码 2：支付成功
   const [paymentDetail, setPaymentDetail] = React.useState<any>({});
+  const [user] = useChatStore((state) => [state.user]);
 
   React.useEffect(() => {
     if (billingModalVisible) {
       setPayStatus(0);
-      getPayableQuotas("chat").then((res) => {
-        setPayableQuotas(res.result);
-      });
+      getPayableQuotas("chat");
     }
   }, [billingModalVisible]);
 
@@ -32,6 +40,8 @@ export function BillingDialog() {
         if (res.result.state === "paid") {
           setPayStatus(2);
           clearInterval(timer);
+          // 购买成功后，刷新一下用户套餐信息
+          getUserQuotaInfo(user.id);
         }
       });
     }, 3000);

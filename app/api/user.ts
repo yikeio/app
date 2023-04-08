@@ -85,7 +85,7 @@ export async function sendVerificationCode({
  * @param param0
  * @returns
  */
-export async function getUserQuotas(userId: number) {
+export async function getUserQuotas(userId: string) {
   return commonFetch(`users/${userId}/quotas`);
 }
 
@@ -94,6 +94,6 @@ export async function getUserQuotas(userId: number) {
  * @param param0
  * @returns
  */
-export async function getUserAvailableQuotas(userId: number) {
+export async function getUserAvailableQuotas(userId: string) {
   return commonFetch(`users/${userId}/available-quotas`);
 }

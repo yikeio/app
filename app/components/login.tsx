@@ -7,8 +7,6 @@ import {
   loginUser,
   createUser,
   checkUser,
-  getUserQuotas,
-  getUserAvailableQuotas,
 } from "../api/user";
 import { useChatStore, useBillingStore } from "../store";
 
@@ -210,9 +208,8 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
 export function LoginDialog() {
   const { loginModalVisible, setLoginModalVisible } = useUserLogin();
   const [user] = useChatStore((state) => [state.user]);
-  const [setCurrentCombo, setAllCombos] = useBillingStore((state) => [
-    state.setCurrentCombo,
-    state.setAllCombos,
+  const [getUserQuotaInfo] = useBillingStore((state) => [
+    state.getUserQuotaInfo,
   ]);
 
   React.useEffect(() => {
@@ -221,14 +218,8 @@ export function LoginDialog() {
     }
 
     if (user.id && localStorage.getItem("login_token")) {
-      // 获取所有套餐
-      getUserQuotas(user.id).then((res) => {
-        setAllCombos(res.result);
-      });
-      // 获取套餐信息
-      getUserAvailableQuotas(user.id).then((res) => {
-        setCurrentCombo(res.result.chat);
-      });
+      // 获取用户的套餐信息
+      getUserQuotaInfo(user.id);
     }
   }, [user]);
 
