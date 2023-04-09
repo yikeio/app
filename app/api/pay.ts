@@ -5,7 +5,7 @@ import { commonFetch } from "./common";
  * @returns
  */
 export async function getPayableQuotas(type: string) {
-  return commonFetch(`payable-quotas?quota_type=${type}`);
+  return commonFetch(`pricings?quota_type=${type}`);
 }
 
 /**
