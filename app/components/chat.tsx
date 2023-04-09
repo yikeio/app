@@ -457,7 +457,17 @@ export function Chat(props: {
                   !isUser ? (
                     <LoadingIcon />
                   ) : (
-                    <LoadingIcon />
+                    <div
+                      className="markdown-body"
+                      style={{ fontSize: `${fontSize}px` }}
+                      onContextMenu={(e) => onRightClick(e, message)}
+                      onDoubleClickCapture={() => {
+                        if (!isMobileScreen()) return;
+                        setUserInput(message.content);
+                      }}
+                    >
+                      <Markdown content={message.content} />
+                    </div>
                   )}
                 </div>
                 {!isUser && !message.preview && (
