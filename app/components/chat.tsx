@@ -7,7 +7,7 @@ import ExportIcon from "../icons/export.svg";
 import MenuIcon from "../icons/menu.svg";
 import CopyIcon from "../icons/copy.svg";
 import DownloadIcon from "../icons/download.svg";
-import LoadingIcon from "../icons/three-dots.svg";
+import LoadingIcon from "../icons/loading.svg";
 import BotIcon from "../icons/bot.svg";
 import { updateConversation } from "../api/conversations";
 
@@ -457,17 +457,7 @@ export function Chat(props: {
                   !isUser ? (
                     <LoadingIcon />
                   ) : (
-                    <div
-                      className="markdown-body"
-                      style={{ fontSize: `${fontSize}px` }}
-                      onContextMenu={(e) => onRightClick(e, message)}
-                      onDoubleClickCapture={() => {
-                        if (!isMobileScreen()) return;
-                        setUserInput(message.content);
-                      }}
-                    >
-                      <Markdown content={message.content} />
-                    </div>
+                    <LoadingIcon />
                   )}
                 </div>
                 {!isUser && !message.preview && (

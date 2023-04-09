@@ -14,7 +14,7 @@ import ChatGptIcon from "../icons/chatgpt.svg";
 
 import BotIcon from "../icons/bot.svg";
 import AddIcon from "../icons/add.svg";
-import LoadingIcon from "../icons/three-dots.svg";
+import LoadingIcon from "../icons/loading.svg";
 import CloseIcon from "../icons/close.svg";
 
 import { useChatStore, useBillingStore } from "../store";

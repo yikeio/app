@@ -1,5 +1,5 @@
 import styles from "./ui-lib.module.scss";
-import LoadingIcon from "../icons/three-dots.svg";
+import LoadingIcon from "../icons/loading.svg";
 import CloseIcon from "../icons/close.svg";
 import { createRoot } from "react-dom/client";
 
