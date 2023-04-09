@@ -1,4 +1,3 @@
-import { showToast } from "./components/ui-lib";
 import { API_DOMAIN } from "./api/common";
 import { createMessage } from "./api/conversations";
 
@@ -19,6 +18,7 @@ export async function requestChatStream(
   const controller = new AbortController();
   const reqTimeoutId = setTimeout(() => controller.abort(), TIME_OUT_MS);
 
+  // TODO: 替换统一的接口
   try {
     await createMessage(options.conversationId, content);
     const res = await fetch(
