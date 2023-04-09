@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import * as React from "react";
-import { Modal } from "antd";
+import { Modal, Spin } from "antd";
 import { useBillingStore, useChatStore } from "../store";
-import { createPayment, getPayment } from "../api/pay";
+import { createPayment, getPayment, getListUserPayment } from "../api/pay";
 
 import styles from "./billing.module.scss";
 
@@ -21,6 +21,7 @@ export function BillingDialog() {
     state.getUserQuotaInfo,
   ]);
   const [payStatus, setPayStatus] = React.useState<number>(0); // 0：未创建订单，1:创建订单，暂时支付二维码 2：支付成功
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [paymentDetail, setPaymentDetail] = React.useState<any>({});
   const [user] = useChatStore((state) => [state.user]);
 
@@ -52,14 +53,21 @@ export function BillingDialog() {
    * @param item
    */
   const handlePay = async (item: any) => {
-    const res = await createPayment({
-      quota_type: item.quota_type,
-      pricing: item.pricing,
-    });
-    setPaymentDetail(res.result);
-    setPayStatus(1);
-    loopQueryPayment(res.result.id);
+    try {
+      setIsLoading(true);
+      const res = await createPayment({
+        quota_type: item.quota_type,
+        pricing: item.pricing,
+      });
+      setPaymentDetail(res.result);
+      setPayStatus(1);
+      loopQueryPayment(res.result.id);
+    } catch (e) {
+      setIsLoading(false);
+    }
   };
+
+  // TODO: 获取用户未付款的订单先展示，否则后续流程走不通
 
   const modalTitle = React.useMemo(() => {
     return {
@@ -77,27 +85,29 @@ export function BillingDialog() {
       onCancel={() => setBillingModalVisible(false)}
     >
       {payStatus === 0 && (
-        <div className={styles["billing-modal"]}>
-          {payableQuotas.map((item: any, index: number) => (
-            <div key={index} className={styles["billing-card"]}>
-              <div className={styles["billing-card-title"]}>{item.title}</div>
-              <div className={styles["billing-card-price"]}>{item.price}</div>
-              <div className={styles["billing-card-token"]}>
-                {String(item.tokens_count).replace(
-                  /\B(?=(\d{3})+(?!\d))/g,
-                  ",",
-                )}
-                (token)
+        <Spin spinning={isLoading}>
+          <div className={styles["billing-modal"]}>
+            {payableQuotas.map((item: any, index: number) => (
+              <div key={index} className={styles["billing-card"]}>
+                <div className={styles["billing-card-title"]}>{item.title}</div>
+                <div className={styles["billing-card-price"]}>{item.price}</div>
+                <div className={styles["billing-card-token"]}>
+                  {String(item.tokens_count).replace(
+                    /\B(?=(\d{3})+(?!\d))/g,
+                    ",",
+                  )}
+                  (token)
+                </div>
+                <button
+                  className={styles["billing-card-btn"]}
+                  onClick={() => handlePay(item)}
+                >
+                  购买
+                </button>
               </div>
-              <button
-                className={styles["billing-card-btn"]}
-                onClick={() => handlePay(item)}
-              >
-                购买
-              </button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </Spin>
       )}
       {payStatus == 2 && (
         <svg
