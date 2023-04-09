@@ -2,7 +2,8 @@
 import * as React from "react";
 import { Modal, Spin } from "antd";
 import { useBillingStore, useChatStore } from "../store";
-import { createPayment, getPayment, getListUserPayment } from "../api/pay";
+import { createPayment, getPayment } from "../api/pay";
+import { getListUserPayment } from "../api/user";
 
 import styles from "./billing.module.scss";
 
@@ -29,6 +30,7 @@ export function BillingDialog() {
     if (billingModalVisible) {
       setPayStatus(0);
       getPayableQuotas("chat");
+      getListUserPaymentList();
     }
   }, [billingModalVisible]);
 
@@ -67,7 +69,19 @@ export function BillingDialog() {
     }
   };
 
-  // TODO: 获取用户未付款的订单先展示，否则后续流程走不通
+  // 获取用户未付款的订单先展示
+  const getListUserPaymentList = async () => {
+    const res = await getListUserPayment(user.id);
+    const recentPayment = res.result.filter(
+      (item: Record<string, string>) => item.state === "pending",
+    )[0];
+
+    if (recentPayment) {
+      setPaymentDetail(recentPayment);
+      setPayStatus(1);
+      loopQueryPayment(recentPayment.id);
+    }
+  };
 
   const modalTitle = React.useMemo(() => {
     return {

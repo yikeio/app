@@ -97,3 +97,10 @@ export async function getUserQuotas(userId: string) {
 export async function getUserAvailableQuotas(userId: string) {
   return commonFetch(`users/${userId}/available-quotas`);
 }
+
+/**
+ * 获取用户支付订单列表（包括未支付订单）
+ */
+export async function getListUserPayment(id: any) {
+  return commonFetch(`users/${id}/payments`);
+}

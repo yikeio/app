@@ -24,10 +24,3 @@ export async function createPayment(data: any) {
 export async function getPayment(id: any) {
   return commonFetch(`payments/${id}`);
 }
-
-/**
- * 获取用户支付订单列表（包括未支付订单）
- */
-export async function getListUserPayment(id: any) {
-  return commonFetch(`users/${id}/payments`);
-}

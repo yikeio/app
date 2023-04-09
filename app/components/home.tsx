@@ -87,15 +87,23 @@ function _Home() {
   const [openSettings, setOpenSettings] = useState(false);
   const [user, config] = useChatStore((state) => [state.user, state.config]);
 
-  useSwitchTheme();
+  // 退出登陆的时候关掉设置页
+  useEffect(() => {
+    if (!user.id && !localStorage.getItem("login_token")) {
+      setOpenSettings(false);
+    }
+  }, [user]);
 
-  if (loading) return <Loading />;
+  useSwitchTheme();
 
   const handleCreateConversation = () => {
     if (!currentCombo) return;
     createConversation();
     setShowSideBar(false);
   };
+
+  if (loading) return <Loading />;
+
   return (
     <div
       className={`${
