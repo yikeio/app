@@ -118,6 +118,9 @@ interface ChatStore {
   clearAllData: () => void;
 }
 
+// 记录会话缓存
+const cacheSet = new Set();
+
 export const useChatStore = create<ChatStore>()((set, get) => ({
   user: {},
   sessions: [createEmptySession()],
@@ -181,6 +184,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
   async getConversationHistory(conversationId) {
     const res = await getConversationMessageList(conversationId);
+    cacheSet.add(conversationId);
 
     const historyList = res.result.map((item: any) => {
       return {
@@ -215,6 +219,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     set({ currentSessionIndex: index });
 
     const conversationId = String(get().currentSession().id);
+
+    // 判断缓存是否获取过
+    if (cacheSet.has(conversationId)) return;
 
     // 获取历史消息
     const messageList = await get().getConversationHistory(conversationId);
