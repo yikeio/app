@@ -95,7 +95,7 @@ const cn = {
     Usage: {
       Title: "账户剩余 token 数",
       SubTitle(used: any) {
-        return `本月已使用 ${used}`;
+        return `累计已使用 ${used}`;
       },
       IsChecking: "正在检查…",
       Check: "重新检查",

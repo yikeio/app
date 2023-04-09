@@ -16,6 +16,9 @@ interface BillingStore {
   // 可购买的套餐
   payableQuotas: any[];
   getPayableQuotas: (type: string) => Promise<void>;
+
+  // 当前已用多少token
+  totalUsage: () => number;
 }
 
 export const useBillingStore = create<BillingStore>()((set, get) => ({
@@ -42,5 +45,12 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
   async getPayableQuotas(type: string) {
     const res = await getPayableQuotas(type);
     set(() => ({ payableQuotas: res.result }));
+  },
+
+  totalUsage() {
+    return get().allCombos.reduce(
+      (acc, cur) => acc + cur.usage.used_tokens_count,
+      0,
+    );
   },
 }));

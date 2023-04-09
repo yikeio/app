@@ -41,10 +41,10 @@ export function Settings(props: { closeSettings: () => void }) {
     state.updateUser,
   ]);
 
-  const [currentCombo, allCombos, setBillingModalVisible] = useBillingStore(
+  const [currentCombo, totalUsage, setBillingModalVisible] = useBillingStore(
     (state) => [
       state.currentCombo,
-      state.allCombos,
+      state.totalUsage(),
       state.setBillingModalVisible,
     ],
   );
@@ -56,10 +56,10 @@ export function Settings(props: { closeSettings: () => void }) {
   }
 
   const handleBuy = () => {
-    // if (currentCombo) {
-    //   showToast("您还有未用尽的套餐");
-    //   return;
-    // }
+    if (currentCombo) {
+      showToast("您还有未用尽的套餐");
+      return;
+    }
     setBillingModalVisible(true);
   };
 
@@ -106,9 +106,7 @@ export function Settings(props: { closeSettings: () => void }) {
 
           <SettingItem
             title={Locale.Settings.Usage.Title}
-            subTitle={Locale.Settings.Usage.SubTitle(
-              currentCombo?.usage?.used_tokens_count || 0,
-            )}
+            subTitle={Locale.Settings.Usage.SubTitle(totalUsage || 0)}
           >
             <span>{currentCombo?.usage?.available_tokens_count || 0}</span>
           </SettingItem>
