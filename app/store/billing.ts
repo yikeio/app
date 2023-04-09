@@ -29,12 +29,11 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
 
   async getUserQuotaInfo(userId: string) {
     const [currentComboRes, allCombosRes] = await Promise.all([
-      getUserQuotas(userId),
       getUserAvailableQuotas(userId),
+      getUserQuotas(userId),
     ]);
-    console.log(currentComboRes, allCombosRes);
     set(() => ({
-      currentCombo: currentComboRes.result,
+      currentCombo: currentComboRes.result.chat,
       allCombos: allCombosRes.result,
     }));
   },
