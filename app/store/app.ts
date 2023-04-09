@@ -81,7 +81,7 @@ function createEmptySession(): ChatSession {
   const createDate = new Date().toLocaleString();
 
   return {
-    id: Date.now() + "",
+    id: "-1",
     title: DEFAULT_TOPIC,
     memoryPrompt: "",
     context: [],
@@ -90,6 +90,12 @@ function createEmptySession(): ChatSession {
   };
 }
 
+type Pager = {
+  currentPage: number;
+  lastPage: number;
+  pageSize: number;
+};
+
 interface ChatStore {
   user: Record<string, any>;
   config: ChatConfig;
@@ -97,7 +103,14 @@ interface ChatStore {
   currentSessionIndex: number;
   getConversationList: (userId: string) => Promise<void>;
   createConversation: () => Promise<ChatSession>;
-  getConversationHistory: (conversationId: string) => Promise<Message[]>;
+  getConversationHistory: (
+    conversationId: string,
+    params?: { page: number; pageSize?: number },
+  ) => Promise<Message[]>;
+  // 对话分页
+  conversationPager: Pager;
+  // 对话历史分页
+  messageHistoryPagerMap: Map<string, Pager>;
 
   clearSessions: () => void;
   removeSession: (index: number) => void;
@@ -136,6 +149,14 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   async getConversationList(userId: string) {
     const conversationRes = await getConversationList(userId);
     console.log("conversationRes", conversationRes);
+    // update pager
+    set(() => ({
+      conversationPager: {
+        currentPage: conversationRes.result.current_page,
+        pageSize: conversationRes.result.per_page,
+        lastPage: conversationRes.result.last_page,
+      },
+    }));
 
     const list: ChatSession[] = conversationRes.result.data;
 
@@ -164,6 +185,8 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       get().updateCurrentSession((session) => (session.messages = messageList));
     }
   },
+  conversationPager: { currentPage: 1, pageSize: 15, lastPage: 1 },
+  messageHistoryPagerMap: new Map(),
 
   // 创建新的对话
   async createConversation() {
@@ -183,10 +206,19 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     return conversation;
   },
 
-  async getConversationHistory(conversationId) {
-    const conversationRes = await getConversationMessageList(conversationId);
+  async getConversationHistory(conversationId, params) {
+    const messageRes = await getConversationMessageList(conversationId, params);
+    console.log("messageRes", messageRes);
+    // update pager
+    set(() => ({
+      messageHistoryPagerMap: get().messageHistoryPagerMap.set(conversationId, {
+        currentPage: messageRes.result.current_page,
+        pageSize: messageRes.result.per_page,
+        lastPage: messageRes.result.last_page,
+      }),
+    }));
 
-    const list: ChatSession[] = conversationRes.result.data;
+    const list: ChatSession[] = messageRes.result.data.reverse();
     cacheSet.add(conversationId);
 
     const historyList = list.map((item: any) => {

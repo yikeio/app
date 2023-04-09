@@ -4,8 +4,14 @@ import { commonFetch } from "./common";
  * 获取会话列表
  * @returns
  */
-export async function getConversationList(user: string) {
-  return commonFetch(`users/${user}/conversations`);
+export async function getConversationList(
+  user: string,
+  options?: { page?: number; pageSize?: number; sorts?: string },
+) {
+  const { page = 1, pageSize = 15, sorts = "last_active_at" } = options || {};
+  return commonFetch(
+    `users/${user}/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`,
+  );
 }
 
 /**
@@ -68,6 +74,12 @@ export async function createSmartMessage(conversation: string) {
  * 获取单个会话的消息列表
  * @returns
  */
-export async function getConversationMessageList(conversation: string) {
-  return commonFetch(`conversations/${conversation}/messages`);
+export async function getConversationMessageList(
+  conversation: string,
+  options?: { page?: number; pageSize?: number; sorts?: string },
+) {
+  const { page = 1, pageSize = 15, sorts = "id:desc" } = options || {};
+  return commonFetch(
+    `conversations/${conversation}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`,
+  );
 }

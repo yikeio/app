@@ -102,6 +102,11 @@ function _Home() {
     setShowSideBar(false);
   };
 
+  // TODO: 懒加载
+  const handleSideBarScroll = () => {
+    console.log("懒加载");
+  };
+
   if (loading) return <Loading />;
 
   return (
@@ -133,6 +138,7 @@ function _Home() {
             setOpenSettings(false);
             setShowSideBar(false);
           }}
+          onScroll={handleSideBarScroll}
         >
           <ChatList />
         </div>

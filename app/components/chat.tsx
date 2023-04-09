@@ -9,7 +9,10 @@ import CopyIcon from "../icons/copy.svg";
 import DownloadIcon from "../icons/download.svg";
 import LoadingIcon from "../icons/loading.svg";
 import BotIcon from "../icons/bot.svg";
-import { updateConversation } from "../api/conversations";
+import {
+  updateConversation,
+  getConversationMessageList,
+} from "../api/conversations";
 
 import {
   Message,
@@ -185,12 +188,25 @@ export function Chat(props: {
   const [isLoading, setIsLoading] = useState(false);
   const { submitKey, shouldSubmit } = useSubmitHandler();
   const { scrollRef, setAutoScroll } = useScrollToBottom();
-  const [hitBottom, setHitBottom] = useState(false);
 
-  const onChatBodyScroll = (e: HTMLElement) => {
+  const onChatBodyScroll = async (e: HTMLElement) => {
+    const { sessions, currentSessionIndex, messageHistoryPagerMap } = chatStore;
+    const { id: currentSessionId } = sessions[currentSessionIndex];
+    const pager = messageHistoryPagerMap.get(currentSessionId);
+
     // TODO: 懒加载
-    const isTouchBottom = e.scrollTop + e.clientHeight >= e.scrollHeight - 20;
-    setHitBottom(isTouchBottom);
+    if (e.scrollTop <= 0) {
+      if (currentSessionId === "-1" || !pager) return;
+      if (pager?.currentPage < pager?.lastPage) {
+        const params = {
+          page: pager.currentPage + 1,
+          pageSize: pager.pageSize,
+        };
+
+        const res = await getConversationMessageList(currentSessionId, params);
+        console.log("res", res);
+      }
+    }
   };
 
   // prompt hints
@@ -400,7 +416,6 @@ export function Chat(props: {
         className={styles["chat-body"]}
         ref={scrollRef}
         onScroll={(e) => onChatBodyScroll(e.currentTarget)}
-        onWheel={(e) => setAutoScroll(hitBottom && e.deltaY > 0)}
         onTouchStart={() => {
           inputRef.current?.blur();
           setAutoScroll(false);
