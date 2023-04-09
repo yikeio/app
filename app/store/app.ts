@@ -134,9 +134,10 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
 
   async getConversationList(userId: string) {
-    const res = await getConversationList(userId);
+    const conversationRes = await getConversationList(userId);
+    console.log("conversationRes", conversationRes);
 
-    const list: ChatSession[] = res.result;
+    const list: ChatSession[] = conversationRes.result.data;
 
     if (list.length === 0) {
       const conversation = await get().createConversation();
@@ -183,10 +184,12 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
 
   async getConversationHistory(conversationId) {
-    const res = await getConversationMessageList(conversationId);
+    const conversationRes = await getConversationMessageList(conversationId);
+
+    const list: ChatSession[] = conversationRes.result.data;
     cacheSet.add(conversationId);
 
-    const historyList = res.result.map((item: any) => {
+    const historyList = list.map((item: any) => {
       return {
         role: item.role,
         content: item.content,
