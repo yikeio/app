@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+  output: "export",
   experimental: {
     appDir: true,
   },
@@ -11,11 +12,11 @@ const nextConfig = {
     }); // 针对 SVG 的处理规则
 
     return config;
-  }
+  },
 };
 
-if (process.env.DOCKER) {
-  nextConfig.output = 'standalone'
-}
+// if (process.env.DOCKER) {
+//   nextConfig.output = "standalone";
+// }
 
 module.exports = nextConfig;
