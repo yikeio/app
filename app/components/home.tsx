@@ -22,6 +22,7 @@ import { isMobileScreen } from "../utils";
 import Locale from "../locales";
 import { ChatList } from "./chat-list";
 import { Chat } from "./chat";
+import { showToast } from "./ui-lib";
 
 import dynamic from "next/dynamic";
 import { ErrorBoundary } from "./error";
@@ -106,7 +107,10 @@ function _Home() {
   useSwitchTheme();
 
   const handleCreateConversation = () => {
-    if (!currentCombo) return;
+    if (!currentCombo) {
+      showToast("当前无可用套餐，请购买套餐!");
+      return;
+    }
     createConversation();
     setShowSideBar(false);
   };
