@@ -4,7 +4,7 @@
   "private": false,
   "license": "Anti 996",
   "scripts": {
-    "dev": "pnpm fetch && next dev",
+    "dev": "next dev",
     "build": "pnpm fetch && next build",
     "start": "next start",
     "lint": "next lint",

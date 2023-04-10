@@ -115,11 +115,15 @@ export function Settings(props: { closeSettings: () => void }) {
             title={Locale.Settings.Combo.Title}
             subTitle={Locale.Settings.Combo.SubTitle(currentCombo?.expired_at)}
           >
-            <div className={styles.combo}>
-              <button className={styles.comboBtn} onClick={() => handleBuy()}>
-                购买套餐
-              </button>
-            </div>
+            {!currentCombo ? (
+              <div className={styles.combo}>
+                <button className={styles.comboBtn} onClick={() => handleBuy()}>
+                  购买套餐
+                </button>
+              </div>
+            ) : (
+              <></>
+            )}
           </SettingItem>
 
           <SettingItem title={Locale.Settings.Avatar}>
@@ -197,6 +201,28 @@ export function Settings(props: { closeSettings: () => void }) {
                 </option>
               ))}
             </select>
+          </SettingItem>
+
+          <SettingItem
+            title={Locale.Settings.HistoryCount.Title}
+            subTitle={Locale.Settings.HistoryCount.SubTitle}
+          >
+            <input
+              type="range"
+              title={`${config.historyMessageCount}px`}
+              value={config.historyMessageCount}
+              min="0"
+              max="10"
+              step="1"
+              onChange={(e) =>
+                updateConfig(
+                  (config) =>
+                    (config.historyMessageCount = Number.parseInt(
+                      e.currentTarget.value,
+                    )),
+                )
+              }
+            ></input>
           </SettingItem>
 
           <SettingItem

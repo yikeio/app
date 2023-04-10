@@ -48,7 +48,7 @@ export interface ChatConfig {
 export const ROLES: Message["role"][] = ["system", "user", "assistant"];
 
 const DEFAULT_CONFIG: ChatConfig = {
-  historyMessageCount: 4,
+  historyMessageCount: 3,
   compressMessageLengthThreshold: 1000,
   sendBotMessages: true as boolean,
   submitKey: SubmitKey.Enter as SubmitKey,
