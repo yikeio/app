@@ -11,7 +11,6 @@ import { List, ListItem, Popover, showToast } from "./ui-lib";
 import { IconButton } from "./button";
 import { SubmitKey, useChatStore, Theme, useBillingStore } from "../store";
 import { Avatar } from "./chat";
-import { message } from "antd";
 
 import Locale, { AllLangs, changeLang, getLang } from "../locales";
 
@@ -42,10 +41,10 @@ export function Settings(props: { closeSettings: () => void }) {
     state.updateUser,
   ]);
 
-  const [currentCombo, allCombos, setBillingModalVisible] = useBillingStore(
+  const [currentCombo, totalUsage, setBillingModalVisible] = useBillingStore(
     (state) => [
       state.currentCombo,
-      state.allCombos,
+      state.totalUsage(),
       state.setBillingModalVisible,
     ],
   );
@@ -56,11 +55,9 @@ export function Settings(props: { closeSettings: () => void }) {
     showToast("已登出");
   }
 
-  const [messageApi, contextHolder] = message.useMessage();
-
   const handleBuy = () => {
     if (currentCombo) {
-      messageApi.info("您还有未用尽的套餐");
+      showToast("您还有未用尽的套餐");
       return;
     }
     setBillingModalVisible(true);
@@ -68,7 +65,6 @@ export function Settings(props: { closeSettings: () => void }) {
 
   return (
     <>
-      {contextHolder}
       <div className={styles["window-header"]}>
         <div className={styles["window-header-title"]}>
           <div className={styles["window-header-main-title"]}>
@@ -110,9 +106,7 @@ export function Settings(props: { closeSettings: () => void }) {
 
           <SettingItem
             title={Locale.Settings.Usage.Title}
-            subTitle={Locale.Settings.Usage.SubTitle(
-              currentCombo?.usage?.used_tokens_count || 0,
-            )}
+            subTitle={Locale.Settings.Usage.SubTitle(totalUsage || 0)}
           >
             <span>{currentCombo?.usage?.available_tokens_count || 0}</span>
           </SettingItem>

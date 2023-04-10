@@ -78,7 +78,10 @@ function _Home() {
       state.removeSession,
     ],
   );
-  const [currentCombo] = useBillingStore((state) => [state.currentCombo]);
+  const [currentCombo, getUserQuotaInfo] = useBillingStore((state) => [
+    state.currentCombo,
+    state.getUserQuotaInfo,
+  ]);
 
   const loading = !useHasHydrated();
   const [showSideBar, setShowSideBar] = useState(true);
@@ -93,6 +96,12 @@ function _Home() {
       setOpenSettings(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (openSettings) {
+      getUserQuotaInfo(user.id);
+    }
+  }, [openSettings]);
 
   useSwitchTheme();
 

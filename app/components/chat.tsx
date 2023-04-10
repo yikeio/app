@@ -1,6 +1,5 @@
 import { useDebouncedCallback } from "use-debounce";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
-import { message } from "antd";
 
 import SendWhiteIcon from "../icons/send-white.svg";
 import ExportIcon from "../icons/export.svg";
@@ -13,13 +12,13 @@ import {
   updateConversation,
   getConversationMessageList,
 } from "../api/conversations";
+import { showToast } from "./ui-lib";
 
 import {
   Message,
   SubmitKey,
   useChatStore,
   BOT_HELLO,
-  ROLES,
   useBillingStore,
 } from "../store";
 
@@ -258,12 +257,10 @@ export function Chat(props: {
     }
   };
 
-  const [messageApi, contextHolder] = message.useMessage();
-
   // submit user input
   const onUserSubmit = () => {
     if (!currentCombo) {
-      messageApi.error("当前无可用套餐，请购买套餐!");
+      showToast("当前无可用套餐，请购买套餐!");
       return;
     }
     if (userInput.length <= 0) return;
@@ -371,7 +368,6 @@ export function Chat(props: {
 
   return (
     <div className={styles.chat} key={session.id}>
-      {contextHolder}
       <div className={styles["window-header"]}>
         <div
           className={styles["window-header-title"]}
