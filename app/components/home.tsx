@@ -2,11 +2,12 @@
 
 require("../polyfill");
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { IconButton } from "./button";
 import { BillingDialog } from "./billing";
 import { LoginDialog } from "./login";
+import { Spin } from "antd";
 import styles from "./home.module.scss";
 
 import SettingsIcon from "../icons/settings.svg";
@@ -17,12 +18,13 @@ import AddIcon from "../icons/add.svg";
 import LoadingIcon from "../icons/loading.svg";
 import CloseIcon from "../icons/close.svg";
 
-import { useChatStore, useBillingStore } from "../store";
+import { useChatStore, useBillingStore, ChatSession } from "../store";
 import { isMobileScreen } from "../utils";
 import Locale from "../locales";
 import { ChatList } from "./chat-list";
 import { Chat } from "./chat";
 import { showToast } from "./ui-lib";
+import { getConversationList } from "../api/conversations";
 
 import dynamic from "next/dynamic";
 import { ErrorBoundary } from "./error";
@@ -72,13 +74,23 @@ const useHasHydrated = () => {
 };
 
 function _Home() {
-  const [createConversation, currentIndex, removeSession] = useChatStore(
-    (state) => [
-      state.createConversation,
-      state.currentSessionIndex,
-      state.removeSession,
-    ],
-  );
+  const [
+    user,
+    config,
+    sessions,
+    currentIndex,
+    createConversation,
+    removeSession,
+    conversationPager,
+  ] = useChatStore((state) => [
+    state.user,
+    state.config,
+    state.sessions,
+    state.currentSessionIndex,
+    state.createConversation,
+    state.removeSession,
+    state.conversationPager,
+  ]);
   const [currentCombo, getUserQuotaInfo] = useBillingStore((state) => [
     state.currentCombo,
     state.getUserQuotaInfo,
@@ -86,10 +98,11 @@ function _Home() {
 
   const loading = !useHasHydrated();
   const [showSideBar, setShowSideBar] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const chatListRef = useRef<HTMLDivElement>(null);
 
   // setting
   const [openSettings, setOpenSettings] = useState(false);
-  const [user, config] = useChatStore((state) => [state.user, state.config]);
 
   // 退出登陆的时候关掉设置页
   useEffect(() => {
@@ -115,9 +128,48 @@ function _Home() {
     setShowSideBar(false);
   };
 
-  // TODO: 懒加载
-  const handleSideBarScroll = () => {
-    console.log("懒加载");
+  const handleSideBarScroll = async () => {
+    if (!chatListRef.current || !conversationPager) return;
+
+    const { scrollTop, clientHeight, scrollHeight } = chatListRef.current;
+    if (scrollHeight - clientHeight >= scrollTop) {
+      if (conversationPager.currentPage < conversationPager.lastPage) {
+        try {
+          setIsLoadingMore(true);
+          const params = {
+            page: conversationPager.currentPage + 1,
+            pageSize: conversationPager.pageSize,
+          };
+          const conversationRes = await getConversationList(user.id, params);
+          const list: ChatSession[] = conversationRes.result.data;
+          const newList: ChatSession[] = [
+            ...sessions,
+            ...list.map((conversation) => {
+              conversation.context = [];
+              conversation.messages = [];
+              conversation.updated_at = new Date(
+                conversation.updated_at,
+              ).toLocaleString();
+              return conversation;
+            }),
+          ];
+
+          // update pager
+          useChatStore.setState({
+            sessions: newList,
+            conversationPager: {
+              currentPage: conversationRes.result.current_page,
+              pageSize: conversationRes.result.per_page,
+              lastPage: conversationRes.result.last_page,
+            },
+          });
+
+          setIsLoadingMore(false);
+        } catch (e) {
+          setIsLoadingMore(false);
+        }
+      }
+    }
   };
 
   if (loading) return <Loading />;
@@ -146,6 +198,7 @@ function _Home() {
         </div>
 
         <div
+          ref={chatListRef}
           className={styles["sidebar-body"]}
           onClick={() => {
             setOpenSettings(false);
@@ -154,6 +207,7 @@ function _Home() {
           onScroll={handleSideBarScroll}
         >
           <ChatList />
+          <Spin spinning={isLoadingMore} />
         </div>
 
         <div className={styles["sidebar-tail"]}>

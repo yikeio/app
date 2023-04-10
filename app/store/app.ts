@@ -51,7 +51,7 @@ const DEFAULT_CONFIG: ChatConfig = {
   historyMessageCount: 4,
   compressMessageLengthThreshold: 1000,
   sendBotMessages: true as boolean,
-  submitKey: SubmitKey.CtrlEnter as SubmitKey,
+  submitKey: SubmitKey.Enter as SubmitKey,
   avatar: "1f603",
   fontSize: 14,
   theme: Theme.Auto as Theme,
@@ -101,7 +101,10 @@ interface ChatStore {
   config: ChatConfig;
   sessions: ChatSession[];
   currentSessionIndex: number;
-  getConversationList: (userId: string) => Promise<void>;
+  getConversationList: (
+    userId: string,
+    params?: { page: number; pageSize?: number },
+  ) => Promise<void>;
   createConversation: () => Promise<ChatSession>;
   getConversationHistory: (
     conversationId: string,
@@ -146,9 +149,8 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     set(() => ({ user }));
   },
 
-  async getConversationList(userId: string) {
-    const conversationRes = await getConversationList(userId);
-    console.log("conversationRes", conversationRes);
+  async getConversationList(userId: string, params) {
+    const conversationRes = await getConversationList(userId, params);
     // update pager
     set(() => ({
       conversationPager: {
@@ -208,7 +210,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
   async getConversationHistory(conversationId, params) {
     const messageRes = await getConversationMessageList(conversationId, params);
-    console.log("messageRes", messageRes);
     // update pager
     set(() => ({
       messageHistoryPagerMap: get().messageHistoryPagerMap.set(conversationId, {

@@ -1,5 +1,6 @@
 import { useDebouncedCallback } from "use-debounce";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { Spin } from "antd";
 
 import SendWhiteIcon from "../icons/send-white.svg";
 import ExportIcon from "../icons/export.svg";
@@ -185,16 +186,23 @@ export function Chat(props: {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMessage, setIsLoadingMessage] = useState(false);
   const { submitKey, shouldSubmit } = useSubmitHandler();
   const { scrollRef, setAutoScroll } = useScrollToBottom();
 
-  const onChatBodyScroll = async (e: HTMLElement) => {
-    const { sessions, currentSessionIndex, messageHistoryPagerMap } = chatStore;
-    const { id: currentSessionId } = sessions[currentSessionIndex];
-    const pager = messageHistoryPagerMap.get(currentSessionId);
+  const {
+    sessions,
+    currentSessionIndex,
+    messageHistoryPagerMap,
+    getConversationHistory,
+    updateCurrentSession,
+  } = chatStore;
+  const { id: currentSessionId } = sessions[currentSessionIndex];
+  const pager = messageHistoryPagerMap.get(currentSessionId);
 
-    // TODO: 懒加载
+  const onChatBodyScroll = async (e: HTMLElement) => {
     if (e.scrollTop <= 0) {
+      setAutoScroll(false);
       if (currentSessionId === "-1" || !pager) return;
       if (pager?.currentPage < pager?.lastPage) {
         const params = {
@@ -202,8 +210,20 @@ export function Chat(props: {
           pageSize: pager.pageSize,
         };
 
-        const res = await getConversationMessageList(currentSessionId, params);
-        console.log("res", res);
+        try {
+          setIsLoadingMessage(true);
+          const prevMessages = await getConversationHistory(
+            currentSessionId,
+            params,
+          );
+          updateCurrentSession((session) => {
+            session.messages = [...prevMessages, ...session.messages];
+          });
+          scrollRef.current?.scrollTo({ top: 2250 });
+          setIsLoadingMessage(false);
+        } catch (e) {
+          setIsLoadingMessage(false);
+        }
       }
     }
   };
@@ -316,7 +336,8 @@ export function Chat(props: {
 
   if (
     context.length === 0 &&
-    session.messages.at(0)?.content !== BOT_HELLO.content
+    session.messages.at(0)?.content !== BOT_HELLO.content &&
+    pager?.currentPage === pager?.lastPage
   ) {
     context.push(BOT_HELLO);
   }
@@ -417,6 +438,7 @@ export function Chat(props: {
           setAutoScroll(false);
         }}
       >
+        {isLoadingMessage && <Spin style={{ display: "block" }} />}
         {messages.map((message, i) => {
           const isUser = message.role === "user";
 
