@@ -9,6 +9,7 @@ import CopyIcon from "../icons/copy.svg";
 import DownloadIcon from "../icons/download.svg";
 import LoadingIcon from "../icons/loading.svg";
 import BotIcon from "../icons/bot.svg";
+import RenameIcon from "../icons/rename.svg";
 import {
   updateConversation,
   getConversationMessageList,
@@ -396,9 +397,14 @@ export function Chat(props: {
         >
           <div
             className={`${styles["window-header-main-title"]} ${styles["chat-body-title"]}`}
-            onClick={handleUpdate}
           >
             {session.title}
+            <IconButton
+              icon={<RenameIcon />}
+              className={styles["chat-rename"]}
+              title={Locale.Chat.Rename}
+              onClick={handleUpdate}
+            />
           </div>
           <div className={styles["window-header-sub-title"]}>
             {Locale.Chat.SubTitle(session.messages.length)}

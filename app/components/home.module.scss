@@ -221,11 +221,13 @@
 }
 
 .chat-body-title {
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
 
-  &:hover {
-    text-decoration: underline;
-  }
+.chat-rename {
+  margin-left: 4px;
+  padding: 8px;
 }
 
 .chat-message {
