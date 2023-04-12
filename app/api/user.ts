@@ -18,27 +18,6 @@ export async function checkUser() {
 }
 
 /**
- * 注册用户
- * @param param0
- * @returns
- */
-export async function createUser({
-  phoneNumber,
-  code,
-}: {
-  phoneNumber: string;
-  code: string;
-}) {
-  return commonFetch("users", {
-    method: "POST",
-    body: JSON.stringify({
-      phone_number: phoneNumber,
-      sms_verification_code: code,
-    }),
-  });
-}
-
-/**
  * 用户登陆
  * @param param0
  * @returns

@@ -4,7 +4,6 @@ import { Modal, Button } from "antd";
 import {
   sendVerificationCode,
   loginUser,
-  createUser,
   checkUser,
   activateUser,
 } from "../api/user";
@@ -102,27 +101,6 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
           updateUser(res.result);
           getConversationList(res.result.id);
         });
-      })
-      .catch((error) => {
-        showToast(error.result.message);
-      });
-  }
-
-  // 注册
-  function handleRegister() {
-    if (!code) return showToast("请填写验证码");
-    if (!phoneNumber) return showToast("请填写手机号");
-
-    const params = { phoneNumber: `+86:${phoneNumber}`, code };
-    createUser(params)
-      .then((res) => {
-        const { result } = res;
-        localStorage.setItem("login_token", res.result.token.value);
-        updateUser(result.user);
-        closeModal();
-        resetForm();
-        showToast("登录成功");
-        getConversationList(result.user.id);
       })
       .catch((error) => {
         showToast(error.result.message);
