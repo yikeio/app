@@ -11,7 +11,7 @@ interface ModalProps {
 
 export default function Modal({
   onClose,
-  show,
+  show = false,
   children,
   size = "md",
   noPadding = false,
