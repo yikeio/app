@@ -11,7 +11,7 @@ interface ModalProps {
 
 export default function Modal({
   onClose,
-  show,
+  show = false,
   children,
   size = "md",
   noPadding = false,
@@ -49,7 +49,7 @@ export default function Modal({
             leaveFrom="opacity-100"
             leaveTo="opacity-"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
+            <div className="fixed inset-0 bg-black bg-opacity-90" />
           </Transition.Child>
           <span
             className="inline-block h-screen align-middle"

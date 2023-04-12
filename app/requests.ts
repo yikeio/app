@@ -21,7 +21,7 @@ export async function requestChatStream(
   try {
     await createMessage(options.conversationId, content);
     const res = await fetch(
-      `${API_DOMAIN}/api/chat/conversations/${options.conversationId}/completions-messages`,
+      `${API_DOMAIN}/api/chat/conversations/${options.conversationId}/completions`,
       {
         method: "POST",
         headers: {

@@ -65,12 +65,9 @@ export async function createMessage(conversation: string, content: string) {
  * @returns
  */
 export async function createSmartMessage(conversation: string) {
-  return commonFetch(
-    `chat/conversations/${conversation}/completions-messages`,
-    {
-      method: "POST",
-    },
-  );
+  return commonFetch(`chat/conversations/${conversation}/completions`, {
+    method: "POST",
+  });
 }
 
 /**
