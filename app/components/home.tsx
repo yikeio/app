@@ -82,6 +82,7 @@ function _Home() {
     createConversation,
     removeSession,
     conversationPager,
+    getUserSettings,
   ] = useChatStore((state) => [
     state.user,
     state.config,
@@ -90,6 +91,7 @@ function _Home() {
     state.createConversation,
     state.removeSession,
     state.conversationPager,
+    state.getUserSettings,
   ]);
   const [currentCombo, getUserQuotaInfo, setActivateVisible] = useBillingStore(
     (state) => [
@@ -124,6 +126,7 @@ function _Home() {
   useEffect(() => {
     if (openSettings) {
       getUserQuotaInfo(user.id);
+      getUserSettings(user.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openSettings]);
@@ -193,7 +196,7 @@ function _Home() {
   return (
     <div
       className={`${
-        config.tightBorder && !isMobileScreen()
+        config.no_border && !isMobileScreen()
           ? styles["tight-container"]
           : styles.container
       }`}

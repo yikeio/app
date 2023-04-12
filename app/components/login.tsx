@@ -14,16 +14,20 @@ import { showToast } from "./ui-lib";
 
 const useUserLogin = () => {
   const [loginModalVisible, setLoginModalVisible] = React.useState(false);
-  const [updateUser, getConversationList] = useChatStore((state) => [
-    state.updateUser,
-    state.getConversationList,
-  ]);
+  const [updateUser, getConversationList, getUserSettings] = useChatStore(
+    (state) => [
+      state.updateUser,
+      state.getConversationList,
+      state.getUserSettings,
+    ],
+  );
 
   React.useEffect(() => {
     checkUser()
       .then((res) => {
         updateUser(res.result);
         getConversationList(res.result.id);
+        getUserSettings(res.result.id);
       })
       .catch((error) => {
         showToast(error.result.message);
@@ -43,13 +47,10 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
   const [count, setCount] = React.useState(0);
   const timerRef = React.useRef<any>(0);
 
-  const [updateUser, getConversationList, createConversation] = useChatStore(
-    (state) => [
-      state.updateUser,
-      state.getConversationList,
-      state.createConversation,
-    ],
-  );
+  const [updateUser, getConversationList] = useChatStore((state) => [
+    state.updateUser,
+    state.getConversationList,
+  ]);
 
   function resetForm() {
     setCode("");

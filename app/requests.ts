@@ -6,7 +6,6 @@ const TIME_OUT_MS = 30000;
 export async function requestChatStream(
   content: string,
   options: {
-    filterBot?: boolean;
     conversationId: string;
     onMessage: (message: string, done: boolean) => void;
     onError: (error: Error, statusCode?: number) => void;

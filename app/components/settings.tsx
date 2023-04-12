@@ -134,7 +134,11 @@ export function Settings(props: { closeSettings: () => void }) {
                   lazyLoadEmojis
                   theme={EmojiTheme.AUTO}
                   onEmojiClick={(e) => {
-                    updateConfig((config) => (config.avatar = e.unified));
+                    updateConfig(
+                      (config) => (config.avatar = e.unified),
+                      user.id,
+                      { key: "avatar", value: e.unified },
+                    );
                     setShowEmojiPicker(false);
                   }}
                 />
@@ -152,11 +156,16 @@ export function Settings(props: { closeSettings: () => void }) {
 
           <SettingItem title={Locale.Settings.SendKey}>
             <select
-              value={config.submitKey}
+              value={config.chat_submit_key}
               onChange={(e) => {
                 updateConfig(
-                  (config) =>
-                    (config.submitKey = e.target.value as any as SubmitKey),
+                  (config) => (
+                    (config.chat_submit_key = e.target
+                      .value as any as SubmitKey),
+                    user.id
+                  ),
+                  user.id,
+                  { key: "chat_submit_key", value: e.target.value },
                 );
               }}
             >
@@ -176,7 +185,11 @@ export function Settings(props: { closeSettings: () => void }) {
               value={config.theme}
               onChange={(e) => {
                 updateConfig(
-                  (config) => (config.theme = e.target.value as any as Theme),
+                  (config) => (
+                    (config.theme = e.target.value as any as Theme), user.id
+                  ),
+                  user.id,
+                  { key: "theme", value: e.target.value },
                 );
               }}
             >
@@ -209,17 +222,22 @@ export function Settings(props: { closeSettings: () => void }) {
           >
             <input
               type="range"
-              title={`${config.historyMessageCount}px`}
-              value={config.historyMessageCount}
+              title={`${config.chat_contexts_count}px`}
+              value={config.chat_contexts_count}
               min="0"
               max="10"
               step="1"
               onChange={(e) =>
                 updateConfig(
                   (config) =>
-                    (config.historyMessageCount = Number.parseInt(
+                    (config.chat_contexts_count = Number.parseInt(
                       e.currentTarget.value,
                     )),
+                  user.id,
+                  {
+                    key: "chat_contexts_count",
+                    value: Number.parseInt(e.currentTarget.value),
+                  },
                 )
               }
             ></input>
@@ -231,15 +249,19 @@ export function Settings(props: { closeSettings: () => void }) {
           >
             <input
               type="range"
-              title={`${config.fontSize ?? 14}px`}
-              value={config.fontSize}
+              title={`${config.chat_font_size ?? 14}px`}
+              value={config.chat_font_size}
               min="12"
               max="18"
               step="1"
               onChange={(e) =>
                 updateConfig(
                   (config) =>
-                    (config.fontSize = Number.parseInt(e.currentTarget.value)),
+                    (config.chat_font_size = Number.parseInt(
+                      e.currentTarget.value,
+                    )),
+                  user.id,
+                  { key: "chat_font_size", value: e.currentTarget.value },
                 )
               }
             ></input>
@@ -248,10 +270,12 @@ export function Settings(props: { closeSettings: () => void }) {
           <SettingItem title={Locale.Settings.TightBorder}>
             <input
               type="checkbox"
-              checked={config.tightBorder}
+              checked={config.no_border}
               onChange={(e) =>
                 updateConfig(
-                  (config) => (config.tightBorder = e.currentTarget.checked),
+                  (config) => (config.no_border = e.currentTarget.checked),
+                  user.id,
+                  { key: "no_border", value: e.currentTarget.checked },
                 )
               }
             ></input>
@@ -260,11 +284,12 @@ export function Settings(props: { closeSettings: () => void }) {
           <SettingItem title={Locale.Settings.SendPreviewBubble}>
             <input
               type="checkbox"
-              checked={config.sendPreviewBubble}
+              checked={config.chat_bubble}
               onChange={(e) =>
                 updateConfig(
-                  (config) =>
-                    (config.sendPreviewBubble = e.currentTarget.checked),
+                  (config) => (config.chat_bubble = e.currentTarget.checked),
+                  user.id,
+                  { key: "chat_bubble", value: e.currentTarget.checked },
                 )
               }
             ></input>

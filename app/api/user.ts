@@ -100,3 +100,25 @@ export async function getUserAvailableQuotas(userId: string) {
 export async function getListUserPayment(id: any) {
   return commonFetch(`users/${id}/payments`);
 }
+
+/**
+ * 获取用户设置
+ */
+export async function getListUserSettings(id: any) {
+  return commonFetch(`users/${id}/settings`);
+}
+
+/**
+ * 修改用户设置
+ */
+export async function updateListUserSettings(
+  id: any,
+  data: Record<string, any>,
+) {
+  return commonFetch(`users/${id}/settings/${data.key}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      value: data.value,
+    }),
+  });
+}

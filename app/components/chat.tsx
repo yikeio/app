@@ -99,17 +99,17 @@ function exportMessages(messages: Message[], topic: string) {
 
 function useSubmitHandler() {
   const config = useChatStore((state) => state.config);
-  const submitKey = config.submitKey;
+  const chat_submit_key = config.chat_submit_key;
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key !== "Enter") return false;
     if (e.key === "Enter" && e.nativeEvent.isComposing) return false;
     return (
-      (config.submitKey === SubmitKey.AltEnter && e.altKey) ||
-      (config.submitKey === SubmitKey.CtrlEnter && e.ctrlKey) ||
-      (config.submitKey === SubmitKey.ShiftEnter && e.shiftKey) ||
-      (config.submitKey === SubmitKey.MetaEnter && e.metaKey) ||
-      (config.submitKey === SubmitKey.Enter &&
+      (config.chat_submit_key === SubmitKey.AltEnter && e.altKey) ||
+      (config.chat_submit_key === SubmitKey.CtrlEnter && e.ctrlKey) ||
+      (config.chat_submit_key === SubmitKey.ShiftEnter && e.shiftKey) ||
+      (config.chat_submit_key === SubmitKey.MetaEnter && e.metaKey) ||
+      (config.chat_submit_key === SubmitKey.Enter &&
         !e.altKey &&
         !e.ctrlKey &&
         !e.shiftKey &&
@@ -118,7 +118,7 @@ function useSubmitHandler() {
   };
 
   return {
-    submitKey,
+    chat_submit_key,
     shouldSubmit,
   };
 }
@@ -182,13 +182,13 @@ export function Chat(props: {
     state.setActivateVisible,
   ]);
 
-  const fontSize = useChatStore((state) => state.config.fontSize);
+  const chat_font_size = useChatStore((state) => state.config.chat_font_size);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMessage, setIsLoadingMessage] = useState(false);
-  const { submitKey, shouldSubmit } = useSubmitHandler();
+  const { chat_submit_key, shouldSubmit } = useSubmitHandler();
   const { scrollRef, setAutoScroll } = useScrollToBottom();
 
   const {
@@ -365,7 +365,7 @@ export function Chat(props: {
         : [],
     )
     .concat(
-      userInput.length > 0 && config.sendPreviewBubble
+      userInput.length > 0 && config.chat_bubble
         ? [
             {
               role: "user",
@@ -505,7 +505,7 @@ export function Chat(props: {
                   ) : (
                     <div
                       className="markdown-body"
-                      style={{ fontSize: `${fontSize}px` }}
+                      style={{ chat_font_size: `${chat_font_size}px` }}
                       onContextMenu={(e) => onRightClick(e, message)}
                       onDoubleClickCapture={() => {
                         if (!isMobileScreen()) return;
@@ -535,7 +535,7 @@ export function Chat(props: {
           <textarea
             ref={inputRef}
             className={styles["chat-input"]}
-            placeholder={Locale.Chat.Input(submitKey)}
+            placeholder={Locale.Chat.Input(chat_submit_key)}
             rows={2}
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}

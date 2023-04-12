@@ -22,9 +22,9 @@ const en: LocaleType = {
     },
     Rename: "Rename Chat",
     Typing: "Typing…",
-    Input: (submitKey: string) => {
-      var inputHints = `Type something and press ${submitKey} to send`;
-      if (submitKey === String(SubmitKey.Enter)) {
+    Input: (chat_submit_key: string) => {
+      var inputHints = `Type something and press ${chat_submit_key} to send`;
+      if (chat_submit_key === String(SubmitKey.Enter)) {
         inputHints += ", press Shift + Enter to newline";
       }
       return inputHints;

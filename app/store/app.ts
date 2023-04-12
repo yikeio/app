@@ -7,6 +7,7 @@ import {
   deleteConversation,
   getConversationMessageList,
 } from "../api/conversations";
+import { getListUserSettings, updateListUserSettings } from "../api/user";
 import { ControllerPool, requestChatStream } from "../requests";
 
 import Locale from "../locales";
@@ -32,33 +33,25 @@ export enum Theme {
 }
 
 export interface ChatConfig {
-  historyMessageCount: number; // -1 means all
-  compressMessageLengthThreshold: number;
-  sendBotMessages: boolean; // send bot's message or not
-  submitKey: SubmitKey;
+  chat_contexts_count: number; // -1 means all
+  chat_submit_key: SubmitKey;
   avatar: string;
-  fontSize: number;
+  chat_font_size: number;
   theme: Theme;
-  tightBorder: boolean;
-  sendPreviewBubble: boolean;
-
-  disablePromptHint: boolean;
+  no_border: boolean;
+  chat_bubble: boolean;
 }
 
 export const ROLES: Message["role"][] = ["system", "user", "assistant"];
 
 const DEFAULT_CONFIG: ChatConfig = {
-  historyMessageCount: 3,
-  compressMessageLengthThreshold: 1000,
-  sendBotMessages: true as boolean,
-  submitKey: SubmitKey.Enter as SubmitKey,
-  avatar: "1f603",
-  fontSize: 14,
-  theme: Theme.Auto as Theme,
-  tightBorder: true,
-  sendPreviewBubble: true,
-
-  disablePromptHint: false,
+  chat_contexts_count: 3, //携带历史记录
+  chat_submit_key: SubmitKey.Enter as SubmitKey, //发送键
+  avatar: "1f603", //头像
+  chat_font_size: 14, //字体大小
+  theme: Theme.Auto as Theme, //主题
+  no_border: true, //无边框模式
+  chat_bubble: false, //发送预览气泡
 };
 
 export interface ChatSession {
@@ -130,7 +123,12 @@ interface ChatStore {
   ) => void;
   updateUser: (user: Record<string, string>) => void;
   getConfig: () => ChatConfig;
-  updateConfig: (updater: (config: ChatConfig) => void) => void;
+  updateConfig: (
+    updater: (config: ChatConfig) => void,
+    userId: string,
+    data: Record<string, any>,
+  ) => void;
+  getUserSettings: (userId: string) => Promise<void>;
   clearAllData: () => void;
 }
 
@@ -147,6 +145,13 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
   updateUser(user: Record<string, string>) {
     set(() => ({ user }));
+  },
+
+  // 获取用户配置
+  async getUserSettings(userId: string) {
+    const res = await getListUserSettings(userId);
+    const config = res.result;
+    set(() => ({ config }));
   },
 
   async getConversationList(userId: string, params) {
@@ -245,9 +250,10 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     return get().config;
   },
 
-  updateConfig(updater) {
+  async updateConfig(updater, userId, data = {}) {
     const config = get().config;
     updater(config);
+    await updateListUserSettings(userId, data);
     set(() => ({ config }));
   },
 
@@ -343,7 +349,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         // collect controller for stop/retry
         ControllerPool.addController(sessionIndex, messageIndex, controller);
       },
-      filterBot: !get().config.sendBotMessages,
     });
   },
 
