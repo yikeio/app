@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Modal, Button } from "antd";
 
 import {
   sendVerificationCode,
@@ -10,7 +9,9 @@ import {
 import { useChatStore, useBillingStore } from "../store";
 
 import styles from "./login.module.scss";
+import Modal from "./modal";
 import { showToast } from "./ui-lib";
+import Avatar from "./avatar";
 
 const useUserLogin = () => {
   const [loginModalVisible, setLoginModalVisible] = React.useState(false);
@@ -40,7 +41,7 @@ const useUserLogin = () => {
   return { loginModalVisible, setLoginModalVisible };
 };
 
-export function LoginContent({ closeModal }: { closeModal: Function }) {
+export function LoginForm({ closeModal }: { closeModal: Function }) {
   const [phoneNumber, setPhoneNumber] = React.useState("");
   const [code, setCode] = React.useState("");
 
@@ -109,12 +110,28 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
   }
 
   return (
-    <div className={styles["login-dialog-body"]}>
-      <div className={styles["login-dialog-item"]}>
-        <span className={styles["login-dialog-item-label"]}>手机号</span>
-        <div className={styles["login-dialog-item-value"]}>
-          <span>+86</span>
+    <div className="flex flex-col max-w-xs gap-6">
+      <div className="space-y-2 text-center">
+        <h1 className="text-2xl">快捷登录</h1>
+        <p className="text-sm text-gray-500">
+          输入您的手机号和验证码，即可快速获得超棒体验
+        </p>
+      </div>
+      <div className="flex flex-col gap-2">
+        <label
+          htmlFor="phone-number-input"
+          className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          手机号
+        </label>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            +86
+          </div>
           <input
+            type="text"
+            id="phone-number-input"
+            className="bg-gray-50 shadow-sm border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-12 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="请输入手机号"
             maxLength={11}
             value={phoneNumber}
@@ -122,24 +139,57 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
           />
         </div>
       </div>
-      <div className={styles["login-dialog-item"]}>
-        <span className={styles["login-dialog-item-label"]}>验证码</span>
-        <div className={styles["login-dialog-item-value"]}>
+      <div className="relative flex flex-col gap-2">
+        <label
+          htmlFor="verify-code-input"
+          className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          验证码
+        </label>
+        <div className="relative">
           <input
+            type="password"
+            id="verify-code-input"
+            className="bg-gray-50 shadow-sm pr-24 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="请输入验证码"
             maxLength={4}
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-          <span className={styles["login-dialog-item-code"]} onClick={getCode}>
+          <button
+            className="absolute inset-y-0 right-0 z-10 flex items-center pr-3 text-blue-800 cursor-pointer"
+            onClick={getCode}
+          >
             {count || "获取验证码"}
-          </span>
+          </button>
         </div>
       </div>
       <div className={styles["login-dialog-item"]}>
-        <button className={styles["login-dialog-login"]} onClick={handleLogin}>
+        <button
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          onClick={handleLogin}
+        >
           登录
         </button>
+      </div>
+    </div>
+  );
+}
+
+export function HeroCard() {
+  return (
+    <div className="flex flex-col items-center max-w-sm gap-8 p-12 py-24 text-gray-800 bg-gray-200">
+      <h1 className="text-2xl leading-relaxed text-gray-600">
+        <span className="text-3xl font-semibold text-gray-400">“</span>
+        无论你从事什么行业，你一定会爱上这个万能助手！
+        <span className="text-3xl font-semibold text-gray-400">”</span>
+      </h1>
+      <div className="flex flex-col items-center gap-4">
+        <Avatar src="https://easywechat.com/overtrue.jpg" alt="" size="lg" />
+        <div className="text-center">
+          <h3 className="font-bold">overtrue</h3>
+          <p className="text-gray-500">高级工程师、设计师</p>
+        </div>
       </div>
     </div>
   );
@@ -165,12 +215,19 @@ export function LoginDialog() {
 
   return (
     <Modal
-      closable={false}
-      title="手机快捷登录"
-      footer={null}
-      open={loginModalVisible}
+      size="lg"
+      show={loginModalVisible}
+      noPadding
+      onClose={() => setLoginModalVisible(false)}
     >
-      <LoginContent closeModal={setLoginModalVisible} />
+      <div className="flex">
+        <div className="flex items-center justify-center w-1/2 p-8">
+          <LoginForm closeModal={setLoginModalVisible} />
+        </div>
+        <div className="w-1/2">
+          <HeroCard />
+        </div>
+      </div>
     </Modal>
   );
 }
@@ -197,12 +254,7 @@ export function ActivateDialog() {
   }
 
   return (
-    <Modal
-      closable={false}
-      title="激活账户"
-      footer={<Button onClick={handleActivate}>激活</Button>}
-      open={activateVisible}
-    >
+    <Modal show={activateVisible} onClose={() => setActivateVisible(false)}>
       <div className={styles["login-dialog-item"]}>
         <div className={styles["login-dialog-item-value"]}>
           <input
@@ -212,6 +264,12 @@ export function ActivateDialog() {
           />
         </div>
       </div>
+      <button
+        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        onClick={handleActivate}
+      >
+        激活
+      </button>
     </Modal>
   );
 }
