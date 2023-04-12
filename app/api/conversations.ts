@@ -10,7 +10,7 @@ export async function getConversationList(
 ) {
   const { page = 1, pageSize = 15, sorts = "last_active_at" } = options || {};
   return commonFetch(
-    `users/${user}/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`,
+    `users/${user}/chat/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`,
   );
 }
 
@@ -19,7 +19,7 @@ export async function getConversationList(
  * @returns
  */
 export async function createConversation(title: string) {
-  return commonFetch("conversations", {
+  return commonFetch("chat/conversations", {
     method: "POST",
     body: JSON.stringify({ title }),
   });
@@ -33,7 +33,7 @@ export async function updateConversation(
   id: string,
   data: Record<string, any>,
 ) {
-  return commonFetch(`conversations/${id}`, {
+  return commonFetch(`chat/conversations/${id}`, {
     method: "PUT",
     body: JSON.stringify(data),
   });
@@ -44,7 +44,7 @@ export async function updateConversation(
  * @returns
  */
 export async function deleteConversation(id: string) {
-  return commonFetch(`conversations/${id}`, {
+  return commonFetch(`chat/conversations/${id}`, {
     method: "DELETE",
   });
 }
@@ -54,7 +54,7 @@ export async function deleteConversation(id: string) {
  * @returns
  */
 export async function createMessage(conversation: string, content: string) {
-  return commonFetch(`conversations/${conversation}/messages`, {
+  return commonFetch(`chat/conversations/${conversation}/messages`, {
     method: "POST",
     body: JSON.stringify({ content }),
   });
@@ -65,9 +65,12 @@ export async function createMessage(conversation: string, content: string) {
  * @returns
  */
 export async function createSmartMessage(conversation: string) {
-  return commonFetch(`conversations/${conversation}/smart-messages`, {
-    method: "POST",
-  });
+  return commonFetch(
+    `chat/conversations/${conversation}/completions-messages`,
+    {
+      method: "POST",
+    },
+  );
 }
 
 /**
@@ -80,6 +83,6 @@ export async function getConversationMessageList(
 ) {
   const { page = 1, pageSize = 15, sorts = "id:desc" } = options || {};
   return commonFetch(
-    `conversations/${conversation}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`,
+    `chat/conversations/${conversation}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`,
   );
 }
