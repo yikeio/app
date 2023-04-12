@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 
 import { IconButton } from "./button";
 import { BillingDialog } from "./billing";
-import { LoginDialog } from "./login";
+import { LoginDialog, ActivateDialog } from "./login";
 import { Spin } from "antd";
 import styles from "./home.module.scss";
 
@@ -91,10 +91,13 @@ function _Home() {
     state.removeSession,
     state.conversationPager,
   ]);
-  const [currentCombo, getUserQuotaInfo] = useBillingStore((state) => [
-    state.currentCombo,
-    state.getUserQuotaInfo,
-  ]);
+  const [currentCombo, getUserQuotaInfo, setActivateVisible] = useBillingStore(
+    (state) => [
+      state.currentCombo,
+      state.getUserQuotaInfo,
+      state.setActivateVisible,
+    ],
+  );
 
   const loading = !useHasHydrated();
   const [showSideBar, setShowSideBar] = useState(true);
@@ -115,11 +118,17 @@ function _Home() {
     if (openSettings) {
       getUserQuotaInfo(user.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openSettings]);
 
   useSwitchTheme();
 
   const handleCreateConversation = () => {
+    if (user.state === "inactivate") {
+      showToast("账号未激活，请先激活!");
+      setActivateVisible(true);
+      return;
+    }
     if (!currentCombo) {
       showToast("当前无可用套餐，请购买套餐!");
       return;
@@ -264,6 +273,7 @@ function _Home() {
       </div>
       <LoginDialog />
       <BillingDialog />
+      <ActivateDialog />
     </div>
   );
 }

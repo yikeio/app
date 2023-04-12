@@ -1,12 +1,11 @@
 import * as React from "react";
-import { Modal, Tooltip } from "antd";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { Modal, Button } from "antd";
 
 import {
   sendVerificationCode,
   loginUser,
-  createUser,
   checkUser,
+  activateUser,
 } from "../api/user";
 import { useChatStore, useBillingStore } from "../store";
 
@@ -31,16 +30,15 @@ const useUserLogin = () => {
         setLoginModalVisible(true);
         localStorage.removeItem("login_token");
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { loginModalVisible, setLoginModalVisible };
 };
 
 export function LoginContent({ closeModal }: { closeModal: Function }) {
-  const [showInviteLink, setShowInviteLink] = React.useState(false);
   const [phoneNumber, setPhoneNumber] = React.useState("");
   const [code, setCode] = React.useState("");
-  const [inviteCode, setInviteCode] = React.useState("");
 
   const [count, setCount] = React.useState(0);
   const timerRef = React.useRef<any>(0);
@@ -55,16 +53,8 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
 
   function resetForm() {
     setCode("");
-    setInviteCode("");
     setPhoneNumber("");
-    setShowInviteLink(false);
     setCount(0);
-  }
-
-  function handleRegistry() {
-    setCount(0);
-    setCode("");
-    setShowInviteLink(true);
   }
 
   function getCode() {
@@ -73,8 +63,7 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
 
     setCount(60);
     // 场景值
-    const scene = showInviteLink ? "register" : "login";
-    const params = { phoneNumber: `+86:${phoneNumber}`, scene };
+    const params = { phoneNumber: `+86:${phoneNumber}`, scene: "login" };
     sendVerificationCode(params)
       .then(() => {
         timerRef.current = setInterval(() => {
@@ -118,28 +107,6 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
       });
   }
 
-  // 注册
-  function handleRegister() {
-    if (!code) return showToast("请填写验证码");
-    if (!phoneNumber) return showToast("请填写手机号");
-    if (!inviteCode) return showToast("请填写邀请码");
-
-    const params = { phoneNumber: `+86:${phoneNumber}`, code, inviteCode };
-    createUser(params)
-      .then((res) => {
-        const { result } = res;
-        localStorage.setItem("login_token", res.result.token.value);
-        updateUser(result.user);
-        closeModal();
-        resetForm();
-        showToast("登录成功");
-        getConversationList(result.user.id);
-      })
-      .catch((error) => {
-        showToast(error.result.message);
-      });
-  }
-
   return (
     <div className={styles["login-dialog-body"]}>
       <div className={styles["login-dialog-item"]}>
@@ -168,38 +135,10 @@ export function LoginContent({ closeModal }: { closeModal: Function }) {
           </span>
         </div>
       </div>
-      {showInviteLink && (
-        <div className={styles["login-dialog-item"]}>
-          <span className={styles["login-dialog-item-label"]}>
-            邀请码
-            <Tooltip title="须通过邀请码才可注册">
-              <ExclamationCircleOutlined />
-            </Tooltip>
-          </span>
-          <div className={styles["login-dialog-item-value"]}>
-            <input
-              placeholder="请输入邀请码"
-              value={inviteCode}
-              onChange={(e) => setInviteCode(e.target.value)}
-            />
-          </div>
-        </div>
-      )}
       <div className={styles["login-dialog-item"]}>
-        <button
-          className={styles["login-dialog-login"]}
-          onClick={showInviteLink ? handleRegister : handleLogin}
-        >
-          {showInviteLink ? "注册并登录" : "登录"}
+        <button className={styles["login-dialog-login"]} onClick={handleLogin}>
+          登录
         </button>
-        {!showInviteLink && (
-          <button
-            className={styles["login-dialog-registry"]}
-            onClick={handleRegistry}
-          >
-            立即注册
-          </button>
-        )}
       </div>
     </div>
   );
@@ -231,6 +170,49 @@ export function LoginDialog() {
       open={loginModalVisible}
     >
       <LoginContent closeModal={setLoginModalVisible} />
+    </Modal>
+  );
+}
+
+// 激活弹窗
+export function ActivateDialog() {
+  const [inviteCode, setInviteCode] = React.useState("");
+  const [user] = useChatStore((state) => [state.user]);
+  const [activateVisible, setActivateVisible] = useBillingStore((state) => [
+    state.activateVisible,
+    state.setActivateVisible,
+  ]);
+
+  function handleActivate() {
+    if (!inviteCode) return showToast("请输入邀请码");
+    activateUser({ userId: user.id, inviteCode })
+      .then(() => {
+        showToast("激活成功");
+        setActivateVisible(false);
+      })
+      .catch((error) => {
+        showToast(error.result.message);
+      });
+  }
+
+  return (
+    <Modal
+      closable={false}
+      title="激活账户"
+      footer={<Button onClick={handleActivate}>激活</Button>}
+      open={activateVisible}
+    >
+      <div className={styles["login-dialog-item"]}>
+        <span className={styles["login-dialog-item-label"]}>手机号</span>
+        <div className={styles["login-dialog-item-value"]}>
+          <span>+86</span>
+          <input
+            placeholder="请输入邀请码"
+            value={inviteCode}
+            onChange={(e) => setInviteCode(e.target.value)}
+          />
+        </div>
+      </div>
     </Modal>
   );
 }

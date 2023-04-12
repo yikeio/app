@@ -18,30 +18,6 @@ export async function checkUser() {
 }
 
 /**
- * 注册用户
- * @param param0
- * @returns
- */
-export async function createUser({
-  phoneNumber,
-  code,
-  inviteCode,
-}: {
-  phoneNumber: string;
-  code: string;
-  inviteCode: string;
-}) {
-  return commonFetch("users", {
-    method: "POST",
-    body: JSON.stringify({
-      phone_number: phoneNumber,
-      sms_verification_code: code,
-      referral_code: inviteCode,
-    }),
-  });
-}
-
-/**
  * 用户登陆
  * @param param0
  * @returns
@@ -53,11 +29,31 @@ export async function loginUser({
   phoneNumber: string;
   code: string;
 }) {
-  return commonFetch("oauth/tokens:via-sms", {
+  return commonFetch("auth/tokens:via-sms", {
     method: "POST",
     body: JSON.stringify({
       phone_number: phoneNumber,
       sms_verification_code: code,
+    }),
+  });
+}
+
+/**
+ * 激活账户
+ * @param param0
+ * @returns
+ */
+export async function activateUser({
+  userId,
+  inviteCode,
+}: {
+  userId: number;
+  inviteCode: string;
+}) {
+  return commonFetch(`users/${userId}:activate`, {
+    method: "POST",
+    body: JSON.stringify({
+      referral_code: inviteCode,
     }),
   });
 }
