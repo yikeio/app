@@ -267,7 +267,7 @@ export function Chat(props: {
     // clear search results
     if (n === 0) {
       setPromptHints([]);
-    } else if (!chatStore.config.disablePromptHint && n < SEARCH_TEXT_LIMIT) {
+    } else if (n < SEARCH_TEXT_LIMIT) {
       // check if need to trigger auto completion
       if (text.startsWith("/")) {
         let searchText = text.slice(1);
@@ -505,7 +505,7 @@ export function Chat(props: {
                   ) : (
                     <div
                       className="markdown-body"
-                      style={{ chat_font_size: `${chat_font_size}px` }}
+                      style={{ fontSize: `${chat_font_size}px` }}
                       onContextMenu={(e) => onRightClick(e, message)}
                       onDoubleClickCapture={() => {
                         if (!isMobileScreen()) return;
