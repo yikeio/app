@@ -199,11 +199,7 @@ export function ActivateDialog() {
     <Modal
       closable={false}
       title="激活账户"
-      footer={
-        <Button type="primary" onClick={handleActivate}>
-          激活
-        </Button>
-      }
+      footer={<Button onClick={handleActivate}>激活</Button>}
       open={activateVisible}
     >
       <div className={styles["login-dialog-item"]}>
