@@ -281,7 +281,7 @@ export function Chat(props: {
 
   // submit user input
   const onUserSubmit = () => {
-    if (user.state === "inactivate") {
+    if (user.state === "unactivated") {
       showToast("账号未激活，请先激活!");
       setActivateVisible(true);
       return;

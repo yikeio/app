@@ -112,6 +112,13 @@ function _Home() {
     if (!user.id && !localStorage.getItem("login_token")) {
       setOpenSettings(false);
     }
+    // 未注册用户展示激活弹窗
+    if (user.id && localStorage.getItem("login_token")) {
+      if (user.state === "unactivated") {
+        showToast("账号未激活，请先激活!");
+        setActivateVisible(true);
+      }
+    }
   }, [user]);
 
   useEffect(() => {
@@ -124,7 +131,7 @@ function _Home() {
   useSwitchTheme();
 
   const handleCreateConversation = () => {
-    if (user.state === "inactivate") {
+    if (user.state === "unactivated") {
       showToast("账号未激活，请先激活!");
       setActivateVisible(true);
       return;

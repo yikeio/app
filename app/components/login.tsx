@@ -199,13 +199,15 @@ export function ActivateDialog() {
     <Modal
       closable={false}
       title="激活账户"
-      footer={<Button onClick={handleActivate}>激活</Button>}
+      footer={
+        <Button type="primary" onClick={handleActivate}>
+          激活
+        </Button>
+      }
       open={activateVisible}
     >
       <div className={styles["login-dialog-item"]}>
-        <span className={styles["login-dialog-item-label"]}>手机号</span>
         <div className={styles["login-dialog-item-value"]}>
-          <span>+86</span>
           <input
             placeholder="请输入邀请码"
             value={inviteCode}

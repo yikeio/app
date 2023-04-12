@@ -1,4 +1,4 @@
-export const API_DOMAIN = "http://192.168.31.73:8000";
+export const API_DOMAIN = "http://30.20.203.33:8000";
 import { showToast } from "../components/ui-lib";
 
 export function commonFetch(url: string, options: Record<string, any> = {}) {
