@@ -5,8 +5,8 @@ interface ModalProps {
   onClose: () => void;
   show: boolean;
   children: ReactNode;
-  noPadding: boolean;
-  size: "sm" | "md" | "lg" | "xl";
+  noPadding?: boolean;
+  size?: "sm" | "md" | "lg" | "xl";
 }
 
 export default function Modal({
