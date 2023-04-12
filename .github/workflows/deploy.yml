@@ -29,7 +29,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      domain: "https://yike.io/"
+      domain: "https://yike.cos.pengyyy.cn/"
       local_dir: ./out/
       remote_dir: /
       thread: 30
