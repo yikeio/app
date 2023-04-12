@@ -3,6 +3,10 @@ import { getUserQuotas, getUserAvailableQuotas } from "../api/user";
 import { getPayableQuotas } from "../api/pay";
 
 interface BillingStore {
+  // 激活弹窗
+  activateVisible: boolean;
+  setActivateVisible: (visible: boolean) => void;
+
   // 套餐弹窗
   billingModalVisible: boolean;
   setBillingModalVisible: (visible: boolean) => void;
@@ -22,6 +26,11 @@ interface BillingStore {
 }
 
 export const useBillingStore = create<BillingStore>()((set, get) => ({
+  activateVisible: false,
+  setActivateVisible: (visible: boolean) => {
+    set(() => ({ activateVisible: visible }));
+  },
+
   billingModalVisible: false,
   setBillingModalVisible: (visible: boolean) => {
     set(() => ({ billingModalVisible: visible }));

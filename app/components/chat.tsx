@@ -10,10 +10,7 @@ import DownloadIcon from "../icons/download.svg";
 import LoadingIcon from "../icons/loading.svg";
 import BotIcon from "../icons/bot.svg";
 import RenameIcon from "../icons/rename.svg";
-import {
-  updateConversation,
-  getConversationMessageList,
-} from "../api/conversations";
+import { updateConversation } from "../api/conversations";
 import { showToast } from "./ui-lib";
 
 import {
@@ -180,7 +177,10 @@ export function Chat(props: {
     state.currentSessionIndex,
   ]);
 
-  const [currentCombo] = useBillingStore((state) => [state.currentCombo]);
+  const [currentCombo, setActivateVisible] = useBillingStore((state) => [
+    state.currentCombo,
+    state.setActivateVisible,
+  ]);
 
   const fontSize = useChatStore((state) => state.config.fontSize);
 
@@ -192,6 +192,7 @@ export function Chat(props: {
   const { scrollRef, setAutoScroll } = useScrollToBottom();
 
   const {
+    user,
     sessions,
     currentSessionIndex,
     messageHistoryPagerMap,
@@ -280,6 +281,11 @@ export function Chat(props: {
 
   // submit user input
   const onUserSubmit = () => {
+    if (user.state === "inactivate") {
+      showToast("账号未激活，请先激活!");
+      setActivateVisible(true);
+      return;
+    }
     if (!currentCombo) {
       showToast("当前无可用套餐，请购买套餐!");
       return;
@@ -386,6 +392,7 @@ export function Chat(props: {
   useEffect(() => {
     if (props.sideBarShowing && isMobileScreen()) return;
     inputRef.current?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
