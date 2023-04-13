@@ -151,7 +151,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
           <input
             type="text"
             id="verify-code-input"
-            className="pr-24 w-full"
+            className="w-full pr-24"
             placeholder="请输入验证码"
             maxLength={4}
             value={code}
@@ -159,7 +159,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
             onChange={(e) => setCode(e.target.value)}
           />
           <button
-            className="absolute inset-y-0 right-0 z-10 flex items-center pr-3 text-blue-800 cursor-pointer"
+            className="absolute inset-y-0 right-0 z-10 flex items-center pr-3 text-blue-800 bg-transparent border-none shadow-none cursor-pointer"
             onClick={getCode}
           >
             {count || "获取验证码"}
@@ -168,7 +168,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
       </div>
       <div className={styles["login-dialog-item"]}>
         <button
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          className="text-white w-full border-blue-600 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           onClick={handleLogin}
         >
           登录
@@ -245,7 +245,7 @@ export function ActivateDialog() {
       <div className="flex flex-col gap-6">
         <header>
           <h2 className="text-xl">请输入邀请码</h2>
-          <p className="text-gray-500 mt-1">
+          <p className="mt-1 text-gray-500">
             当前为内测期间，你需要输入邀请码才能使用
           </p>
         </header>

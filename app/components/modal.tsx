@@ -17,7 +17,7 @@ export default function Modal({
   noPadding = false,
 }: ModalProps) {
   let panelClassNames =
-    "inline-block w-full my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl";
+    "inline-block w-full my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl -mt-20";
   if (!noPadding) {
     panelClassNames = panelClassNames + " p-6";
   }
