@@ -66,6 +66,7 @@ export interface ChatSession {
 
 const DEFAULT_TOPIC = Locale.Store.DefaultTopic;
 export const BOT_HELLO: Message = {
+  id: "hello",
   role: "assistant",
   content: Locale.Store.BotHello,
   date: "",
