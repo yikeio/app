@@ -16,8 +16,8 @@ export function ChatItem(props: {
 }) {
   return (
     <div
-      className={`${styles["chat-item"]} ${
-        props.selected && styles["chat-item-selected"]
+      className={`bg-white p-2 px-4 rounded-lg ${
+        props.selected && "border-2 border-blue-500"
       }`}
       onClick={props.onClick}
     >
@@ -46,7 +46,7 @@ export function ChatList() {
   );
 
   return (
-    <div className={styles["chat-list"]}>
+    <div className="">
       {sessions.map((item, i) => (
         <ChatItem
           title={item.title}

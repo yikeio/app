@@ -1,6 +1,7 @@
 import { useDebouncedCallback } from "use-debounce";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { Spin } from "antd";
+import Avatar from "./avatar";
 
 import SendWhiteIcon from "../icons/send-white.svg";
 import ExportIcon from "../icons/export.svg";
@@ -48,15 +49,15 @@ const Emoji = dynamic(async () => (await import("emoji-picker-react")).Emoji, {
   loading: () => <LoadingIcon />,
 });
 
-export function Avatar(props: { role: Message["role"] }) {
+export function UserAvatar(props: { role: Message["role"] }) {
   const config = useChatStore((state) => state.config);
 
   if (props.role !== "user") {
-    return <BotIcon className={styles["user-avtar"]} />;
+    return <Avatar src="/logo.svg" className="rounded-full h-12 w-12" />;
   }
 
   return (
-    <div className={styles["user-avtar"]}>
+    <div className="rounded-full h-12 w-12 bg-gray-100 flex items-center justify-center">
       <Emoji unified={config.avatar} size={18} />
     </div>
   );
@@ -397,24 +398,19 @@ export function Chat(props: {
   }, []);
 
   return (
-    <div className={styles.chat} key={session.id}>
-      <div className={styles["window-header"]}>
-        <div
-          className={styles["window-header-title"]}
-          onClick={props?.showSideBar}
-        >
-          <div
-            className={`${styles["window-header-main-title"]} ${styles["chat-body-title"]}`}
-          >
-            {session.title}
+    <div className="flex flex-1 flex-col" key={session.id}>
+      <div className="flex items-center justify-between py-4 px-6 border-b">
+        <div className="flex items-center gap-4" onClick={props?.showSideBar}>
+          <div className="flex items-center gap-2">
+            <h3 className="text-xl text-gray-700">{session.title}</h3>
             <IconButton
               icon={<RenameIcon />}
-              className={styles["chat-rename"]}
-              title={Locale.Chat.Rename}
+              className="h-4 w-4"
+              title="重命名"
               onClick={handleUpdate}
             />
           </div>
-          <div className={styles["window-header-sub-title"]}>
+          <div className="text-gray-400 text-sm">
             {Locale.Chat.SubTitle(session.messages.length)}
           </div>
         </div>
@@ -443,8 +439,9 @@ export function Chat(props: {
         </div>
       </div>
 
+      {/* 对话内容范围 */}
       <div
-        className={styles["chat-body"]}
+        className="bg-white p-6 flex flex-1 flex-col gap-2"
         ref={scrollRef}
         onScroll={(e) => onChatBodyScroll(e.currentTarget)}
         onTouchStart={() => {
@@ -459,85 +456,93 @@ export function Chat(props: {
           return (
             <div
               key={i}
-              className={
-                isUser ? styles["chat-message-user"] : styles["chat-message"]
-              }
+              className={`flex gap-4 ${isUser ? "justify-end" : "flex-start"}`}
             >
-              <div className={styles["chat-message-container"]}>
-                <div className={styles["chat-message-avatar"]}>
-                  <Avatar role={message.role} />
-                </div>
-                {(message.preview || message.streaming) && (
-                  <div className={styles["chat-message-status"]}>
-                    {Locale.Chat.Typing}
+              {!isUser && <UserAvatar role={message.role} />}
+
+              {/* 单条消息结构 */}
+              <div className="flex flex-col gap-2 py-4 group">
+                <div className="rounded-lg">
+                  {/* 看起来不需要这个东西 */}
+                  {/* {(message.preview || message.streaming) && Locale.Chat.Typing} */}
+                  <div
+                    className={
+                      `p-6 rounded-xl ` +
+                      (isUser
+                        ? "bg-blue-500 rounded-tr-none text-white"
+                        : "bg-gray-100 rounded-tl-none text-gray-700")
+                    }
+                  >
+                    {/* 消息内容 */}
+                    {(message.preview || message.content.length === 0) &&
+                    !isUser ? (
+                      <LoadingIcon />
+                    ) : (
+                      <div
+                        className="markdown-body"
+                        style={{ fontSize: `${chat_font_size}px` }}
+                        onContextMenu={(e) => onRightClick(e, message)}
+                        onDoubleClickCapture={() => {
+                          if (!isMobileScreen()) return;
+                          setUserInput(message.content);
+                        }}
+                      >
+                        <Markdown content={message.content} />
+                      </div>
+                    )}
                   </div>
-                )}
-                <div className={styles["chat-message-item"]}>
+                </div>
+                <div className="opacity-0 flex items-center gap-4 group-hover:opacity-100">
+                  {!isUser && !message.preview && (
+                    <div className="text-xs text-gray-400">
+                      {parseTime(message.date.toLocaleString())}
+                    </div>
+                  )}
+
                   {!isUser &&
                     !(message.preview || message.content.length === 0) && (
-                      <div className={styles["chat-message-top-actions"]}>
+                      // 工具栏
+                      <div className="flex items-center text-xs gap-4 text-gray-400">
                         {message.streaming ? (
                           <div
-                            className={styles["chat-message-top-action"]}
+                            className="cursor-pointer hover:text-blue-500"
                             onClick={() => onUserStop(i)}
                           >
-                            {Locale.Chat.Actions.Stop}
+                            复制
                           </div>
                         ) : (
                           <div
-                            className={styles["chat-message-top-action"]}
+                            className="cursor-pointer hover:text-blue-500"
                             onClick={() => onResend(i)}
                           >
-                            {Locale.Chat.Actions.Retry}
+                            重新生成
                           </div>
                         )}
 
                         <div
-                          className={styles["chat-message-top-action"]}
+                          className="cursor-pointer hover:text-blue-500"
                           onClick={() => copyToClipboard(message.content)}
                         >
-                          {Locale.Chat.Actions.Copy}
+                          复制
                         </div>
                       </div>
                     )}
-                  {(message.preview || message.content.length === 0) &&
-                  !isUser ? (
-                    <LoadingIcon />
-                  ) : (
-                    <div
-                      className="markdown-body"
-                      style={{ fontSize: `${chat_font_size}px` }}
-                      onContextMenu={(e) => onRightClick(e, message)}
-                      onDoubleClickCapture={() => {
-                        if (!isMobileScreen()) return;
-                        setUserInput(message.content);
-                      }}
-                    >
-                      <Markdown content={message.content} />
-                    </div>
-                  )}
                 </div>
-                {!isUser && !message.preview && (
-                  <div className={styles["chat-message-actions"]}>
-                    <div className={styles["chat-message-action-date"]}>
-                      {parseTime(message.date.toLocaleString())}
-                    </div>
-                  </div>
-                )}
               </div>
+              {isUser && <UserAvatar role={message.role} />}
             </div>
           );
         })}
       </div>
 
-      <div className={styles["chat-input-panel"]}>
+      <div className="p-6 border-t">
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
-        <div className={styles["chat-input-panel-inner"]}>
+        <div className="flex gap-4">
           <textarea
             ref={inputRef}
-            className="w-full"
+            className="flex-1"
             placeholder={Locale.Chat.Input(chat_submit_key)}
-            rows={2}
+            rows={1}
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}
             onKeyDown={onInputKeyDown}
@@ -548,13 +553,13 @@ export function Chat(props: {
             }}
             autoFocus={!props?.sideBarShowing}
           />
-          <IconButton
-            icon={<SendWhiteIcon />}
-            text={Locale.Chat.Send}
-            className={styles["chat-input-send"]}
+          <button
+            className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             noDark
             onClick={onUserSubmit}
-          />
+          >
+            发送
+          </button>
         </div>
       </div>
     </div>

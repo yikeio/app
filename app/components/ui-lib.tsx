@@ -37,7 +37,9 @@ export function ListItem(props: { children: JSX.Element[] }) {
 }
 
 export function List(props: { children: JSX.Element[] | JSX.Element }) {
-  return <div className={styles.list}>{props.children}</div>;
+  return (
+    <div className="bg-white rounded border shadow-sm">{props.children}</div>
+  );
 }
 
 export function Loading() {

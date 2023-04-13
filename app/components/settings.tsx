@@ -10,7 +10,7 @@ import { List, ListItem, Popover, showToast } from "./ui-lib";
 
 import { IconButton } from "./button";
 import { SubmitKey, useChatStore, Theme, useBillingStore } from "../store";
-import { Avatar } from "./chat";
+import { UserAvatar } from "./chat";
 
 import Locale, { AllLangs, changeLang, getLang } from "../locales";
 
@@ -20,15 +20,15 @@ function SettingItem(props: {
   children: JSX.Element;
 }) {
   return (
-    <ListItem>
-      <div className={styles["settings-title"]}>
-        <div>{props.title}</div>
+    <div className="p-4 flex items-center justify-between">
+      <div>
+        <div className="font-bold">{props.title}</div>
         {props.subTitle && (
           <div className={styles["settings-sub-title"]}>{props.subTitle}</div>
         )}
       </div>
       {props.children}
-    </ListItem>
+    </div>
   );
 }
 
@@ -64,29 +64,18 @@ export function Settings(props: { closeSettings: () => void }) {
   };
 
   return (
-    <>
-      <div className={styles["window-header"]}>
-        <div className={styles["window-header-title"]}>
-          <div className={styles["window-header-main-title"]}>
-            {Locale.Settings.Title}
-          </div>
-          <div className={styles["window-header-sub-title"]}>
-            {Locale.Settings.SubTitle}
-          </div>
-        </div>
-        <div className={styles["window-actions"]}>
-          <div className={styles["window-action-button"]}>
-            <IconButton
-              icon={<CloseIcon />}
-              onClick={props.closeSettings}
-              bordered
-              title={Locale.Settings.Actions.Close}
-            />
-          </div>
-        </div>
+    <div className="bg-gray-100 p-6 space-y-6 flex-1">
+      <div className="flex items-center justify-between">
+        <div className="text-2xl font-bold">设置</div>
+        <IconButton
+          icon={<CloseIcon />}
+          onClick={props.closeSettings}
+          bordered
+          title={Locale.Settings.Actions.Close}
+        />
       </div>
-      <div className={styles["settings"]}>
-        <List>
+      <div className="bg-gray-100">
+        <div className="bg-white rounded-lg border shadow-sm divide-y">
           {user.name && (
             <SettingItem title={Locale.Settings.User}>
               <div className={styles.user}>
@@ -149,7 +138,7 @@ export function Settings(props: { closeSettings: () => void }) {
                 className={styles.avatar}
                 onClick={() => setShowEmojiPicker(true)}
               >
-                <Avatar role="user" />
+                <UserAvatar role="user" />
               </div>
             </Popover>
           </SettingItem>
@@ -294,8 +283,8 @@ export function Settings(props: { closeSettings: () => void }) {
               }
             ></input>
           </SettingItem>
-        </List>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

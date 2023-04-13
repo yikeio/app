@@ -28,6 +28,7 @@ import { getConversationList } from "../api/conversations";
 
 import dynamic from "next/dynamic";
 import { ErrorBoundary } from "./error";
+import Image from "next/image";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -195,30 +196,31 @@ function _Home() {
 
   return (
     <div
-      className={`${
-        config.no_border && !isMobileScreen()
-          ? styles["tight-container"]
-          : styles.container
-      }`}
+      className={
+        `min-h-screen flex ` +
+        (config.no_border && !isMobileScreen() ? "" : styles.container)
+      }
     >
       <div
-        className={styles.sidebar + ` ${showSideBar && styles["sidebar-show"]}`}
+        className={
+          `bg-blue-200 p-6 flex flex-col ` + (showSideBar ? "" : "hidden")
+        }
       >
-        <div className={styles["sidebar-header"]}>
-          <div className={styles["sidebar-title"]}>Yike Chat</div>
-          <div className={styles["sidebar-sub-title"]}>
-            {user?.name || (
-              <button className={styles["sidebar-login-btn"]}>未登录</button>
-            )}
+        <div className="flex items-center justify-between py-6">
+          <div>
+            <h1 className="text-3xl font-bold">Yike Chat</h1>
+            <div className={styles["sidebar-sub-title"]}>
+              {user?.name || (
+                <button className={styles["sidebar-login-btn"]}>未登录</button>
+              )}
+            </div>
           </div>
-          <div className={styles["sidebar-logo"]}>
-            <ChatGptIcon />
-          </div>
+          <Image src="/logo.svg" height={50} width={50} alt={""} />
         </div>
 
         <div
           ref={chatListRef}
-          className={styles["sidebar-body"]}
+          className="flex-1"
           onClick={() => {
             setOpenSettings(false);
             setShowSideBar(false);
@@ -229,9 +231,9 @@ function _Home() {
           <Spin spinning={isLoadingMore} />
         </div>
 
-        <div className={styles["sidebar-tail"]}>
-          <div className={styles["sidebar-actions"]}>
-            <div className={styles["sidebar-action"] + " " + styles.mobile}>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="block md:hidden">
               <IconButton
                 icon={<CloseIcon />}
                 onClick={() => {
@@ -241,16 +243,14 @@ function _Home() {
                 }}
               />
             </div>
-            <div className={styles["sidebar-action"]}>
-              <IconButton
-                icon={<SettingsIcon />}
-                onClick={() => {
-                  setOpenSettings(true);
-                  setShowSideBar(false);
-                }}
-                shadow
-              />
-            </div>
+            <IconButton
+              icon={<SettingsIcon />}
+              onClick={() => {
+                setOpenSettings(true);
+                setShowSideBar(false);
+              }}
+              shadow
+            />
           </div>
           <div>
             <IconButton
@@ -265,7 +265,7 @@ function _Home() {
         </div>
       </div>
 
-      <div className={styles["window-content"]}>
+      <div className="flex-1 flex flex-col">
         {openSettings ? (
           <Settings
             closeSettings={() => {
