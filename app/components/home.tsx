@@ -131,6 +131,13 @@ function _Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openSettings]);
 
+  const toggleSidebar = () => {
+    if (!isMobileScreen()) {
+      return;
+    }
+    setShowSideBar(!showSideBar);
+  };
+
   useSwitchTheme();
 
   const handleCreateConversation = () => {
@@ -144,7 +151,7 @@ function _Home() {
       return;
     }
     createConversation();
-    setShowSideBar(false);
+    toggleSidebar();
   };
 
   const handleSideBarScroll = async () => {
@@ -222,11 +229,8 @@ function _Home() {
           ref={chatListRef}
           className="flex-1"
           onClick={() => {
-            if (!isMobileScreen()) {
-              return;
-            }
             setOpenSettings(false);
-            setShowSideBar(false);
+            toggleSidebar();
           }}
           onScroll={handleSideBarScroll}
         >
@@ -249,7 +253,7 @@ function _Home() {
             icon={<SettingsIcon />}
             onClick={() => {
               setOpenSettings(true);
-              setShowSideBar(false);
+              toggleSidebar();
             }}
             shadow
           />
@@ -269,13 +273,13 @@ function _Home() {
           <Settings
             closeSettings={() => {
               setOpenSettings(false);
-              setShowSideBar(true);
+              toggleSidebar();
             }}
           />
         ) : (
           <Chat
             key="chat"
-            showSideBar={() => setShowSideBar(true)}
+            showSideBar={() => toggleSidebar()}
             sideBarShowing={showSideBar}
           />
         )}

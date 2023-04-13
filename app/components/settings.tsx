@@ -89,7 +89,7 @@ export function Settings(props: { closeSettings: () => void }) {
 
           {user.name && (
             <SettingItem title={Locale.Settings.UserReferral}>
-              <div className={styles.user}>{user.referral_code}</div>
+              <div className="uppercase">{user.referral_code}</div>
             </SettingItem>
           )}
 
