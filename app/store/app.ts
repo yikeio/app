@@ -56,6 +56,7 @@ const DEFAULT_CONFIG: ChatConfig = {
 };
 
 export interface ChatSession {
+  messages_count: number;
   id: string;
   title: string;
   memoryPrompt: string;
@@ -81,6 +82,7 @@ function createEmptySession(): ChatSession {
     memoryPrompt: "",
     context: [],
     messages: [],
+    messages_count: 0,
     updated_at: createDate,
   };
 }

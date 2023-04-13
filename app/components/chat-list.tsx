@@ -54,7 +54,7 @@ export function ChatList() {
         <ChatItem
           title={item.title}
           time={item.updated_at}
-          count={item.messages_count}
+          count={item.messages_count || 0}
           key={i}
           selected={i === selectedIndex}
           onClick={() => selectSession(i)}
