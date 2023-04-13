@@ -27,7 +27,10 @@ const Avatar: React.FC<AvatarProps> = ({
       alt={alt}
       height={sizes[size]}
       width={sizes[size]}
-      className={classNames("rounded-full", className)}
+      className={classNames(
+        "rounded-full bg-white shadow-inner shadow-gray-300",
+        className,
+      )}
     />
   );
 };
