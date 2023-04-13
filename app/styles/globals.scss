@@ -64,18 +64,13 @@ body {
   color: var(--black);
   margin: 0;
   padding: 0;
-  height: var(--full-height);
-  width: 100vw;
   overflow-y: scroll;
   letter-spacing: 0;
   touch-action: manipulation;
   text-rendering: optimizeLegibility;
   font-feature-settings: "liga" 0;
   position: relative;
-  min-height: 100%;
   font-size: 14px;
-  line-height: 1.4285714286;
-  //   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   @media only screen and (max-width: 600px) {
