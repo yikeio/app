@@ -53,7 +53,7 @@ export function UserAvatar(props: { role: Message["role"] }) {
   const config = useChatStore((state) => state.config);
 
   if (props.role !== "user") {
-    return <Avatar src="/logo.svg" className="rounded-full h-12 w-12" />;
+    return <Avatar src="/logo.svg" className="rounded-full h-10 w-10" />;
   }
 
   return (
