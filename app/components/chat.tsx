@@ -53,11 +53,13 @@ export function UserAvatar(props: { role: Message["role"] }) {
   const config = useChatStore((state) => state.config);
 
   if (props.role !== "user") {
-    return <Avatar src="/logo.svg" className="w-10 h-10 rounded-full" />;
+    return (
+      <Avatar src="/logo.svg" className="w-10 h-10 rounded-full shrink-0" />
+    );
   }
 
   return (
-    <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-inner shadow-gray-300">
+    <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-inner shrink-0 shadow-gray-300">
       <Emoji unified={config.avatar} size={32} />
     </div>
   );
@@ -408,7 +410,7 @@ export function Chat(props: {
   }) => {
     const isUser = message.role === "user";
     return (
-      <div className="flex flex-col max-w-full gap-2 group">
+      <div className="flex flex-col gap-2 overflow-hidden group">
         <div className="rounded-lg">
           {/* 看起来不需要这个东西 */}
           {/* {(message.preview || message.streaming) && Locale.Chat.Typing} */}
