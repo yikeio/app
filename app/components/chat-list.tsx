@@ -48,13 +48,15 @@ export function ChatList() {
     ],
   );
 
+  console.log("sessions", sessions);
+
   return (
     <div className="flex flex-col gap-4">
       {sessions.map((item, i) => (
         <ChatItem
           title={item.title}
           time={item.updated_at}
-          count={item.messages.length}
+          count={item.messages_count}
           key={i}
           selected={i === selectedIndex}
           onClick={() => selectSession(i)}
