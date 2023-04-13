@@ -12,6 +12,7 @@ import styles from "./login.module.scss";
 import Modal from "./modal";
 import { showToast } from "./ui-lib";
 import Avatar from "./avatar";
+import Image from "next/image";
 
 const useUserLogin = () => {
   const [loginModalVisible, setLoginModalVisible] = React.useState(false);
@@ -176,25 +177,6 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
   );
 }
 
-export function HeroCard() {
-  return (
-    <div className="flex flex-col items-center max-w-sm gap-8 p-12 py-24 text-gray-800 bg-gray-200">
-      <h1 className="text-2xl leading-relaxed text-gray-600">
-        <span className="text-3xl font-semibold text-gray-400">“</span>
-        无论你从事什么行业，你一定会爱上这个万能助手！
-        <span className="text-3xl font-semibold text-gray-400">”</span>
-      </h1>
-      <div className="flex flex-col items-center gap-4">
-        <Avatar src="https://easywechat.com/overtrue.jpg" alt="" size="lg" />
-        <div className="text-center">
-          <h3 className="font-bold">overtrue</h3>
-          <p className="text-gray-500">高级工程师、设计师</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function LoginDialog() {
   const { loginModalVisible, setLoginModalVisible } = useUserLogin();
   const [user] = useChatStore((state) => [state.user]);
@@ -215,17 +197,17 @@ export function LoginDialog() {
 
   return (
     <Modal
-      size="lg"
+      size="sm"
       show={loginModalVisible}
       noPadding
       onClose={() => setLoginModalVisible(false)}
     >
-      <div className="flex">
-        <div className="flex items-center justify-center w-1/2 p-8">
-          <LoginForm closeModal={setLoginModalVisible} />
+      <div className="p-8 space-y-4">
+        <div className="flex items-center justify-center">
+          <Image src="/logo.svg" alt="" height={80} width={80} />
         </div>
-        <div className="w-1/2">
-          <HeroCard />
+        <div className="flex items-center justify-center">
+          <LoginForm closeModal={setLoginModalVisible} />
         </div>
       </div>
     </Modal>

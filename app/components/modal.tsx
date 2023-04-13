@@ -49,7 +49,7 @@ export default function Modal({
             leaveFrom="opacity-100"
             leaveTo="opacity-"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-90" />
+            <div className="fixed inset-0 bg-black/40" />
           </Transition.Child>
           <span
             className="inline-block h-screen align-middle"
