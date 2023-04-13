@@ -512,7 +512,7 @@ export function Chat(props: {
 
   return (
     <div
-      className="flex flex-col max-h-screen overflow-y-auto"
+      className="flex flex-col h-screen max-h-screen overflow-y-auto"
       key={session.id}
     >
       <div className="flex items-center justify-between px-6 py-4 border-b">
