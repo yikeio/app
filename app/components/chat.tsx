@@ -408,7 +408,7 @@ export function Chat(props: {
   }) => {
     const isUser = message.role === "user";
     return (
-      <div className="flex flex-col gap-2 group md:w-[80%]">
+      <div className="flex flex-col max-w-full gap-2 group">
         <div className="rounded-lg">
           {/* 看起来不需要这个东西 */}
           {/* {(message.preview || message.streaming) && Locale.Chat.Typing} */}
