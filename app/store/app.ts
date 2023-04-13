@@ -63,7 +63,6 @@ export interface ChatSession {
   context: Message[];
   messages: Message[];
   updated_at: string;
-  message_count: number;
 }
 
 const DEFAULT_TOPIC = Locale.Store.DefaultTopic;
@@ -85,7 +84,6 @@ function createEmptySession(): ChatSession {
     messages: [],
     messages_count: 0,
     updated_at: createDate,
-    message_count: 0,
   };
 }
 
