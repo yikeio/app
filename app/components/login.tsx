@@ -237,8 +237,18 @@ export function ActivateDialog() {
   }
 
   return (
-    <Modal show={activateVisible} onClose={() => setActivateVisible(false)}>
+    <Modal
+      show={activateVisible}
+      size="sm"
+      onClose={() => setActivateVisible(false)}
+    >
       <div className="flex flex-col gap-6">
+        <header>
+          <h2 className="text-xl">请输入邀请码</h2>
+          <p className="text-gray-500 mt-1">
+            当前为内测期间，你需要输入邀请码才能使用
+          </p>
+        </header>
         <input
           type="text"
           className="block"
