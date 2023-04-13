@@ -1,10 +1,10 @@
-import DeleteIcon from "../icons/delete.svg";
 import styles from "./home.module.scss";
 
 import { useChatStore } from "../store";
 
 import Locale from "../locales";
 import { isMobileScreen } from "../utils";
+import { IconTrash } from "@tabler/icons-react";
 
 export function ChatItem(props: {
   onClick?: (e: React.MouseEvent) => void;
@@ -16,8 +16,8 @@ export function ChatItem(props: {
 }) {
   return (
     <div
-      className={`bg-white p-2 px-4 rounded-lg relative group ${
-        props.selected && "border-2 border-blue-500"
+      className={`bg-slate-100 border-2 p-2 px-4 rounded-lg relative group ${
+        props.selected ? "border-blue-500" : "border-slate-200"
       }`}
       onClick={props.onClick}
     >
@@ -29,10 +29,10 @@ export function ChatItem(props: {
         <div className={styles["chat-item-date"]}>{props.time}</div>
       </div>
       <div
-        className="absolute opacity-0 group-hover:opacity-100 transition-all right-0 top-0 p-2"
+        className="absolute top-0 right-0 p-1 m-2 text-red-500 transition-all rounded-full opacity-0 group-hover:bg-red-200 group-hover:opacity-100"
         onClick={props.onDelete}
       >
-        <DeleteIcon />
+        <IconTrash size={14} />
       </div>
     </div>
   );
@@ -54,7 +54,7 @@ export function ChatList() {
         <ChatItem
           title={item.title}
           time={item.updated_at}
-          count={item.messages_count}
+          count={item.messages_count || 0}
           key={i}
           selected={i === selectedIndex}
           onClick={() => selectSession(i)}

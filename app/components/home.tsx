@@ -4,18 +4,13 @@ require("../polyfill");
 
 import { useState, useEffect, useRef } from "react";
 
-import { IconButton } from "./button";
 import { BillingDialog } from "./billing";
 import { LoginDialog, ActivateDialog } from "./login";
 import { Spin } from "antd";
 import styles from "./home.module.scss";
 
-import SettingsIcon from "../icons/settings.svg";
-
 import BotIcon from "../icons/bot.svg";
-import AddIcon from "../icons/add.svg";
 import LoadingIcon from "../icons/loading.svg";
-import CloseIcon from "../icons/close.svg";
 
 import { useChatStore, useBillingStore, ChatSession } from "../store";
 import { isMobileScreen } from "../utils";
@@ -28,6 +23,11 @@ import { getConversationList } from "../api/conversations";
 import dynamic from "next/dynamic";
 import { ErrorBoundary } from "./error";
 import Image from "next/image";
+import {
+  IconTrash,
+  IconAdjustmentsHorizontal,
+  IconPlus,
+} from "@tabler/icons-react";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -209,7 +209,7 @@ function _Home() {
     >
       <div
         className={
-          `fixed md:relative bg-blue-200 inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col ` +
+          `fixed md:relative bg-white border-r inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col ` +
           (showSideBar ? "left-0" : "-left-[100%]")
         }
       >
@@ -239,44 +239,52 @@ function _Home() {
           <Spin spinning={isLoadingMore} />
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="block md:hidden">
-            <IconButton
-              icon={<CloseIcon />}
+        <div className="flex flex-col gap-4">
+          <button
+            className="w-full p-2 px-4 text-white bg-red-500 border-red-400 md:hidden"
+            onClick={() => {
+              if (confirm(Locale.Home.DeleteChat)) {
+                removeSession(currentIndex);
+              }
+            }}
+          >
+            <IconTrash size={22} />
+            <span>删除选中会话</span>
+          </button>
+          <div className="flex items-center justify-between">
+            <button
+              className="p-2 px-4"
               onClick={() => {
-                if (confirm(Locale.Home.DeleteChat)) {
-                  removeSession(currentIndex);
-                }
+                setOpenSettings(true);
+                toggleSidebar();
               }}
-            />
+            >
+              <IconAdjustmentsHorizontal size={22} />
+              <span>设置</span>
+            </button>
+            <button
+              className="p-2 px-4"
+              onClick={() => {
+                handleCreateConversation();
+              }}
+            >
+              <IconPlus size={22} />
+              <span>开始新的会话</span>
+            </button>
           </div>
-          <IconButton
-            icon={<SettingsIcon />}
-            onClick={() => {
-              setOpenSettings(true);
-              toggleSidebar();
-            }}
-            shadow
-          />
-          <IconButton
-            icon={<AddIcon />}
-            text={Locale.Home.NewChat}
-            onClick={() => {
-              handleCreateConversation();
-            }}
-            shadow
-          />
         </div>
       </div>
 
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1 overflow-hidden bg-slate-100">
         {openSettings ? (
-          <Settings
-            closeSettings={() => {
-              setOpenSettings(false);
-              toggleSidebar();
-            }}
-          />
+          <div className="w-full mx-auto max-w-prose">
+            <Settings
+              closeSettings={() => {
+                setOpenSettings(false);
+                toggleSidebar();
+              }}
+            />
+          </div>
         ) : (
           <Chat
             key="chat"
