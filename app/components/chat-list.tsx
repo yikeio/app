@@ -48,8 +48,6 @@ export function ChatList() {
     ],
   );
 
-  console.log("sessions", sessions);
-
   return (
     <div className="flex flex-col gap-4">
       {sessions.map((item, i) => (
