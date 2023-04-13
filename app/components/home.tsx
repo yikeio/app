@@ -203,12 +203,13 @@ function _Home() {
   return (
     <div
       className={
-        `min-h-screen flex ` + (config.no_border && !isMobileScreen() ? "" : "")
+        `min-h-screen w-full flex ` +
+        (config.no_border && !isMobileScreen() ? "" : "")
       }
     >
       <div
         className={
-          `fixed md:relative bg-blue-200 inset-0 w-full md:w-72 md:max-w-sm z-10 p-6 flex flex-col ` +
+          `fixed md:relative bg-blue-200 inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col ` +
           (showSideBar ? "left-0" : "-left-[100%]")
         }
       >
@@ -268,7 +269,7 @@ function _Home() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col w-screen md:w-auto">
+      <div className="flex flex-col flex-1 overflow-hidden">
         {openSettings ? (
           <Settings
             closeSettings={() => {

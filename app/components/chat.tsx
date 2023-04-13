@@ -53,11 +53,11 @@ export function UserAvatar(props: { role: Message["role"] }) {
   const config = useChatStore((state) => state.config);
 
   if (props.role !== "user") {
-    return <Avatar src="/logo.svg" className="rounded-full h-10 w-10" />;
+    return <Avatar src="/logo.svg" className="w-10 h-10 rounded-full" />;
   }
 
   return (
-    <div className="rounded-full h-12 w-12 bg-gray-100 flex items-center justify-center">
+    <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-inner shadow-gray-300">
       <Emoji unified={config.avatar} size={32} />
     </div>
   );
@@ -408,7 +408,7 @@ export function Chat(props: {
   }) => {
     const isUser = message.role === "user";
     return (
-      <div className="flex flex-col gap-2 group w-full md:w-auto">
+      <div className="flex flex-col gap-2 group md:w-[80%]">
         <div className="rounded-lg">
           {/* 看起来不需要这个东西 */}
           {/* {(message.preview || message.streaming) && Locale.Chat.Typing} */}
@@ -416,8 +416,8 @@ export function Chat(props: {
             className={
               `p-6 rounded-xl relative ` +
               (isUser
-                ? "bg-blue-500 rounded-tr-none text-white"
-                : "bg-gray-100 rounded-tl-none text-gray-700")
+                ? "bg-blue-500 rounded-br-none text-white"
+                : "bg-gray-100 rounded-bl-none text-gray-700")
             }
           >
             {/* 消息内容 */}
@@ -438,7 +438,7 @@ export function Chat(props: {
             )}
           </div>
         </div>
-        <div className="opacity-0 flex items-center gap-4 group-hover:opacity-100">
+        <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100">
           {!isUser && !message.preview && (
             <div className="text-xs text-gray-400">
               {parseTime(message.date.toLocaleString())}
@@ -447,7 +447,7 @@ export function Chat(props: {
 
           {!isUser && !(message.preview || message.content.length === 0) && (
             // 工具栏
-            <div className="flex items-center text-xs gap-4 text-gray-400">
+            <div className="flex items-center gap-4 text-xs text-gray-400">
               {message.streaming ? (
                 <div
                   className="cursor-pointer hover:text-blue-500"
@@ -510,24 +510,24 @@ export function Chat(props: {
 
   return (
     <div
-      className="max-h-screen overflow-y-auto flex flex-1 flex-col"
+      className="flex flex-col max-h-screen overflow-y-auto"
       key={session.id}
     >
-      <div className="flex items-center justify-between py-4 px-6 border-b">
+      <div className="flex items-center justify-between px-6 py-4 border-b">
         <div
-          className="md:flex items-center gap-4"
+          className="items-center gap-4 md:flex"
           onClick={props?.showSideBar}
         >
           <div className="flex items-center gap-2">
             <h3 className="text-xl text-gray-700">{session.title}</h3>
             <IconButton
               icon={<RenameIcon />}
-              className="h-4 w-4"
+              className="w-4 h-4"
               title="重命名"
               onClick={handleUpdate}
             />
           </div>
-          <div className="text-gray-400 text-sm">
+          <div className="text-sm text-gray-400">
             {Locale.Chat.SubTitle(session.messages.length)}
           </div>
         </div>
@@ -558,7 +558,7 @@ export function Chat(props: {
 
       {/* 对话列表 */}
       <div
-        className="bg-white p-6 flex flex-1 flex-col gap-2 overflow-y-scroll"
+        className="flex flex-col flex-1 gap-2 p-6 overflow-y-scroll bg-white"
         ref={scrollRef}
         onScroll={(e) => onChatBodyScroll(e.currentTarget)}
         onTouchStart={() => {
@@ -574,9 +574,9 @@ export function Chat(props: {
         })}
       </div>
 
-      <div className="p-6 border-t sticky bottom-0 bg-white shadow">
+      <div className="sticky bottom-0 p-6 bg-white border-t shadow">
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col gap-4 md:flex-row">
           <textarea
             ref={inputRef}
             className="flex-1 w-full"
