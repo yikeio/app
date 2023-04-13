@@ -16,6 +16,7 @@
     "@ant-design/icons": "^5.0.1",
     "@headlessui/react": "^1.7.14",
     "@svgr/webpack": "^6.5.1",
+    "@tailwindcss/forms": "^0.5.3",
     "@vercel/analytics": "^0.1.11",
     "antd": "^5.4.2",
     "autoprefixer": "^10.4.14",

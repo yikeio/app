@@ -11,7 +11,6 @@ import { useChatStore, useBillingStore } from "../store";
 import styles from "./login.module.scss";
 import Modal from "./modal";
 import { showToast } from "./ui-lib";
-import Avatar from "./avatar";
 import Image from "next/image";
 
 const useUserLogin = () => {
@@ -132,9 +131,10 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
           <input
             type="text"
             id="phone-number-input"
-            className="bg-gray-50 shadow-sm border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-12 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-full pl-12 p-2.5"
             placeholder="请输入手机号"
             maxLength={11}
+            autoFocus={true}
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
@@ -149,12 +149,13 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
         </label>
         <div className="relative">
           <input
-            type="password"
+            type="text"
             id="verify-code-input"
-            className="bg-gray-50 shadow-sm pr-24 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="pr-24 w-full"
             placeholder="请输入验证码"
             maxLength={4}
             value={code}
+            autoComplete="off"
             onChange={(e) => setCode(e.target.value)}
           />
           <button
@@ -237,21 +238,21 @@ export function ActivateDialog() {
 
   return (
     <Modal show={activateVisible} onClose={() => setActivateVisible(false)}>
-      <div className={styles["login-dialog-item"]}>
-        <div className={styles["login-dialog-item-value"]}>
-          <input
-            placeholder="请输入邀请码"
-            value={inviteCode}
-            onChange={(e) => setInviteCode(e.target.value)}
-          />
-        </div>
+      <div className="flex flex-col gap-6">
+        <input
+          type="text"
+          className="block"
+          placeholder="请输入邀请码"
+          value={inviteCode}
+          onChange={(e) => setInviteCode(e.target.value)}
+        />
+        <button
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          onClick={handleActivate}
+        >
+          激活
+        </button>
       </div>
-      <button
-        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-        onClick={handleActivate}
-      >
-        激活
-      </button>
     </Modal>
   );
 }

@@ -535,7 +535,7 @@ export function Chat(props: {
         <div className={styles["chat-input-panel-inner"]}>
           <textarea
             ref={inputRef}
-            className={styles["chat-input"]}
+            className="w-full"
             placeholder={Locale.Chat.Input(chat_submit_key)}
             rows={2}
             onInput={(e) => onInput(e.currentTarget.value)}
