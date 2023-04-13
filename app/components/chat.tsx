@@ -58,7 +58,7 @@ export function UserAvatar(props: { role: Message["role"] }) {
 
   return (
     <div className="rounded-full h-12 w-12 bg-gray-100 flex items-center justify-center">
-      <Emoji unified={config.avatar} size={18} />
+      <Emoji unified={config.avatar} size={32} />
     </div>
   );
 }
@@ -358,6 +358,7 @@ export function Chat(props: {
       isLoading
         ? [
             {
+              id: "loading",
               role: "assistant",
               content: "……",
               date: new Date().toLocaleString(),
@@ -370,6 +371,7 @@ export function Chat(props: {
       userInput.length > 0 && config.chat_bubble
         ? [
             {
+              id: "user-input",
               role: "user",
               content: userInput,
               date: new Date().toLocaleString(),
@@ -397,10 +399,125 @@ export function Chat(props: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const MessageBody = ({
+    message,
+    index,
+  }: {
+    message: RenderMessage;
+    index: number;
+  }) => {
+    const isUser = message.role === "user";
+    return (
+      <div className="flex flex-col gap-2 group w-full md:w-auto">
+        <div className="rounded-lg">
+          {/* 看起来不需要这个东西 */}
+          {/* {(message.preview || message.streaming) && Locale.Chat.Typing} */}
+          <div
+            className={
+              `p-6 rounded-xl relative ` +
+              (isUser
+                ? "bg-blue-500 rounded-tr-none text-white"
+                : "bg-gray-100 rounded-tl-none text-gray-700")
+            }
+          >
+            {/* 消息内容 */}
+            {(message.preview || message.content.length === 0) && !isUser ? (
+              <LoadingIcon />
+            ) : (
+              <div
+                className="markdown-body"
+                style={{ fontSize: `${chat_font_size}px` }}
+                onContextMenu={(e) => onRightClick(e, message)}
+                onDoubleClickCapture={() => {
+                  if (!isMobileScreen()) return;
+                  setUserInput(message.content);
+                }}
+              >
+                <Markdown content={message.content} />
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="opacity-0 flex items-center gap-4 group-hover:opacity-100">
+          {!isUser && !message.preview && (
+            <div className="text-xs text-gray-400">
+              {parseTime(message.date.toLocaleString())}
+            </div>
+          )}
+
+          {!isUser && !(message.preview || message.content.length === 0) && (
+            // 工具栏
+            <div className="flex items-center text-xs gap-4 text-gray-400">
+              {message.streaming ? (
+                <div
+                  className="cursor-pointer hover:text-blue-500"
+                  onClick={() => onUserStop(index)}
+                >
+                  复制
+                </div>
+              ) : (
+                <div
+                  className="cursor-pointer hover:text-blue-500"
+                  onClick={() => onResend(index)}
+                >
+                  重新生成
+                </div>
+              )}
+
+              <div
+                className="cursor-pointer hover:text-blue-500"
+                onClick={() => copyToClipboard(message.content)}
+              >
+                复制
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const MessageItem = ({
+    message,
+    index = 0,
+  }: {
+    message: RenderMessage;
+    index?: number;
+  }) => {
+    const isUser = message.role === "user";
+    const messageBody = (
+      <MessageBody
+        key="message-body"
+        message={message}
+        index={index}
+      ></MessageBody>
+    );
+    const avatar = <UserAvatar key="avatar" role={message.role} />;
+
+    return (
+      <div
+        key={index}
+        className={`flex flex-col md:flex-row items-start gap-2 md:gap-4 ${
+          isUser ? "items-end md:items-start justify-end" : "items-start"
+        }`}
+      >
+        {isUser && !isMobileScreen()
+          ? [messageBody, avatar]
+          : [avatar, messageBody]}
+      </div>
+    );
+  };
+
   return (
-    <div className="flex flex-1 flex-col" key={session.id}>
+    <div
+      className="max-h-screen overflow-y-auto flex flex-1 flex-col"
+      key={session.id}
+    >
       <div className="flex items-center justify-between py-4 px-6 border-b">
-        <div className="flex items-center gap-4" onClick={props?.showSideBar}>
+        <div
+          className="md:flex items-center gap-4"
+          onClick={props?.showSideBar}
+        >
           <div className="flex items-center gap-2">
             <h3 className="text-xl text-gray-700">{session.title}</h3>
             <IconButton
@@ -439,9 +556,9 @@ export function Chat(props: {
         </div>
       </div>
 
-      {/* 对话内容范围 */}
+      {/* 对话列表 */}
       <div
-        className="bg-white p-6 flex flex-1 flex-col gap-2"
+        className="bg-white p-6 flex flex-1 flex-col gap-2 overflow-y-scroll"
         ref={scrollRef}
         onScroll={(e) => onChatBodyScroll(e.currentTarget)}
         onTouchStart={() => {
@@ -451,98 +568,20 @@ export function Chat(props: {
       >
         {isLoadingMessage && <Spin style={{ display: "block" }} />}
         {messages.map((message, i) => {
-          const isUser = message.role === "user";
-
           return (
-            <div
-              key={i}
-              className={`flex gap-4 ${isUser ? "justify-end" : "flex-start"}`}
-            >
-              {!isUser && <UserAvatar role={message.role} />}
-
-              {/* 单条消息结构 */}
-              <div className="flex flex-col gap-2 py-4 group">
-                <div className="rounded-lg">
-                  {/* 看起来不需要这个东西 */}
-                  {/* {(message.preview || message.streaming) && Locale.Chat.Typing} */}
-                  <div
-                    className={
-                      `p-6 rounded-xl ` +
-                      (isUser
-                        ? "bg-blue-500 rounded-tr-none text-white"
-                        : "bg-gray-100 rounded-tl-none text-gray-700")
-                    }
-                  >
-                    {/* 消息内容 */}
-                    {(message.preview || message.content.length === 0) &&
-                    !isUser ? (
-                      <LoadingIcon />
-                    ) : (
-                      <div
-                        className="markdown-body"
-                        style={{ fontSize: `${chat_font_size}px` }}
-                        onContextMenu={(e) => onRightClick(e, message)}
-                        onDoubleClickCapture={() => {
-                          if (!isMobileScreen()) return;
-                          setUserInput(message.content);
-                        }}
-                      >
-                        <Markdown content={message.content} />
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="opacity-0 flex items-center gap-4 group-hover:opacity-100">
-                  {!isUser && !message.preview && (
-                    <div className="text-xs text-gray-400">
-                      {parseTime(message.date.toLocaleString())}
-                    </div>
-                  )}
-
-                  {!isUser &&
-                    !(message.preview || message.content.length === 0) && (
-                      // 工具栏
-                      <div className="flex items-center text-xs gap-4 text-gray-400">
-                        {message.streaming ? (
-                          <div
-                            className="cursor-pointer hover:text-blue-500"
-                            onClick={() => onUserStop(i)}
-                          >
-                            复制
-                          </div>
-                        ) : (
-                          <div
-                            className="cursor-pointer hover:text-blue-500"
-                            onClick={() => onResend(i)}
-                          >
-                            重新生成
-                          </div>
-                        )}
-
-                        <div
-                          className="cursor-pointer hover:text-blue-500"
-                          onClick={() => copyToClipboard(message.content)}
-                        >
-                          复制
-                        </div>
-                      </div>
-                    )}
-                </div>
-              </div>
-              {isUser && <UserAvatar role={message.role} />}
-            </div>
+            <MessageItem key={i} message={message} index={i}></MessageItem>
           );
         })}
       </div>
 
-      <div className="p-6 border-t">
+      <div className="p-6 border-t sticky bottom-0 bg-white shadow">
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
-        <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
           <textarea
             ref={inputRef}
-            className="flex-1"
+            className="flex-1 w-full"
             placeholder={Locale.Chat.Input(chat_submit_key)}
-            rows={1}
+            rows={2}
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}
             onKeyDown={onInputKeyDown}
@@ -554,8 +593,7 @@ export function Chat(props: {
             autoFocus={!props?.sideBarShowing}
           />
           <button
-            className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            noDark
+            className="block w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             onClick={onUserSubmit}
           >
             发送

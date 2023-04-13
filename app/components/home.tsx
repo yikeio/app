@@ -11,7 +11,6 @@ import { Spin } from "antd";
 import styles from "./home.module.scss";
 
 import SettingsIcon from "../icons/settings.svg";
-import ChatGptIcon from "../icons/chatgpt.svg";
 
 import BotIcon from "../icons/bot.svg";
 import AddIcon from "../icons/add.svg";
@@ -197,31 +196,35 @@ function _Home() {
   return (
     <div
       className={
-        `min-h-screen flex ` +
-        (config.no_border && !isMobileScreen() ? "" : styles.container)
+        `min-h-screen flex ` + (config.no_border && !isMobileScreen() ? "" : "")
       }
     >
       <div
         className={
-          `bg-blue-200 p-6 flex flex-col ` + (showSideBar ? "" : "hidden")
+          `fixed md:relative bg-blue-200 inset-0 w-full md:w-72 md:max-w-sm z-10 p-6 flex flex-col ` +
+          (showSideBar ? "left-0" : "-left-[100%]")
         }
       >
-        <div className="flex items-center justify-between py-6">
+        <div className="flex items-center gap-4 py-6">
+          <Image src="/logo.svg" height={50} width={50} alt={""} />
+
           <div>
             <h1 className="text-3xl font-bold">Yike Chat</h1>
-            <div className={styles["sidebar-sub-title"]}>
+            <div className="text-gray-500">
               {user?.name || (
                 <button className={styles["sidebar-login-btn"]}>未登录</button>
               )}
             </div>
           </div>
-          <Image src="/logo.svg" height={50} width={50} alt={""} />
         </div>
 
         <div
           ref={chatListRef}
           className="flex-1"
           onClick={() => {
+            if (!isMobileScreen()) {
+              return;
+            }
             setOpenSettings(false);
             setShowSideBar(false);
           }}
@@ -232,40 +235,36 @@ function _Home() {
         </div>
 
         <div className="flex items-center justify-between">
-          <div>
-            <div className="block md:hidden">
-              <IconButton
-                icon={<CloseIcon />}
-                onClick={() => {
-                  if (confirm(Locale.Home.DeleteChat)) {
-                    removeSession(currentIndex);
-                  }
-                }}
-              />
-            </div>
+          <div className="block md:hidden">
             <IconButton
-              icon={<SettingsIcon />}
+              icon={<CloseIcon />}
               onClick={() => {
-                setOpenSettings(true);
-                setShowSideBar(false);
+                if (confirm(Locale.Home.DeleteChat)) {
+                  removeSession(currentIndex);
+                }
               }}
-              shadow
             />
           </div>
-          <div>
-            <IconButton
-              icon={<AddIcon />}
-              text={Locale.Home.NewChat}
-              onClick={() => {
-                handleCreateConversation();
-              }}
-              shadow
-            />
-          </div>
+          <IconButton
+            icon={<SettingsIcon />}
+            onClick={() => {
+              setOpenSettings(true);
+              setShowSideBar(false);
+            }}
+            shadow
+          />
+          <IconButton
+            icon={<AddIcon />}
+            text={Locale.Home.NewChat}
+            onClick={() => {
+              handleCreateConversation();
+            }}
+            shadow
+          />
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col w-screen md:w-auto">
         {openSettings ? (
           <Settings
             closeSettings={() => {

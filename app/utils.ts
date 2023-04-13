@@ -56,7 +56,7 @@ export function isIOS() {
 }
 
 export function isMobileScreen() {
-  return window.innerWidth <= 600;
+  return window.outerWidth <= 600;
 }
 
 export function selectOrCopy(el: HTMLElement, content: string) {

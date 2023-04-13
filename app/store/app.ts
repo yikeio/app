@@ -13,6 +13,7 @@ import { ControllerPool, requestChatStream } from "../requests";
 import Locale from "../locales";
 
 export type Message = ChatCompletionResponseMessage & {
+  id: string;
   date: string;
   streaming?: boolean;
   isError?: boolean;

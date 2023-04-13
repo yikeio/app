@@ -7,7 +7,7 @@ import Locale from "../locales";
 import { isMobileScreen } from "../utils";
 
 export function ChatItem(props: {
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   onDelete?: (e: React.MouseEvent) => void;
   title: string;
   count: number;
@@ -16,19 +16,22 @@ export function ChatItem(props: {
 }) {
   return (
     <div
-      className={`bg-white p-2 px-4 rounded-lg ${
+      className={`bg-white p-2 px-4 rounded-lg relative group ${
         props.selected && "border-2 border-blue-500"
       }`}
       onClick={props.onClick}
     >
-      <div className={styles["chat-item-title"]}>{props.title}</div>
+      <div className="font-bold">{props.title}</div>
       <div className={styles["chat-item-info"]}>
         <div className={styles["chat-item-count"]}>
           {Locale.ChatItem.ChatItemCount(props.count)}
         </div>
         <div className={styles["chat-item-date"]}>{props.time}</div>
       </div>
-      <div className={styles["chat-item-delete"]} onClick={props.onDelete}>
+      <div
+        className="absolute opacity-0 group-hover:opacity-100 transition-all right-0 top-0 p-2"
+        onClick={props.onDelete}
+      >
         <DeleteIcon />
       </div>
     </div>
@@ -46,7 +49,7 @@ export function ChatList() {
   );
 
   return (
-    <div className="">
+    <div className="flex flex-col gap-4">
       {sessions.map((item, i) => (
         <ChatItem
           title={item.title}
