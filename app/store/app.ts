@@ -231,6 +231,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
     const historyList = list.map((item: any) => {
       return {
+        id: item.id || "",
         role: item.role,
         content: item.content,
         date: item.created_at,
