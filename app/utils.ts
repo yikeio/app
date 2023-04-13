@@ -37,6 +37,8 @@ export function downloadAs(text: string, filename: string) {
 }
 
 export function parseTime(time: string): string {
+  if (!time) return "";
+
   const date = new Date(time);
   const year = date.getFullYear();
   const month = date.getMonth() + 1;

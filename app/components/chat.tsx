@@ -26,6 +26,7 @@ import {
   downloadAs,
   isMobileScreen,
   selectOrCopy,
+  parseTime,
 } from "../utils";
 
 import dynamic from "next/dynamic";
@@ -519,7 +520,7 @@ export function Chat(props: {
                 {!isUser && !message.preview && (
                   <div className={styles["chat-message-actions"]}>
                     <div className={styles["chat-message-action-date"]}>
-                      {message.date.toLocaleString()}
+                      {parseTime(message.date.toLocaleString())}
                     </div>
                   </div>
                 )}
