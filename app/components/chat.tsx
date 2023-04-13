@@ -3,16 +3,20 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { Spin } from "antd";
 import Avatar from "./avatar";
 
-import SendWhiteIcon from "../icons/send-white.svg";
 import ExportIcon from "../icons/export.svg";
 import MenuIcon from "../icons/menu.svg";
 import CopyIcon from "../icons/copy.svg";
 import DownloadIcon from "../icons/download.svg";
 import LoadingIcon from "../icons/loading.svg";
-import BotIcon from "../icons/bot.svg";
 import RenameIcon from "../icons/rename.svg";
 import { updateConversation } from "../api/conversations";
 import { showToast } from "./ui-lib";
+import {
+  IconMessage2,
+  IconFileExport,
+  IconMenu2,
+  IconBrandTelegram,
+} from "@tabler/icons-react";
 
 import {
   Message,
@@ -410,16 +414,16 @@ export function Chat(props: {
   }) => {
     const isUser = message.role === "user";
     return (
-      <div className="relative max-w-[75%] flex flex-col gap-2 overflow-hidden group">
+      <div className="relative max-w-[90%] md:max-w-[75%] flex flex-col gap-2 overflow-hidden group">
         <div className="rounded-lg">
           {/* 看起来不需要这个东西 */}
           {/* {(message.preview || message.streaming) && Locale.Chat.Typing} */}
           <div
             className={
-              `p-6 rounded-xl relative ` +
+              `p-3 md:p-6 rounded-xl relative ` +
               (isUser
                 ? "bg-blue-500 justify-self-end rounded-br-none text-white"
-                : "bg-gray-100 rounded-bl-none text-gray-700")
+                : "bg-white rounded-bl-none text-gray-700")
             }
           >
             {/* 消息内容 */}
@@ -512,15 +516,16 @@ export function Chat(props: {
 
   return (
     <div
-      className="flex flex-col h-screen max-h-screen overflow-y-auto"
+      className="flex flex-col flex-1 max-h-screen overflow-y-auto bg-slate-100"
       key={session.id}
     >
-      <div className="flex items-center justify-between px-6 py-4 border-b">
+      <div className="flex items-center justify-between px-6 py-4 bg-white border-b">
         <div
           className="items-center gap-4 md:flex"
           onClick={props?.showSideBar}
         >
           <div className="flex items-center gap-2">
+            <IconMessage2 />
             <h3 className="text-xl text-gray-700">{session.title}</h3>
             <IconButton
               icon={<RenameIcon />}
@@ -535,17 +540,18 @@ export function Chat(props: {
         </div>
         <div className={styles["window-actions"]}>
           <div className={styles["window-action-button"] + " " + styles.mobile}>
-            <IconButton
-              icon={<MenuIcon />}
-              bordered
+            <button
+              className="flex items-center gap-1 p-2"
               title={Locale.Chat.Actions.ChatList}
               onClick={props?.showSideBar}
-            />
+            >
+              <IconMenu2 size={22} />
+              <span>会话列表</span>
+            </button>
           </div>
-          <div className={styles["window-action-button"]}>
-            <IconButton
-              icon={<ExportIcon />}
-              bordered
+          <div className="hidden md:inline">
+            <button
+              className="p-2"
               title={Locale.Chat.Actions.Export}
               onClick={() => {
                 exportMessages(
@@ -553,14 +559,16 @@ export function Chat(props: {
                   session.title,
                 );
               }}
-            />
+            >
+              <IconFileExport size={22} />
+            </button>
           </div>
         </div>
       </div>
 
       {/* 对话列表 */}
       <div
-        className="flex flex-col flex-1 gap-2 p-6 overflow-y-scroll bg-white"
+        className="flex flex-col flex-1 gap-2 p-6 overflow-y-scroll"
         ref={scrollRef}
         onScroll={(e) => onChatBodyScroll(e.currentTarget)}
         onTouchStart={() => {
@@ -576,12 +584,12 @@ export function Chat(props: {
         })}
       </div>
 
-      <div className="sticky bottom-0 p-6 bg-white border-t shadow">
+      <div className="sticky bottom-0 p-6">
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
-        <div className="flex flex-col gap-4 md:flex-row">
+        <div className="relative flex flex-col items-center gap-4 md:flex-row">
           <textarea
             ref={inputRef}
-            className="flex-1 w-full"
+            className="flex-1 w-full py-3 md:py-2 md:pr-24 rounded-xl"
             placeholder={Locale.Chat.Input(chat_submit_key)}
             rows={2}
             onInput={(e) => onInput(e.currentTarget.value)}
@@ -595,10 +603,11 @@ export function Chat(props: {
             autoFocus={!props?.sideBarShowing}
           />
           <button
-            className="block w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            className="w-full px-5 py-2 text-white bg-blue-700 md:-ml-32 md:w-auto hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             onClick={onUserSubmit}
           >
-            发送
+            <IconBrandTelegram size={20} />
+            <span>发送</span>
           </button>
         </div>
       </div>
