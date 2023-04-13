@@ -304,12 +304,14 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
   async onUserInput(content) {
     const userMessage: Message = {
+      id: new Date().getTime().toString(),
       role: "user",
       content,
       date: new Date().toLocaleString(),
     };
 
     const botMessage: Message = {
+      id: new Date().getTime().toString(),
       content: "",
       role: "assistant",
       date: new Date().toLocaleString(),
