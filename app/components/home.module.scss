@@ -74,7 +74,7 @@
   .sidebar {
     position: absolute;
     left: -100%;
-    z-index: 1000;
+    z-index: 10;
     height: var(--full-height);
     transition: all ease 0.3s;
     box-shadow: none;
@@ -117,7 +117,7 @@
   border-radius: 3px;
   cursor: pointer;
   background-color: var(--primary);
-  transition: all .2s;
+  transition: all 0.2s;
 
   &:hover {
     background-color: var(--hover-color);
