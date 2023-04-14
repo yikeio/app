@@ -1,8 +1,9 @@
 import { useState } from "react";
 
 import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react";
+import toast from "react-hot-toast";
 
-import { ListItem, Popover, showToast } from "./ui-lib";
+import { ListItem, Popover } from "./ui-lib";
 
 import { SubmitKey, useChatStore, Theme, useBillingStore } from "../store";
 import { UserAvatar } from "./chat";
@@ -48,12 +49,12 @@ export function Settings(props: { closeSettings: () => void }) {
   function handleLogout() {
     localStorage.removeItem("login_token");
     updateUser({});
-    showToast("已登出");
+    toast.success("已登出");
   }
 
   const handleBuy = () => {
     if (currentCombo) {
-      showToast("您还有未用尽的套餐");
+      toast.error("您还有未用尽的套餐");
       return;
     }
     setBillingModalVisible(true);

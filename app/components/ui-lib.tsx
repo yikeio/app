@@ -110,35 +110,3 @@ export function showModal(props: ModalProps) {
 
   root.render(<Modal {...props} onClose={closeModal}></Modal>);
 }
-
-export type ToastProps = { content: string };
-
-export function Toast(props: ToastProps) {
-  return (
-    <div className={styles["toast-container"]}>
-      <div className={styles["toast-content"]}>{props.content}</div>
-    </div>
-  );
-}
-
-export function showToast(content: string, delay = 3000) {
-  const div = document.createElement("div");
-  div.className = styles.show;
-  document.body.appendChild(div);
-
-  const root = createRoot(div);
-  const close = () => {
-    div.classList.add(styles.hide);
-
-    setTimeout(() => {
-      root.unmount();
-      div.remove();
-    }, 300);
-  };
-
-  setTimeout(() => {
-    close();
-  }, delay);
-
-  root.render(<Toast content={content} />);
-}

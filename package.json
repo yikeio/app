@@ -9,8 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "fetch": "node ./scripts/fetch-prompts.mjs",
-    "prepare": "husky install",
-    "preinstall": "npx only-allow pnpm"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -30,6 +29,7 @@
     "postcss": "^8.4.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.0",
     "react-markdown": "^8.0.7",
     "rehype-highlight": "^6.0.0",
     "rehype-katex": "^6.0.2",

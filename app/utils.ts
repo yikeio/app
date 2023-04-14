@@ -1,4 +1,4 @@
-import { showToast } from "./components/ui-lib";
+import toast from "react-hot-toast";
 import Locale from "./locales";
 
 export function trimTopic(topic: string) {
@@ -16,7 +16,7 @@ export async function copyToClipboard(text: string) {
     document.execCommand("copy");
     document.body.removeChild(textarea);
   } finally {
-    showToast(Locale.Copy.Success);
+    toast.success(Locale.Copy.Success);
   }
 }
 
