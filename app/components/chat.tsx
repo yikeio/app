@@ -3,12 +3,7 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { Spin } from "antd";
 import Avatar from "./avatar";
 
-import ExportIcon from "../icons/export.svg";
-import MenuIcon from "../icons/menu.svg";
-import CopyIcon from "../icons/copy.svg";
-import DownloadIcon from "../icons/download.svg";
 import LoadingIcon from "../icons/loading.svg";
-import RenameIcon from "../icons/rename.svg";
 import { updateConversation } from "../api/conversations";
 import { showToast } from "./ui-lib";
 import {
@@ -16,6 +11,9 @@ import {
   IconFileExport,
   IconMenu2,
   IconBrandTelegram,
+  IconPencil,
+  IconReload,
+  IconCopy,
 } from "@tabler/icons-react";
 
 import {
@@ -39,9 +37,6 @@ import dynamic from "next/dynamic";
 import { ControllerPool } from "../requests";
 import { Prompt, usePromptStore } from "../store";
 import Locale from "../locales";
-
-import { IconButton } from "./button";
-import styles from "./home.module.scss";
 
 import { showModal } from "./ui-lib";
 
@@ -83,24 +78,16 @@ function exportMessages(messages: Message[], topic: string) {
     title: Locale.Export.Title,
     children: (
       <div className="markdown-body">
-        <pre className={styles["export-content"]}>{mdText}</pre>
+        <pre>{mdText}</pre>
       </div>
     ),
     actions: [
-      <IconButton
-        key="copy"
-        icon={<CopyIcon />}
-        bordered
-        text={Locale.Export.Copy}
-        onClick={() => copyToClipboard(mdText)}
-      />,
-      <IconButton
-        key="download"
-        icon={<DownloadIcon />}
-        bordered
-        text={Locale.Export.Download}
-        onClick={() => downloadAs(mdText, filename)}
-      />,
+      <button key="copy" onClick={() => copyToClipboard(mdText)}>
+        复制
+      </button>,
+      <button key="download" onClick={() => downloadAs(mdText, filename)}>
+        下载
+      </button>,
     ],
   });
 }
@@ -138,15 +125,14 @@ export function PromptHints(props: {
   if (props.prompts.length === 0) return null;
 
   return (
-    <div className={styles["prompt-hints"]}>
+    <div>
       {props.prompts.map((prompt, i) => (
         <div
-          className={styles["prompt-hint"]}
           key={prompt.title + i.toString()}
           onClick={() => props.onPromptSelect(prompt)}
         >
-          <div className={styles["hint-title"]}>{prompt.title}</div>
-          <div className={styles["hint-content"]}>{prompt.content}</div>
+          <div>{prompt.title}</div>
+          <div>{prompt.content}</div>
         </div>
       ))}
     </div>
@@ -456,25 +442,25 @@ export function Chat(props: {
             <div className="flex items-center gap-4 text-xs text-gray-400">
               {message.streaming ? (
                 <div
-                  className="cursor-pointer hover:text-blue-500"
+                  className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
                   onClick={() => onUserStop(index)}
                 >
-                  复制
+                  <IconCopy size={12} /> 复制
                 </div>
               ) : (
                 <div
-                  className="cursor-pointer hover:text-blue-500"
+                  className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
                   onClick={() => onResend(index)}
                 >
-                  重新生成
+                  <IconReload size={12} /> 重新生成
                 </div>
               )}
 
               <div
-                className="cursor-pointer hover:text-blue-500"
+                className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
                 onClick={() => copyToClipboard(message.content)}
               >
-                复制
+                <IconCopy size={12} /> 复制
               </div>
             </div>
           )}
@@ -527,19 +513,16 @@ export function Chat(props: {
           <div className="flex items-center gap-2">
             <IconMessage2 />
             <h3 className="text-xl text-gray-700">{session.title}</h3>
-            <IconButton
-              icon={<RenameIcon />}
-              className="w-4 h-4"
-              title="重命名"
-              onClick={handleUpdate}
-            />
+            <button className="w-4 h-4" title="重命名" onClick={handleUpdate}>
+              <IconPencil size={12} />
+            </button>
           </div>
           <div className="text-sm text-gray-400">
             {Locale.Chat.SubTitle(session.messages.length)}
           </div>
         </div>
-        <div className={styles["window-actions"]}>
-          <div className={styles["window-action-button"] + " " + styles.mobile}>
+        <div>
+          <div className="md:hidden">
             <button
               className="flex items-center gap-1 p-2"
               title={Locale.Chat.Actions.ChatList}
@@ -549,7 +532,8 @@ export function Chat(props: {
               <span>会话列表</span>
             </button>
           </div>
-          <div className="hidden md:inline">
+          {/* 暂时不做导出 */}
+          <div className="hidden">
             <button
               className="p-2"
               title={Locale.Chat.Actions.Export}
@@ -586,7 +570,7 @@ export function Chat(props: {
 
       <div className="sticky bottom-0 p-6">
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
-        <div className="relative flex flex-col items-center gap-4 md:flex-row">
+        <div className="relative flex flex-col items-center md:flex-row">
           <textarea
             ref={inputRef}
             className="flex-1 w-full py-3 md:py-2 md:pr-32 rounded-xl"
@@ -603,7 +587,7 @@ export function Chat(props: {
             autoFocus={!props?.sideBarShowing}
           />
           <button
-            className="md:absolute right-4 w-full px-5 py-2 text-white bg-blue-700 md:-ml-32 md:w-auto hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            className="md:absolute right-4 w-full px-5 py-2 text-white border-blue-600 bg-blue-700 md:-ml-32 md:w-auto hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             onClick={onUserSubmit}
           >
             <IconBrandTelegram size={20} />

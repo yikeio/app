@@ -2,8 +2,6 @@ import { useState } from "react";
 
 import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react";
 
-import styles from "./settings.module.scss";
-
 import { ListItem, Popover, showToast } from "./ui-lib";
 
 import { SubmitKey, useChatStore, Theme, useBillingStore } from "../store";
@@ -22,7 +20,7 @@ function SettingItem(props: {
       <div>
         <div className="font-bold">{props.title}</div>
         {props.subTitle && (
-          <div className={styles["settings-sub-title"]}>{props.subTitle}</div>
+          <div className="text-gray-700">{props.subTitle}</div>
         )}
       </div>
       {props.children}
@@ -105,11 +103,9 @@ export function Settings(props: { closeSettings: () => void }) {
           subTitle={Locale.Settings.Combo.SubTitle(currentCombo?.expired_at)}
         >
           {!currentCombo ? (
-            <div className={styles.combo}>
-              <button className={styles.comboBtn} onClick={() => handleBuy()}>
-                购买套餐
-              </button>
-            </div>
+            <button className="text-blue-500 px-2 " onClick={() => handleBuy()}>
+              购买套餐
+            </button>
           ) : (
             <div className="text-gray-500">
               您还有未用尽的套餐，暂时不需要额外够买
@@ -136,10 +132,7 @@ export function Settings(props: { closeSettings: () => void }) {
             }
             open={showEmojiPicker}
           >
-            <div
-              className={styles.avatar}
-              onClick={() => setShowEmojiPicker(true)}
-            >
+            <div onClick={() => setShowEmojiPicker(true)}>
               <UserAvatar role="user" />
             </div>
           </Popover>
@@ -168,9 +161,7 @@ export function Settings(props: { closeSettings: () => void }) {
         </SettingItem>
 
         <ListItem>
-          <div className={styles["settings-title"]}>
-            {Locale.Settings.Theme}
-          </div>
+          <div className="">{Locale.Settings.Theme}</div>
           <select
             value={config.theme}
             onChange={(e) => {
@@ -268,7 +259,7 @@ export function Settings(props: { closeSettings: () => void }) {
                 { key: "no_border", value: e.currentTarget.checked },
               )
             }
-          ></input>
+          />
         </SettingItem>
 
         <SettingItem title={Locale.Settings.SendPreviewBubble}>
@@ -282,7 +273,7 @@ export function Settings(props: { closeSettings: () => void }) {
                 { key: "chat_bubble", value: e.currentTarget.checked },
               )
             }
-          ></input>
+          />
         </SettingItem>
       </div>
     </div>

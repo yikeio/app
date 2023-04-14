@@ -1,11 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import * as React from "react";
-import { Modal, Spin } from "antd";
+import { Spin } from "antd";
 import { useBillingStore, useChatStore } from "../store";
 import { createPayment, getPayment } from "../api/pay";
 import { getListUserPayment } from "../api/user";
-
-import styles from "./billing.module.scss";
+import Modal from "./modal";
 
 export function BillingDialog() {
   const [
@@ -83,71 +82,87 @@ export function BillingDialog() {
     }
   };
 
-  const modalTitle = React.useMemo(() => {
-    return {
-      0: "服务套餐",
-      1: "请扫码支付",
-      2: "支付成功",
-    }[payStatus];
-  }, [payStatus]);
-
-  return (
-    <Modal
-      title={modalTitle}
-      open={billingModalVisible}
-      footer={null}
-      onCancel={() => setBillingModalVisible(false)}
-    >
-      {payStatus === 0 && (
+  if (payStatus === 2) {
+    return (
+      <Modal
+        show={billingModalVisible}
+        size="sm"
+        onClose={() => setBillingModalVisible(false)}
+      >
+        <div className="flex flex-col items-center gap-6">
+          <h1 className="text-2xl font-bold">支付成功</h1>
+          <svg
+            className="h-16 w-16 text-green-600"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M501.009067 0C224.50176 0 0.395947 229.198507 0.395947 512s224.105813 512 500.626773 512c276.514133 0 500.619947-229.198507 500.619947-512S777.434453 0 501.015893 0z m-39.103147 732.99968L257.938773 514.300587l52.210347-44.305067L428.168533 567.405227c48.011947-60.299947 155.56608-180.599467 303.506774-276.39808l12.417706 30.399146c-135.816533 131.50208-247.186773 316.798293-282.187093 411.600214z"
+              fill="currentcolor"
+            ></path>
+          </svg>
+        </div>
+      </Modal>
+    );
+  } else if (payStatus === 1) {
+    return (
+      <Modal
+        show={billingModalVisible}
+        size="sm"
+        onClose={() => setBillingModalVisible(false)}
+      >
+        <div className="flex flex-col items-center gap-6">
+          <h1 className="text-2xl font-bold">请扫码支付</h1>
+          <img
+            src={paymentDetail.context.qrcode}
+            alt=""
+            className="h-32 w-32"
+          />
+          <div>请使用微信扫码支付</div>
+        </div>
+      </Modal>
+    );
+  } else {
+    return (
+      <Modal
+        show={billingModalVisible}
+        size="lg"
+        onClose={() => setBillingModalVisible(false)}
+      >
         <Spin spinning={isLoading}>
-          <div className={styles["billing-modal"]}>
-            {payableQuotas.map((item: any, index: number) => (
-              <div key={index} className={styles["billing-card"]}>
-                <div className={styles["billing-card-title"]}>{item.title}</div>
-                <div className={styles["billing-card-price"]}>{item.price}</div>
-                <div className={styles["billing-card-token"]}>
-                  {String(item.tokens_count).replace(
-                    /\B(?=(\d{3})+(?!\d))/g,
-                    ",",
-                  )}
-                  (token)
-                </div>
-                <button
-                  className={styles["billing-card-btn"]}
-                  onClick={() => handlePay(item)}
+          <div className="flex flex-col items-center gap-6">
+            <h1 className="text-3xl font-bold">购买套餐</h1>
+            <div className="flex gap-6 justify-evenly">
+              {payableQuotas.map((item: any, index: number) => (
+                <div
+                  key={index}
+                  className="border-2 border-blue-500 rounded-lg shadow p-6 flex flex-col gap-4"
                 >
-                  购买
-                </button>
-              </div>
-            ))}
+                  <div className="text-2xl font-bold">{item.title}</div>
+                  <div className="text-sm flex items-center gap-2">
+                    <span className="font-bold text-blue-500">
+                      {String(item.tokens_count).replace(
+                        /\B(?=(\d{3})+(?!\d))/g,
+                        ",",
+                      )}
+                    </span>
+                    <span>Token</span>
+                  </div>
+                  <div className="text-xl font-semibold">￥{item.price}</div>
+
+                  <button
+                    className="w-full px-4 py-1 bg-blue-500 hover:bg-blue-600 text-white border-blue-600/70"
+                    onClick={() => handlePay(item)}
+                  >
+                    购买
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </Spin>
-      )}
-      {payStatus == 2 && (
-        <svg
-          style={{ color: "rgb(6, 180, 100)" }}
-          className={styles["pay-qr-code"]}
-          viewBox="0 0 1024 1024"
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          p-id="6787"
-          width="200"
-          height="200"
-        >
-          <path
-            d="M501.009067 0C224.50176 0 0.395947 229.198507 0.395947 512s224.105813 512 500.626773 512c276.514133 0 500.619947-229.198507 500.619947-512S777.434453 0 501.015893 0z m-39.103147 732.99968L257.938773 514.300587l52.210347-44.305067L428.168533 567.405227c48.011947-60.299947 155.56608-180.599467 303.506774-276.39808l12.417706 30.399146c-135.816533 131.50208-247.186773 316.798293-282.187093 411.600214z"
-            fill="currentcolor"
-            p-id="2857"
-          ></path>
-        </svg>
-      )}
-      {payStatus === 1 && (
-        <img
-          src={paymentDetail.context.qrcode}
-          alt=""
-          className={styles["pay-qr-code"]}
-        />
-      )}
-    </Modal>
-  );
+      </Modal>
+    );
+  }
 }

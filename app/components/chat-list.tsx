@@ -1,5 +1,3 @@
-import styles from "./home.module.scss";
-
 import { useChatStore } from "../store";
 
 import Locale from "../locales";
@@ -23,11 +21,9 @@ export function ChatItem(props: {
       onClick={props.onClick}
     >
       <div className="font-bold">{props.title}</div>
-      <div className={styles["chat-item-info"]}>
-        <div className={styles["chat-item-count"]}>
-          {Locale.ChatItem.ChatItemCount(props.count)}
-        </div>
-        <div className={styles["chat-item-date"]}>{props.time}</div>
+      <div className="">
+        <div className="">{Locale.ChatItem.ChatItemCount(props.count)}</div>
+        <div className="text-xs text-gray-400">{props.time}</div>
       </div>
       {props.id === "-1" ? (
         ""

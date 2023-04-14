@@ -7,7 +7,6 @@ import { useState, useEffect, useRef } from "react";
 import { BillingDialog } from "./billing";
 import { LoginDialog, ActivateDialog } from "./login";
 import { Spin } from "antd";
-import styles from "./home.module.scss";
 
 import BotIcon from "../icons/bot.svg";
 import LoadingIcon from "../icons/loading.svg";
@@ -31,7 +30,7 @@ import {
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
-    <div className={styles["loading-content"]}>
+    <div className="h-screen flex items-center justify-center gap-6">
       {!props.noLogo && <BotIcon />}
       <LoadingIcon />
     </div>
@@ -219,9 +218,7 @@ function _Home() {
           <div>
             <h1 className="text-3xl font-bold">Yike Chat</h1>
             <div className="text-gray-500">
-              {user?.name || (
-                <button className={styles["sidebar-login-btn"]}>未登录</button>
-              )}
+              {user?.name || <button className="text-gray-400">未登录</button>}
             </div>
           </div>
         </div>
@@ -253,14 +250,13 @@ function _Home() {
           </button>
           <div className="flex items-center justify-between">
             <button
-              className="p-2 px-4"
+              className="p-2"
               onClick={() => {
                 setOpenSettings(true);
                 toggleSidebar();
               }}
             >
               <IconAdjustmentsHorizontal size={22} />
-              <span>设置</span>
             </button>
             <button
               className="p-2 px-4"
