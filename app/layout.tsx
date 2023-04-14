@@ -46,7 +46,7 @@ export default function RootLayout({
         ></link>
         <script src="/serviceWorkerRegister.js" defer></script>
       </head>
-      <body className="bg-slate-100">{children}</body>
+      <body className="text-gray-700 bg-slate-100">{children}</body>
     </html>
   );
 }
