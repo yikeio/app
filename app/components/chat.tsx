@@ -589,7 +589,7 @@ export function Chat(props: {
         <div className="relative flex flex-col items-center gap-4 md:flex-row">
           <textarea
             ref={inputRef}
-            className="flex-1 w-full py-3 md:py-2 md:pr-24 rounded-xl"
+            className="flex-1 w-full py-3 md:py-2 md:pr-32 rounded-xl"
             placeholder={Locale.Chat.Input(chat_submit_key)}
             rows={2}
             onInput={(e) => onInput(e.currentTarget.value)}
@@ -603,7 +603,7 @@ export function Chat(props: {
             autoFocus={!props?.sideBarShowing}
           />
           <button
-            className="w-full px-5 py-2 text-white bg-blue-700 md:-ml-32 md:w-auto hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            className="md:absolute right-4 w-full px-5 py-2 text-white bg-blue-700 md:-ml-32 md:w-auto hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             onClick={onUserSubmit}
           >
             <IconBrandTelegram size={20} />
