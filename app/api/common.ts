@@ -1,5 +1,5 @@
+import toast from "react-hot-toast";
 export const API_DOMAIN = "http://yike.pengyyy.cn";
-import { showToast } from "../components/ui-lib";
 
 export function commonFetch(url: string, options: Record<string, any> = {}) {
   const token = localStorage.getItem("login_token");
@@ -23,7 +23,7 @@ export function commonFetch(url: string, options: Record<string, any> = {}) {
         });
       } else {
         res.json().then((result: any) => {
-          showToast(result.message);
+          toast(result.message);
           reject({ result, status: res.status });
         });
       }

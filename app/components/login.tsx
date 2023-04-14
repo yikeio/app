@@ -1,4 +1,5 @@
 import * as React from "react";
+import toast from "react-hot-toast";
 
 import {
   sendVerificationCode,
@@ -9,7 +10,6 @@ import {
 import { useChatStore, useBillingStore } from "../store";
 
 import Modal from "./modal";
-import { showToast } from "./ui-lib";
 import Image from "next/image";
 
 const useUserLogin = () => {
@@ -30,7 +30,7 @@ const useUserLogin = () => {
         getUserSettings(res.result.id);
       })
       .catch((error) => {
-        showToast(error.result.message);
+        toast(error.result.message);
         setLoginModalVisible(true);
         localStorage.removeItem("login_token");
       });
@@ -59,7 +59,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
   }
 
   function getCode() {
-    if (!phoneNumber) return showToast("请填写手机号");
+    if (!phoneNumber) return toast("请填写手机号");
     if (count) return;
 
     setCount(60);
@@ -78,7 +78,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
         }, 1000);
       })
       .catch((error) => {
-        showToast(error.result.message);
+        toast(error.result.message);
 
         setCount(0);
         clearInterval(timerRef.current);
@@ -87,8 +87,8 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
 
   // 登录
   function handleLogin() {
-    if (!code) return showToast("请填写验证码");
-    if (!phoneNumber) return showToast("请填写手机号");
+    if (!code) return toast("请填写验证码");
+    if (!phoneNumber) return toast("请填写手机号");
 
     const params = { phoneNumber: `+86:${phoneNumber}`, code };
     loginUser(params)
@@ -96,7 +96,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
         localStorage.setItem("login_token", res.result.value);
         closeModal();
         resetForm();
-        showToast("登录成功");
+        toast("登录成功");
 
         checkUser().then((res) => {
           updateUser(res.result);
@@ -104,7 +104,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
         });
       })
       .catch((error) => {
-        showToast(error.result.message);
+        toast(error.result.message);
       });
   }
 
@@ -224,14 +224,14 @@ export function ActivateDialog() {
   ]);
 
   function handleActivate() {
-    if (!inviteCode) return showToast("请输入邀请码");
+    if (!inviteCode) return toast("请输入邀请码");
     activateUser({ userId: user.id, inviteCode })
       .then(() => {
-        showToast("激活成功");
+        toast("激活成功");
         setActivateVisible(false);
       })
       .catch((error) => {
-        showToast(error.result.message);
+        toast(error.result.message);
       });
   }
 

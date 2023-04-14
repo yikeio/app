@@ -120,25 +120,3 @@ export function Toast(props: ToastProps) {
     </div>
   );
 }
-
-export function showToast(content: string, delay = 3000) {
-  const div = document.createElement("div");
-  div.className = styles.show;
-  document.body.appendChild(div);
-
-  const root = createRoot(div);
-  const close = () => {
-    div.classList.add(styles.hide);
-
-    setTimeout(() => {
-      root.unmount();
-      div.remove();
-    }, 300);
-  };
-
-  setTimeout(() => {
-    close();
-  }, delay);
-
-  root.render(<Toast content={content} />);
-}

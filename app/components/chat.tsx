@@ -1,11 +1,11 @@
 import { useDebouncedCallback } from "use-debounce";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import toast from "react-hot-toast";
 import { Spin } from "antd";
 import Avatar from "./avatar";
 
 import LoadingIcon from "../icons/loading.svg";
 import { updateConversation } from "../api/conversations";
-import { showToast } from "./ui-lib";
 import {
   IconMessage2,
   IconFileExport,
@@ -276,12 +276,12 @@ export function Chat(props: {
   // submit user input
   const onUserSubmit = () => {
     if (user.state === "unactivated") {
-      showToast("账号未激活，请先激活!");
+      toast("账号未激活，请先激活!");
       setActivateVisible(true);
       return;
     }
     if (!currentCombo) {
-      showToast("当前无可用套餐，请购买套餐!");
+      toast("当前无可用套餐，请购买套餐!");
       return;
     }
     if (userInput.length <= 0) return;

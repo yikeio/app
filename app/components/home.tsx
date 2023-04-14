@@ -3,6 +3,7 @@
 require("../polyfill");
 
 import { useState, useEffect, useRef } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 import { BillingDialog } from "./billing";
 import { LoginDialog, ActivateDialog } from "./login";
@@ -16,7 +17,6 @@ import { isMobileScreen } from "../utils";
 import Locale from "../locales";
 import { ChatList } from "./chat-list";
 import { Chat } from "./chat";
-import { showToast } from "./ui-lib";
 import { getConversationList } from "../api/conversations";
 
 import dynamic from "next/dynamic";
@@ -116,7 +116,7 @@ function _Home() {
     // 未注册用户展示激活弹窗
     if (user.id && localStorage.getItem("login_token")) {
       if (user.state === "unactivated") {
-        showToast("账号未激活，请先激活!");
+        toast("账号未激活，请先激活!");
         setActivateVisible(true);
       }
     }
@@ -141,12 +141,12 @@ function _Home() {
 
   const handleCreateConversation = () => {
     if (user.state === "unactivated") {
-      showToast("账号未激活，请先激活!");
+      toast("账号未激活，请先激活!");
       setActivateVisible(true);
       return;
     }
     if (!currentCombo) {
-      showToast("当前无可用套餐，请购买套餐!");
+      toast("当前无可用套餐，请购买套餐!");
       return;
     }
     createConversation();
@@ -292,6 +292,7 @@ function _Home() {
       <LoginDialog />
       <BillingDialog />
       <ActivateDialog />
+      <Toaster />
     </div>
   );
 }
