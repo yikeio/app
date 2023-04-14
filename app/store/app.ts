@@ -271,6 +271,8 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     if (cacheSet.has(conversationId)) return;
 
     // 获取历史消息
+    if (conversationId === "-1") return;
+
     const messageList = await get().getConversationHistory(conversationId);
     get().updateCurrentSession((session) => (session.messages = messageList));
   },

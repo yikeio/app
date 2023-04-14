@@ -13,6 +13,7 @@ export function ChatItem(props: {
   count: number;
   time: string;
   selected: boolean;
+  id: string;
 }) {
   return (
     <div
@@ -28,12 +29,16 @@ export function ChatItem(props: {
         </div>
         <div className={styles["chat-item-date"]}>{props.time}</div>
       </div>
-      <div
-        className="absolute top-0 right-0 p-1 m-2 text-red-500 transition-all rounded-full opacity-0 group-hover:bg-red-200 group-hover:opacity-100"
-        onClick={props.onDelete}
-      >
-        <IconTrash size={14} />
-      </div>
+      {props.id === "-1" ? (
+        ""
+      ) : (
+        <div
+          className="absolute top-0 right-0 p-1 m-2 text-red-500 transition-all rounded-full opacity-0 group-hover:bg-red-200 group-hover:opacity-100 cursor-pointer"
+          onClick={props.onDelete}
+        >
+          <IconTrash size={14} />
+        </div>
+      )}
     </div>
   );
 }
@@ -52,6 +57,7 @@ export function ChatList() {
     <div className="flex flex-col gap-4">
       {sessions.map((item, i) => (
         <ChatItem
+          id={item.id}
           title={item.title}
           time={item.updated_at}
           count={item.messages_count || 0}

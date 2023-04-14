@@ -213,7 +213,7 @@ function _Home() {
           (showSideBar ? "left-0" : "-left-[100%]")
         }
       >
-        <div className="flex items-center gap-4 py-6">
+        <div className="flex items-center gap-4 px-2 py-6">
           <Image src="/logo.svg" height={50} width={50} alt={""} />
 
           <div>
