@@ -3,79 +3,19 @@
 @tailwind utilities;
 
 @import "./form";
-@mixin light {
-  /* color */
-  --white: white;
-  --black: rgb(48, 48, 48);
-  --gray: rgb(250, 250, 250);
-  --primary: rgb(29, 147, 171);
-  --second: rgb(231, 248, 255);
-  --hover-color: #f3f3f3;
-  --bar-color: rgba(0, 0, 0, 0.1);
-  --theme-color: var(--gray);
-
-  /* shadow */
-  --shadow: 50px 50px 100px 10px rgb(0, 0, 0, 0.1);
-  --card-shadow: 0px 2px 4px 0px rgb(0, 0, 0, 0.05);
-
-  /* stroke */
-  --border-in-light: 1px solid rgb(222, 222, 222);
-}
-
-.light {
-  @include light;
-}
-
-.mask {
-  filter: invert(0.8);
-}
-
-:root {
-  @include light;
-
-  --window-width: 90vw;
-  --window-height: 90vh;
-  --sidebar-width: 300px;
-  --window-content-width: calc(100% - var(--sidebar-width));
-  --message-max-width: 80%;
-  --full-height: 100%;
-}
-
-@media only screen and (max-width: 600px) {
-  :root {
-    --window-width: 100vw;
-    --window-height: var(--full-height);
-    --sidebar-width: 100vw;
-    --window-content-width: var(--window-width);
-    --message-max-width: 100%;
-  }
-
-  .no-mobile {
-    display: none;
-  }
-}
 
 html {
-  height: var(--full-height);
+  height: 100%;
 }
 
 body {
-  background-color: var(--gray);
-  color: var(--black);
-  margin: 0;
-  padding: 0;
-  overflow-y: scroll;
-  letter-spacing: 0;
+  height: 100%;
   touch-action: manipulation;
   text-rendering: optimizeLegibility;
   font-feature-settings: "liga" 0;
   position: relative;
   font-size: 14px;
   -moz-osx-font-smoothing: grayscale;
-
-  @media only screen and (max-width: 600px) {
-    background-color: var(--second);
-  }
 }
 
 ::-webkit-scrollbar {
@@ -93,20 +33,6 @@ body {
   border-radius: 20px;
   background-clip: content-box;
   border: 1px solid transparent;
-}
-
-div.math {
-  overflow-x: auto;
-}
-
-.link {
-  font-size: 12px;
-  color: var(--primary);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 pre {
@@ -152,20 +78,5 @@ pre {
 
   &:hover {
     filter: brightness(0.9);
-  }
-}
-
-.error {
-  width: 80%;
-  border-radius: 20px;
-  border: var(--border-in-light);
-  box-shadow: var(--card-shadow);
-  padding: 20px;
-  overflow: auto;
-  background-color: var(--white);
-  color: var(--black);
-
-  pre {
-    overflow: auto;
   }
 }
