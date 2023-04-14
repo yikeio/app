@@ -24,6 +24,7 @@ select {
   @apply h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700;
 }
 
-button {
+button,
+.button {
   @apply rounded-md border w-fit inline-flex items-center justify-center font-bold antialiased text-gray-600 shadow-sm gap-1;
 }

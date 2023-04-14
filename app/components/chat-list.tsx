@@ -21,9 +21,11 @@ export function ChatItem(props: {
       onClick={props.onClick}
     >
       <div className="font-bold">{props.title}</div>
-      <div className="">
-        <div className="">{Locale.ChatItem.ChatItemCount(props.count)}</div>
-        <div className="text-xs text-gray-400">{props.time}</div>
+      <div className="flex items-center justify-between text-xs">
+        <div className="text-gray-500">
+          {Locale.ChatItem.ChatItemCount(props.count)}
+        </div>
+        <div className=" text-gray-400">{props.time}</div>
       </div>
       {props.id === "-1" ? (
         ""

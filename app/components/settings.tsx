@@ -17,7 +17,7 @@ function SettingItem(props: {
   children: JSX.Element;
 }) {
   return (
-    <div className="flex items-center justify-between p-4">
+    <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4">
       <div>
         <div className="font-bold">{props.title}</div>
         {props.subTitle && (
@@ -61,7 +61,7 @@ export function Settings(props: { closeSettings: () => void }) {
   };
 
   return (
-    <div className="flex-1 p-6 space-y-6">
+    <div className="flex-1 p-3 md:p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div className="text-2xl font-bold">设置</div>
         <button
@@ -77,7 +77,7 @@ export function Settings(props: { closeSettings: () => void }) {
             <div className="flex items-center gap-2">
               {user.name}
               <button
-                className="px-4 py-1 text-white bg-red-500"
+                className="px-4 py-1 text-white border-red-600/60 bg-red-500 hover:bg-red-600"
                 onClick={handleLogout}
               >
                 退出登录

@@ -28,6 +28,10 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 
+const Settings = dynamic(async () => (await import("./settings")).Settings, {
+  loading: () => <Loading noLogo />,
+});
+
 export function Loading(props: { noLogo?: boolean }) {
   return (
     <div className="h-screen flex items-center justify-center gap-6">
@@ -36,10 +40,6 @@ export function Loading(props: { noLogo?: boolean }) {
     </div>
   );
 }
-
-const Settings = dynamic(async () => (await import("./settings")).Settings, {
-  loading: () => <Loading noLogo />,
-});
 
 function useSwitchTheme() {
   const config = useChatStore((state) => state.config);
@@ -213,30 +213,31 @@ function _Home() {
     >
       <div
         className={
-          `fixed md:relative bg-white border-r inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col ` +
+          `fixed md:relative bg-white border-r inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col gap-6 ` +
           (showSideBar ? "left-0" : "-left-[100%] md:left-0")
         }
       >
-        <div className="flex items-center gap-4 px-2 py-6">
-          <Image src="/logo.svg" height={50} width={50} alt={""} />
+        <div className="flex items-center gap-4 px-2">
+          <Image src="/logo.svg" height={32} width={32} alt={""} />
 
           <div>
-            <h1 className="text-3xl font-bold">Yike Chat</h1>
-            <div className="text-gray-500">
+            <h1 className="text-2xl font-bold">Yike Chat</h1>
+            {/* <div className="text-gray-500">
               {user?.name || <button className="text-gray-400">未登录</button>}
-            </div>
+            </div> */}
           </div>
         </div>
 
         <div
           ref={chatListRef}
-          className="flex-1"
+          className="flex-1 flex flex-col gap-2"
           onClick={() => {
             setOpenSettings(false);
             toggleSidebar();
           }}
           onScroll={handleSideBarScroll}
         >
+          <h4 className="text-gray-500">会话历史({sessions.length})</h4>
           <ChatList />
           <Spin spinning={isLoadingMore} />
         </div>
