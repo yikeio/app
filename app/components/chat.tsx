@@ -420,7 +420,7 @@ export function Chat(props: {
           {/* {(message.preview || message.streaming) && Locale.Chat.Typing} */}
           <div
             className={
-              `p-3 md:p-6 rounded-xl relative ` +
+              `p-3 md:p-4 rounded-xl relative ` +
               (isUser
                 ? "bg-blue-500 justify-self-end rounded-br-none text-white"
                 : "bg-white rounded-bl-none text-gray-700")

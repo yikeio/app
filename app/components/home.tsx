@@ -210,7 +210,7 @@ function _Home() {
       <div
         className={
           `fixed md:relative bg-white border-r inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col ` +
-          (showSideBar ? "left-0" : "-left-[100%]")
+          (showSideBar ? "left-0" : "-left-[100%] md:left-0")
         }
       >
         <div className="flex items-center gap-4 px-2 py-6">
