@@ -576,7 +576,7 @@ export function Chat(props: {
         <div className="relative flex flex-col items-center md:flex-row">
           <textarea
             ref={inputRef}
-            className="flex-1 w-full py-3 md:py-2 md:pr-32 rounded-xl"
+            className="flex-1 w-full py-3 md:py-2 md:pr-32 rounded-xl ring-0 focus:ring-0"
             placeholder={Locale.Chat.Input(chat_submit_key)}
             rows={2}
             onInput={(e) => onInput(e.currentTarget.value)}
