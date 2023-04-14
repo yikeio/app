@@ -23,7 +23,7 @@ export function commonFetch(url: string, options: Record<string, any> = {}) {
         });
       } else {
         res.json().then((result: any) => {
-          toast(result.message);
+          toast.error(result.message);
           reject({ result, status: res.status });
         });
       }

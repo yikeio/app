@@ -92,13 +92,17 @@ function _Home() {
     state.conversationPager,
     state.getUserSettings,
   ]);
-  const [currentCombo, getUserQuotaInfo, setActivateVisible] = useBillingStore(
-    (state) => [
-      state.currentCombo,
-      state.getUserQuotaInfo,
-      state.setActivateVisible,
-    ],
-  );
+  const [
+    currentCombo,
+    getUserQuotaInfo,
+    setActivateVisible,
+    setBillingModalVisible,
+  ] = useBillingStore((state) => [
+    state.currentCombo,
+    state.getUserQuotaInfo,
+    state.setActivateVisible,
+    state.setBillingModalVisible,
+  ]);
 
   const loading = !useHasHydrated();
   const [showSideBar, setShowSideBar] = useState(true);
@@ -116,7 +120,7 @@ function _Home() {
     // 未注册用户展示激活弹窗
     if (user.id && localStorage.getItem("login_token")) {
       if (user.state === "unactivated") {
-        toast("账号未激活，请先激活!");
+        toast.error("账号未激活，请先激活!");
         setActivateVisible(true);
       }
     }
@@ -141,12 +145,13 @@ function _Home() {
 
   const handleCreateConversation = () => {
     if (user.state === "unactivated") {
-      toast("账号未激活，请先激活!");
+      toast.error("账号未激活，请先激活!");
       setActivateVisible(true);
       return;
     }
     if (!currentCombo) {
-      toast("当前无可用套餐，请购买套餐!");
+      toast.error("当前无可用套餐，请购买套餐!");
+      setBillingModalVisible(true);
       return;
     }
     createConversation();

@@ -16,7 +16,7 @@ export async function copyToClipboard(text: string) {
     document.execCommand("copy");
     document.body.removeChild(textarea);
   } finally {
-    toast(Locale.Copy.Success);
+    toast.success(Locale.Copy.Success);
   }
 }
 

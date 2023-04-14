@@ -29,8 +29,7 @@ const useUserLogin = () => {
         getConversationList(res.result.id);
         getUserSettings(res.result.id);
       })
-      .catch((error) => {
-        toast(error.result.message);
+      .catch(() => {
         setLoginModalVisible(true);
         localStorage.removeItem("login_token");
       });
@@ -59,7 +58,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
   }
 
   function getCode() {
-    if (!phoneNumber) return toast("请填写手机号");
+    if (!phoneNumber) return toast.error("请填写手机号");
     if (count) return;
 
     setCount(60);
@@ -77,9 +76,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
           });
         }, 1000);
       })
-      .catch((error) => {
-        toast(error.result.message);
-
+      .catch(() => {
         setCount(0);
         clearInterval(timerRef.current);
       });
@@ -87,25 +84,21 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
 
   // 登录
   function handleLogin() {
-    if (!code) return toast("请填写验证码");
-    if (!phoneNumber) return toast("请填写手机号");
+    if (!code) return toast.error("请填写验证码");
+    if (!phoneNumber) return toast.error("请填写手机号");
 
     const params = { phoneNumber: `+86:${phoneNumber}`, code };
-    loginUser(params)
-      .then((res) => {
-        localStorage.setItem("login_token", res.result.value);
-        closeModal();
-        resetForm();
-        toast("登录成功");
+    loginUser(params).then((res) => {
+      localStorage.setItem("login_token", res.result.value);
+      closeModal();
+      resetForm();
+      toast.success("登录成功");
 
-        checkUser().then((res) => {
-          updateUser(res.result);
-          getConversationList(res.result.id);
-        });
-      })
-      .catch((error) => {
-        toast(error.result.message);
+      checkUser().then((res) => {
+        updateUser(res.result);
+        getConversationList(res.result.id);
       });
+    });
   }
 
   return (
@@ -224,15 +217,11 @@ export function ActivateDialog() {
   ]);
 
   function handleActivate() {
-    if (!inviteCode) return toast("请输入邀请码");
-    activateUser({ userId: user.id, inviteCode })
-      .then(() => {
-        toast("激活成功");
-        setActivateVisible(false);
-      })
-      .catch((error) => {
-        toast(error.result.message);
-      });
+    if (!inviteCode) return toast.error("请输入邀请码");
+    activateUser({ userId: user.id, inviteCode }).then(() => {
+      toast.success("激活成功");
+      setActivateVisible(false);
+    });
   }
 
   return (

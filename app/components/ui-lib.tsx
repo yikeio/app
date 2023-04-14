@@ -110,13 +110,3 @@ export function showModal(props: ModalProps) {
 
   root.render(<Modal {...props} onClose={closeModal}></Modal>);
 }
-
-export type ToastProps = { content: string };
-
-export function Toast(props: ToastProps) {
-  return (
-    <div className={styles["toast-container"]}>
-      <div className={styles["toast-content"]}>{props.content}</div>
-    </div>
-  );
-}

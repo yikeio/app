@@ -49,12 +49,12 @@ export function Settings(props: { closeSettings: () => void }) {
   function handleLogout() {
     localStorage.removeItem("login_token");
     updateUser({});
-    toast("已登出");
+    toast.success("已登出");
   }
 
   const handleBuy = () => {
     if (currentCombo) {
-      toast("您还有未用尽的套餐");
+      toast.error("您还有未用尽的套餐");
       return;
     }
     setBillingModalVisible(true);

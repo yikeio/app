@@ -171,10 +171,12 @@ export function Chat(props: {
     state.currentSessionIndex,
   ]);
 
-  const [currentCombo, setActivateVisible] = useBillingStore((state) => [
-    state.currentCombo,
-    state.setActivateVisible,
-  ]);
+  const [currentCombo, setActivateVisible, setBillingModalVisible] =
+    useBillingStore((state) => [
+      state.currentCombo,
+      state.setActivateVisible,
+      state.setBillingModalVisible,
+    ]);
 
   const chat_font_size = useChatStore((state) => state.config.chat_font_size);
 
@@ -276,12 +278,13 @@ export function Chat(props: {
   // submit user input
   const onUserSubmit = () => {
     if (user.state === "unactivated") {
-      toast("账号未激活，请先激活!");
+      toast.error("账号未激活，请先激活!");
       setActivateVisible(true);
       return;
     }
     if (!currentCombo) {
-      toast("当前无可用套餐，请购买套餐!");
+      toast.error("当前无可用套餐，请购买套餐!");
+      setBillingModalVisible(true);
       return;
     }
     if (userInput.length <= 0) return;
