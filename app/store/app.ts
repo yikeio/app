@@ -17,6 +17,7 @@ export type Message = ChatCompletionResponseMessage & {
   date: string;
   streaming?: boolean;
   isError?: boolean;
+  preview?: boolean;
 };
 
 export enum SubmitKey {
@@ -40,7 +41,6 @@ export interface ChatConfig {
   chat_font_size: number;
   theme: Theme;
   no_border: boolean;
-  chat_bubble: boolean;
 }
 
 export const ROLES: Message["role"][] = ["system", "user", "assistant"];
@@ -52,7 +52,6 @@ const DEFAULT_CONFIG: ChatConfig = {
   chat_font_size: 14, //字体大小
   theme: Theme.Auto as Theme, //主题
   no_border: true, //无边框模式
-  chat_bubble: false, //发送预览气泡
 };
 
 export interface ChatSession {

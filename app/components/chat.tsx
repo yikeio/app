@@ -1,5 +1,12 @@
 import { useDebouncedCallback } from "use-debounce";
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import toast from "react-hot-toast";
 import { Spin } from "antd";
 import Avatar from "./avatar";
@@ -334,47 +341,32 @@ export function Chat(props: {
     }
   };
 
-  const config = useChatStore((state) => state.config);
-
-  const context: RenderMessage[] = session.context.slice();
-
   if (
-    context.length === 0 &&
+    session.context.length === 0 &&
     session.messages.at(0)?.content !== BOT_HELLO.content &&
     pager?.currentPage === pager?.lastPage
   ) {
-    context.push(BOT_HELLO);
+    session.context.push(BOT_HELLO);
   }
 
   // preview messages
-  const messages = context
-    .concat(session.messages as RenderMessage[])
-    .concat(
-      isLoading
-        ? [
-            {
-              id: "loading",
-              role: "assistant",
-              content: "……",
-              date: new Date().toLocaleString(),
-              preview: true,
-            },
-          ]
-        : [],
-    )
-    .concat(
-      userInput.length > 0 && config.chat_bubble
-        ? [
-            {
-              id: "user-input",
-              role: "user",
-              content: userInput,
-              date: new Date().toLocaleString(),
-              preview: true,
-            },
-          ]
-        : [],
-    );
+  const messages: RenderMessage[] = useMemo(
+    () =>
+      session.context.concat(session.messages as RenderMessage[]).concat(
+        isLoading
+          ? [
+              {
+                id: "loading",
+                role: "assistant",
+                content: "……",
+                date: new Date().toLocaleString(),
+                preview: true,
+              },
+            ]
+          : [],
+      ),
+    [session.messages, session.context, isLoading],
+  );
 
   // 更新对话
   const handleUpdate = () => {
@@ -405,8 +397,6 @@ export function Chat(props: {
     return (
       <div className="relative max-w-[90%] md:max-w-[75%] flex flex-col gap-2 overflow-hidden group">
         <div className="rounded-lg">
-          {/* 看起来不需要这个东西 */}
-          {/* {(message.preview || message.streaming) && Locale.Chat.Typing} */}
           <div
             className={
               `p-3 md:p-4 rounded-xl relative ` +
@@ -472,36 +462,39 @@ export function Chat(props: {
     );
   };
 
-  const MessageItem = ({
-    message,
-    index = 0,
-  }: {
-    message: RenderMessage;
-    index?: number;
-  }) => {
-    const isUser = message.role === "user";
-    const messageBody = (
-      <MessageBody
-        key="message-body"
-        message={message}
-        index={index}
-      ></MessageBody>
-    );
-    const avatar = <UserAvatar key="avatar" role={message.role} />;
+  const MessageItem = useCallback(
+    ({ message, index = 0 }: { message: RenderMessage; index?: number }) => {
+      const isUser = message.role === "user";
+      const messageBody = (
+        <MessageBody
+          key={`${message.id}_body`}
+          message={message}
+          index={index}
+        />
+      );
+      const avatar = (
+        <UserAvatar
+          key={
+            isUser ? `${message.id}_user_avatar` : `${message.id}_bot_avatar`
+          }
+          role={message.role}
+        />
+      );
 
-    return (
-      <div
-        key={index}
-        className={`flex flex-col md:flex-row items-start gap-2 md:gap-4 ${
-          isUser ? "items-end md:items-start justify-end" : "items-start"
-        }`}
-      >
-        {isUser && !isMobileScreen()
-          ? [messageBody, avatar]
-          : [avatar, messageBody]}
-      </div>
-    );
-  };
+      return (
+        <div
+          className={`flex flex-col md:flex-row items-start gap-2 md:gap-4 ${
+            isUser ? "items-end md:items-start justify-end" : "items-start"
+          }`}
+        >
+          {isUser && !isMobileScreen()
+            ? [messageBody, avatar]
+            : [avatar, messageBody]}
+        </div>
+      );
+    },
+    [],
+  );
 
   return (
     <div
@@ -564,11 +557,9 @@ export function Chat(props: {
         }}
       >
         {isLoadingMessage && <Spin style={{ display: "block" }} />}
-        {messages.map((message, i) => {
-          return (
-            <MessageItem key={i} message={message} index={i}></MessageItem>
-          );
-        })}
+        {messages.map((message, i) => (
+          <MessageItem key={message.id} message={message} index={i} />
+        ))}
       </div>
 
       <div className="sticky bottom-0 p-6">
