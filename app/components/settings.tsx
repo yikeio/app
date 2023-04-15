@@ -262,20 +262,6 @@ export function Settings(props: { closeSettings: () => void }) {
             }
           />
         </SettingItem>
-
-        <SettingItem title={Locale.Settings.SendPreviewBubble}>
-          <input
-            type="checkbox"
-            checked={config.chat_bubble}
-            onChange={(e) =>
-              updateConfig(
-                (config) => (config.chat_bubble = e.currentTarget.checked),
-                user.id,
-                { key: "chat_bubble", value: e.currentTarget.checked },
-              )
-            }
-          />
-        </SettingItem>
       </div>
     </div>
   );
