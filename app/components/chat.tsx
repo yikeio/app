@@ -564,7 +564,7 @@ export function Chat(props: {
 
       <div className="sticky bottom-0 p-6">
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
-        <div className="relative flex flex-col items-center md:flex-row">
+        <div className="relative flex flex-col items-center gap-2 md:flex-row">
           <textarea
             ref={inputRef}
             className="flex-1 w-full py-3 md:py-2 md:pr-32 rounded-xl ring-0 focus:ring-0"
