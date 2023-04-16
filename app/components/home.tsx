@@ -256,7 +256,7 @@ function _Home() {
           </button>
           <div className="flex items-center justify-between">
             <button
-              className="p-2"
+              className="p-2 hover:bg-slate-100"
               onClick={() => {
                 setOpenSettings(true);
                 toggleSidebar();
@@ -265,7 +265,7 @@ function _Home() {
               <IconAdjustmentsHorizontal size={22} />
             </button>
             <button
-              className="p-2 px-4"
+              className="p-2 px-4 hover:bg-slate-100"
               onClick={() => {
                 handleCreateConversation();
               }}
