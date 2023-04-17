@@ -90,8 +90,8 @@ export async function getUserQuotas(userId: string) {
  * @param param0
  * @returns
  */
-export async function getUserAvailableQuotas(userId: string) {
-  return commonFetch(`users/${userId}/available-quotas`);
+export async function getUserAvailableQuota(userId: string) {
+  return commonFetch(`users/${userId}/available-quota`);
 }
 
 /**

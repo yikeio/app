@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-export const API_DOMAIN = "http://yike.pengyyy.cn";
+export const API_DOMAIN = "http://47.112.186.22";
 
 export function commonFetch(url: string, options: Record<string, any> = {}) {
   const token = localStorage.getItem("login_token");

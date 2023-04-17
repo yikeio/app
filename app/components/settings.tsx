@@ -96,7 +96,7 @@ export function Settings(props: { closeSettings: () => void }) {
           title={Locale.Settings.Usage.Title}
           subTitle={Locale.Settings.Usage.SubTitle(totalUsage || 0)}
         >
-          <span>{currentCombo?.usage?.available_tokens_count || 0}</span>
+          <span>{currentCombo?.available_tokens_count || 0}</span>
         </SettingItem>
 
         <SettingItem

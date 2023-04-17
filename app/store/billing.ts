@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getUserQuotas, getUserAvailableQuotas } from "../api/user";
+import { getUserQuotas, getUserAvailableQuota } from "../api/user";
 import { getPayableQuotas } from "../api/pay";
 
 interface BillingStore {
@@ -41,11 +41,11 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
 
   async getUserQuotaInfo(userId: string) {
     const [currentComboRes, allCombosRes] = await Promise.all([
-      getUserAvailableQuotas(userId),
+      getUserAvailableQuota(userId),
       getUserQuotas(userId),
     ]);
     set(() => ({
-      currentCombo: currentComboRes.result.chat,
+      currentCombo: currentComboRes.result,
       allCombos: allCombosRes.result,
     }));
   },
@@ -57,9 +57,6 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
   },
 
   totalUsage() {
-    return get().allCombos.reduce(
-      (acc, cur) => acc + cur.usage.used_tokens_count,
-      0,
-    );
+    return get().allCombos.reduce((acc, cur) => acc + cur.used_tokens_count, 0);
   },
 }));
