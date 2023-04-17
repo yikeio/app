@@ -1,44 +1,51 @@
+const { fontFamily } = require("tailwindcss/defaultTheme")
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./app/**/*.{js,ts,jsx,tsx}"],
+  darkMode: ["class"],
+  content: ["pages/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
   theme: {
-    extend: {},
-    fontFamily: {
-      sans: [
-        "-apple-system",
-        "BlinkMacSystemFont",
-        "Apple Color Emoji",
-        "Segoe UI Emoji",
-        "Segoe UI Symbol",
-        "Segoe UI",
-        "PingFang SC",
-        "HarmonyOS_Regular",
-        "Hiragino Sans GB",
-        "Microsoft YaHei",
-        "Helvetica Neue",
-        "Helvetica",
-        "Source Han Sans SC",
-        "Noto Sans CJK SC",
-        "WenQuanYi Micro Hei",
-        "Arial",
-        "sans-serif",
-      ],
-      serif: [
-        "STZhongsong",
-        "STSong",
-        "Noto Serif CJK",
-        "Noto Serif SC",
-        "PMingLiu",
-        "SimSun",
-        "WenQuanYi Bitmap Song",
-        "Times New Roman",
-        "Times",
-        "serif",
-        "Apple Color Emoji",
-        "Segoe UI Emoji",
-        "Segoe UI Symbol",
-      ],
+    container: {
+      center: true,
+      padding: "1.5rem",
+      screens: {
+        "2xl": "1360px",
+      },
+    },
+    extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+        serif: [
+          "STZhongsong",
+          "STSong",
+          "Noto Serif CJK",
+          "Noto Serif SC",
+          "PMingLiu",
+          "SimSun",
+          "WenQuanYi Bitmap Song",
+          "Times New Roman",
+          "Times",
+          "serif",
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+        ],
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
-};
+  plugins: [require("@tailwindcss/forms"), require("tailwindcss-animate")],
+}
