@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 import Head from "next/head"
-import Image from "next/image"
 import { getConversationList } from "@/api/conversations"
 import Locale from "@/locales"
 import { ChatSession, useBillingStore, useChatStore } from "@/store"
