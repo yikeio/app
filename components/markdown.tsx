@@ -1,13 +1,13 @@
-import ReactMarkdown from "react-markdown"
+import ReactMarkdown from "react-markdown";
+import "katex/dist/katex.min.css";
+import RemarkMath from "remark-math";
+import RemarkBreaks from "remark-breaks";
+import RehypeKatex from "rehype-katex";
+import RemarkGfm from "remark-gfm";
+import RehypeHighlight from "rehype-highlight";
+import { useRef } from "react";
 
-import "katex/dist/katex.min.css"
-import { RefObject, useEffect, useRef, useState } from "react"
-import { copyToClipboard } from "@/utils"
-import RehypeHighlight from "rehype-highlight"
-import RehypeKatex from "rehype-katex"
-import RemarkBreaks from "remark-breaks"
-import RemarkGfm from "remark-gfm"
-import RemarkMath from "remark-math"
+import { copyToClipboard } from "@/utils";
 
 export function PreCode(props: { children: any }) {
   const ref = useRef<HTMLPreElement>(null)
@@ -22,33 +22,10 @@ export function PreCode(props: { children: any }) {
             copyToClipboard(code)
           }
         }}
-      ></span>
+      />
       {props.children}
     </pre>
   )
-}
-
-const useLazyLoad = (ref: RefObject<Element>): boolean => {
-  const [isIntersecting, setIntersecting] = useState<boolean>(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIntersecting(true)
-        observer.disconnect()
-      }
-    })
-
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [ref])
-
-  return isIntersecting
 }
 
 export function Markdown(props: { content: string }) {
@@ -65,9 +42,7 @@ export function Markdown(props: { content: string }) {
           },
         ],
       ]}
-      components={{
-        pre: PreCode,
-      }}
+      components={{ pre: PreCode }}
     >
       {props.content}
     </ReactMarkdown>
