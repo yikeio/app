@@ -40,7 +40,6 @@ export interface ChatConfig {
   chat_submit_key: SubmitKey
   avatar: string
   chat_font_size: number
-  no_border: boolean
 }
 
 export const ROLES: Message["role"][] = ["system", "user", "assistant"]
@@ -50,7 +49,6 @@ const DEFAULT_CONFIG: ChatConfig = {
   chat_submit_key: SubmitKey.Enter as SubmitKey, //发送键
   avatar: "1f603", //头像
   chat_font_size: 14, //字体大小
-  no_border: true, //无边框模式
 }
 
 export interface ChatSession {

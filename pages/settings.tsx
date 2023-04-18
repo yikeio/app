@@ -240,19 +240,6 @@ export default function Setting() {
                 }
               ></Slider>
             </SettingItem>
-
-            <SettingItem title="无边框模式">
-              <Checkbox
-                checked={config.no_border}
-                onCheckedChange={(value) =>
-                  updateConfig(
-                    (config) => (config.no_border = value),
-                    user.id,
-                    { key: "no_border", value: value }
-                  )
-                }
-              />
-            </SettingItem>
           </div>
         </div>
       </section>
