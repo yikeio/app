@@ -3,6 +3,7 @@ import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react"
 import toast from "react-hot-toast"
 
 import { Layout } from "@/components/layout"
+import { Label } from "@/components/ui/label"
 import {
   Popover,
   PopoverContent,
@@ -18,11 +19,11 @@ function SettingItem(props: {
   children: JSX.Element
 }) {
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4">
+    <div className="flex flex-col justify-between gap-4 py-4 md:flex-row md:items-center">
       <div>
-        <div className="font-bold">{props.title}</div>
+        <Label className="text-gray-700">{props.title}</Label>
         {props.subTitle && (
-          <div className="text-gray-700">{props.subTitle}</div>
+          <div className="text-sm text-gray-400">{props.subTitle}</div>
         )}
       </div>
       {props.children}
@@ -72,17 +73,17 @@ export default function Setting() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <section>
-        <div className="flex-1 p-3 md:p-6 space-y-6">
+        <div className="flex-1 p-3 space-y-6 md:p-6">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold">设置</div>
           </div>
-          <div className="bg-white border divide-y rounded-lg shadow-sm">
+          <div className="flex flex-col gap-6 divide-y rounded-lg">
             {user.name && (
               <SettingItem title={Locale.Settings.User}>
                 <div className="flex items-center gap-2">
                   {user.name}
                   <button
-                    className="px-4 py-1 text-white border-red-600/60 bg-red-500 hover:bg-red-600"
+                    className="px-4 py-1 text-white bg-red-500 border-red-600/60 hover:bg-red-600"
                     onClick={handleLogout}
                   >
                     退出登录
@@ -112,7 +113,7 @@ export default function Setting() {
             >
               {!currentCombo.is_available ? (
                 <button
-                  className="text-blue-500 px-2 "
+                  className="px-2 text-blue-500 "
                   onClick={() => handleBuy()}
                 >
                   购买套餐

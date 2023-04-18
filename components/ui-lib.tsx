@@ -1,15 +1,16 @@
-import LoadingIcon from "../icons/loading.svg";
-import CloseIcon from "../icons/close.svg";
-import { createRoot } from "react-dom/client";
+import { createRoot } from "react-dom/client"
+
+import CloseIcon from "../icons/close.svg"
+import LoadingIcon from "../icons/loading.svg"
 
 export function Popover(props: {
-  children: JSX.Element;
-  content: JSX.Element;
-  open?: boolean;
-  onClose?: () => void;
+  children: JSX.Element
+  content: JSX.Element
+  open?: boolean
+  onClose?: () => void
 }) {
   return (
-    <div className={'popover'}>
+    <div className={"popover"}>
       {props.children}
       {props.open && (
         <div className={"popover-content"}>
@@ -18,19 +19,17 @@ export function Popover(props: {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export function Card(props: { children: JSX.Element[]; className?: string }) {
-  return (
-    <div className='card'>{props.children}</div>
-  );
+  return <div className="card">{props.children}</div>
 }
 
 export function List(props: { children: JSX.Element[] | JSX.Element }) {
   return (
-    <div className="bg-white rounded border shadow-sm">{props.children}</div>
-  );
+    <div className="bg-white border rounded shadow-sm">{props.children}</div>
+  )
 }
 
 export function Loading() {
@@ -46,14 +45,14 @@ export function Loading() {
     >
       <LoadingIcon />
     </div>
-  );
+  )
 }
 
 interface ModalProps {
-  title: string;
-  children?: JSX.Element;
-  actions?: JSX.Element[];
-  onClose?: () => void;
+  title: string
+  children?: JSX.Element
+  actions?: JSX.Element[]
+  onClose?: () => void
 }
 export function Modal(props: ModalProps) {
   return (
@@ -78,26 +77,26 @@ export function Modal(props: ModalProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export function showModal(props: ModalProps) {
-  const div = document.createElement("div");
-  div.className = "modal-mask";
-  document.body.appendChild(div);
+  const div = document.createElement("div")
+  div.className = "modal-mask"
+  document.body.appendChild(div)
 
-  const root = createRoot(div);
+  const root = createRoot(div)
   const closeModal = () => {
-    props.onClose?.();
-    root.unmount();
-    div.remove();
-  };
+    props.onClose?.()
+    root.unmount()
+    div.remove()
+  }
 
   div.onclick = (e) => {
     if (e.target === div) {
-      closeModal();
+      closeModal()
     }
-  };
+  }
 
-  root.render(<Modal {...props} onClose={closeModal}></Modal>);
+  root.render(<Modal {...props} onClose={closeModal}></Modal>)
 }

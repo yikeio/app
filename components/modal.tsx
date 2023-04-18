@@ -1,12 +1,12 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode } from "react";
+import { Fragment, ReactNode } from "react"
+import { Dialog, Transition } from "@headlessui/react"
 
 interface ModalProps {
-  onClose: () => void;
-  show: boolean;
-  children: ReactNode;
-  noPadding?: boolean;
-  size?: "sm" | "md" | "lg" | "xl";
+  onClose: () => void
+  show: boolean
+  children: ReactNode
+  noPadding?: boolean
+  size?: "xs" | "sm" | "md" | "lg" | "xl"
 }
 
 export default function Modal({
@@ -17,19 +17,20 @@ export default function Modal({
   noPadding = false,
 }: ModalProps) {
   let panelClassNames =
-    "inline-block w-full my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl -mt-20";
+    "inline-block w-full my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl -mt-20"
   if (!noPadding) {
-    panelClassNames = panelClassNames + " p-6";
+    panelClassNames = panelClassNames + " p-6"
   }
-
-  if (size === "sm") {
-    panelClassNames = panelClassNames + " max-w-sm";
+  if (size === "xs") {
+    panelClassNames = panelClassNames + " max-w-xs"
+  } else if (size === "sm") {
+    panelClassNames = panelClassNames + " max-w-sm"
   } else if (size === "md") {
-    panelClassNames = panelClassNames + " max-w-xl";
+    panelClassNames = panelClassNames + " max-w-xl"
   } else if (size === "lg") {
-    panelClassNames = panelClassNames + " max-w-2xl";
+    panelClassNames = panelClassNames + " max-w-2xl"
   } else if (size === "xl") {
-    panelClassNames = panelClassNames + " max-w-4xl";
+    panelClassNames = panelClassNames + " max-w-4xl"
   }
 
   return (
@@ -71,5 +72,5 @@ export default function Modal({
         </div>
       </Dialog>
     </Transition>
-  );
+  )
 }
