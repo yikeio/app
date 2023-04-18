@@ -310,9 +310,9 @@ export function Chat(props: {
         <div className="rounded-lg">
           <div
             className={
-              `p-3 md:p-4 rounded-xl relative prose prose-slate ` +
+              `p-3 md:p-4 lg:p-5 xl:p-8 rounded-xl relative ` +
               (isUser
-                ? "bg-blue-500 justify-self-end rounded-br-none text-white prose-invert"
+                ? "bg-blue-500 justify-self-end rounded-br-none text-white"
                 : "bg-white rounded-bl-none text-gray-700")
             }
           >
@@ -436,7 +436,7 @@ export function Chat(props: {
             title="重命名"
             onClick={handleUpdate}
           >
-            <Edit2 className="h-4 w-4" />
+            <Edit2 className="w-4 h-4" />
           </Button>
 
           {/* 暂时不做导出 */}
@@ -450,14 +450,14 @@ export function Chat(props: {
               )
             }}
           >
-            <FileDown className="h-4 w-4" />
+            <FileDown className="w-4 h-4" />
           </Button>
           <Button
             variant="outline"
             className="flex items-center justify-center w-8 h-8 p-1"
             onClick={() => null} // 分享图片？
           >
-            <Share2 className="h-4 w-4" />
+            <Share2 className="w-4 h-4" />
           </Button>
 
           <Button
