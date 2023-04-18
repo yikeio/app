@@ -154,7 +154,7 @@ export default function ChatPage() {
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <section className="flex min-h-screen w-full">
+      <section className="flex w-full min-h-screen">
         <div
           className={
             `fixed md:relative bg-white border-r inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col gap-6 ` +
@@ -163,20 +163,22 @@ export default function ChatPage() {
         >
           <div
             ref={chatListRef}
-            className="flex flex-1 flex-col gap-2"
+            className="flex flex-col flex-1 gap-4"
             onClick={() => toggleSidebar()}
             onScroll={handleSideBarScroll}
           >
             <Label className="text-gray-500 ">
               会话历史({sessions.length})
             </Label>
-            <ChatList />
+            <div>
+              <ChatList />
+            </div>
             {isLoadingMore && <div className="animate-spin"></div>}
           </div>
 
           <div className="flex flex-col gap-4">
             <Button
-              className="flex w-full items-center justify-center border-red-400 bg-red-500 p-2 px-4 text-white md:hidden"
+              className="flex items-center justify-center w-full p-2 px-4 text-white bg-red-500 border-red-400 md:hidden"
               onClick={() => {
                 if (confirm(Locale.Home.DeleteChat)) {
                   removeSession(currentIndex)
@@ -187,7 +189,7 @@ export default function ChatPage() {
               <span>删除选中会话</span>
             </Button>
             <Button
-              className="flex w-full items-center justify-center gap-2 p-2 px-4 hover:bg-slate-100"
+              className="flex items-center justify-center w-full gap-2"
               onClick={handleCreateConversation}
             >
               <Icons.plus size={22} />
@@ -196,7 +198,7 @@ export default function ChatPage() {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col overflow-hidden bg-slate-100">
+        <div className="flex flex-col flex-1 overflow-hidden bg-slate-100">
           <Chat showSideBar={toggleSidebar} sideBarShowing={showSideBar} />
         </div>
       </section>

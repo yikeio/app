@@ -79,7 +79,7 @@ export default function Setting() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <section>
+      <section className="max-w-5xl mx-auto">
         <div className="flex-1 p-3 space-y-6 md:p-6">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold">设置</div>
