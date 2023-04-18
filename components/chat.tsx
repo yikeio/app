@@ -48,22 +48,22 @@ function exportMessages(messages: Message[], topic: string) {
       .join("\n\n")
   const filename = `${topic}.md`
 
-  showModal({
-    title: Locale.Export.Title,
-    children: (
-      <div className="markdown-body">
-        <pre>{mdText}</pre>
-      </div>
-    ),
-    actions: [
-      <button key="copy" onClick={() => copyToClipboard(mdText)}>
-        复制
-      </button>,
-      <button key="download" onClick={() => downloadAs(mdText, filename)}>
-        下载
-      </button>,
-    ],
-  })
+  // showModal({
+  //   title: Locale.Export.Title,
+  //   children: (
+  //     <div className="markdown-body">
+  //       <pre>{mdText}</pre>
+  //     </div>
+  //   ),
+  //   actions: [
+  //     <button key="copy" onClick={() => copyToClipboard(mdText)}>
+  //       复制
+  //     </button>,
+  //     <button key="download" onClick={() => downloadAs(mdText, filename)}>
+  //       下载
+  //     </button>,
+  //   ],
+  // })
 }
 
 function useSubmitHandler() {
@@ -119,9 +119,10 @@ export function Chat(props: {
   type RenderMessage = Message & { preview?: boolean }
 
   const chatStore = useChatStore()
-  const [session, sessionIndex] = useChatStore((state) => [
+  const [session, sessionIndex, currentUserMessages] = useChatStore((state) => [
     state.currentSession(),
     state.currentSessionIndex,
+    state.currentUserMessages()
   ])
 
   const [currentCombo, setActivateVisible, setBillingModalVisible] =
@@ -130,6 +131,7 @@ export function Chat(props: {
       state.setActivateVisible,
       state.setBillingModalVisible,
     ])
+  const [keyIndex , setKeyIndex] = useState(0)
 
   const chat_font_size = useChatStore((state) => state.config.chat_font_size)
 
@@ -179,6 +181,11 @@ export function Chat(props: {
     }
   }
 
+  useEffect(() => {
+    setKeyIndex(0)
+    setUserInput('')
+  }, [session])
+
   const scrollInput = () => {
     const dom = inputRef.current
     if (!dom) return
@@ -221,6 +228,20 @@ export function Chat(props: {
 
   // check if should send message
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      let newKeyIndex = keyIndex
+      if (e.key === "ArrowUp" && !newKeyIndex) {
+        newKeyIndex = currentUserMessages.length - 1
+      } else {
+        newKeyIndex = keyIndex + (e.key === "ArrowDown" ? 1 : -1)
+      }
+      const data  = currentUserMessages[newKeyIndex]
+      if (!data) return
+      setUserInput(data.content)
+      setKeyIndex(newKeyIndex)
+      e.preventDefault()
+      return
+    }
     if (shouldSubmit(e)) {
       onUserSubmit()
       e.preventDefault()

@@ -132,6 +132,7 @@ interface ChatStore {
   ) => void
   getUserSettings: (userId: string) => Promise<void>
   clearAllData: () => void
+  currentUserMessages: () => Message[]
 }
 
 // 记录会话缓存
@@ -365,6 +366,12 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       content: Locale.Store.Prompt.History(session.memoryPrompt),
       date: "",
     } as Message
+  },
+
+  currentUserMessages() {
+    return get().currentSession().messages.filter((message) => {
+      return message.role === "user"
+    })
   },
 
   updateMessage(
