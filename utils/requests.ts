@@ -1,25 +1,25 @@
-import { API_DOMAIN } from "../api/common";
-import { createMessage } from "../api/conversations";
+import { API_DOMAIN } from "../api/common"
+import { createMessage } from "../api/conversations"
 
-const TIME_OUT_MS = 30000;
+const TIME_OUT_MS = 30000
 
 export async function requestChatStream(
   content: string,
   options: {
-    conversationId: string;
-    onMessage: (message: string, done: boolean) => void;
-    onError: (error: Error, statusCode?: number) => void;
-    onController?: (controller: AbortController) => void;
-  },
+    conversationId: string
+    onMessage: (message: string, done: boolean) => void
+    onError: (error: Error, statusCode?: number) => void
+    onController?: (controller: AbortController) => void
+  }
 ) {
-  const token = localStorage.getItem("login_token");
+  const token = localStorage.getItem("login_token")
 
-  const controller = new AbortController();
-  const reqTimeoutId = setTimeout(() => controller.abort(), TIME_OUT_MS);
+  const controller = new AbortController()
+  const reqTimeoutId = setTimeout(() => controller.abort(), TIME_OUT_MS)
 
   // TODO: 替换统一的接口
   try {
-    await createMessage(options.conversationId, content);
+    await createMessage(options.conversationId, content)
     const res = await fetch(
       `${API_DOMAIN}/api/chat/conversations/${options.conversationId}/completions`,
       {
@@ -28,47 +28,47 @@ export async function requestChatStream(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      },
-    );
-    clearTimeout(reqTimeoutId);
+      }
+    )
+    clearTimeout(reqTimeoutId)
 
-    let responseText = "";
+    let responseText = ""
 
     const finish = () => {
-      options?.onMessage(responseText, true);
-      controller.abort();
-    };
+      options?.onMessage(responseText, true)
+      controller.abort()
+    }
 
     if (res.ok) {
-      const reader = res.body?.getReader();
-      const decoder = new TextDecoder();
+      const reader = res.body?.getReader()
+      const decoder = new TextDecoder()
 
-      options?.onController?.(controller);
+      options?.onController?.(controller)
 
       while (true) {
         // handle time out, will stop if no response in 10 secs
-        const resTimeoutId = setTimeout(() => finish(), TIME_OUT_MS);
-        const content = await reader?.read();
-        clearTimeout(resTimeoutId);
-        const text = decoder.decode(content?.value);
-        responseText += text;
+        const resTimeoutId = setTimeout(() => finish(), TIME_OUT_MS)
+        const content = await reader?.read()
+        clearTimeout(resTimeoutId)
+        const text = decoder.decode(content?.value)
+        responseText += text
 
-        const done = !content || content.done;
-        options?.onMessage(responseText, false);
+        const done = !content || content.done
+        options?.onMessage(responseText, false)
 
         if (done) {
-          break;
+          break
         }
       }
 
-      finish();
+      finish()
     } else {
-      console.error("Stream Error", res.body);
-      options?.onError(new Error("Stream Error"), res.status);
+      console.error("Stream Error", res.body)
+      options?.onError(new Error("Stream Error"), res.status)
     }
   } catch (err) {
-    console.error("NetWork Error", err);
-    options?.onError(err as Error);
+    console.error("NetWork Error", err)
+    options?.onError(err as Error)
   }
 }
 
@@ -79,26 +79,26 @@ export const ControllerPool = {
   addController(
     sessionIndex: number,
     messageIndex: number,
-    controller: AbortController,
+    controller: AbortController
   ) {
-    const key = this.key(sessionIndex, messageIndex);
-    this.controllers[key] = controller;
-    return key;
+    const key = this.key(sessionIndex, messageIndex)
+    this.controllers[key] = controller
+    return key
   },
 
   stop(sessionIndex: number, messageIndex: number) {
-    const key = this.key(sessionIndex, messageIndex);
-    const controller = this.controllers[key];
-    console.log(controller);
-    controller?.abort();
+    const key = this.key(sessionIndex, messageIndex)
+    const controller = this.controllers[key]
+    console.log(controller)
+    controller?.abort()
   },
 
   remove(sessionIndex: number, messageIndex: number) {
-    const key = this.key(sessionIndex, messageIndex);
-    delete this.controllers[key];
+    const key = this.key(sessionIndex, messageIndex)
+    delete this.controllers[key]
   },
 
   key(sessionIndex: number, messageIndex: number) {
-    return `${sessionIndex},${messageIndex}`;
+    return `${sessionIndex},${messageIndex}`
   },
-};
+}

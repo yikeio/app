@@ -1,4 +1,4 @@
-import { commonFetch, API_DOMAIN } from "./common";
+import { API_DOMAIN, commonFetch } from "./common"
 
 /**
  * 获取会话列表
@@ -6,12 +6,12 @@ import { commonFetch, API_DOMAIN } from "./common";
  */
 export async function getConversationList(
   user: string,
-  options?: { page?: number; pageSize?: number; sorts?: string },
+  options?: { page?: number; pageSize?: number; sorts?: string }
 ) {
-  const { page = 1, pageSize = 15, sorts = "last_active_at" } = options || {};
+  const { page = 1, pageSize = 15, sorts = "last_active_at" } = options || {}
   return commonFetch(
-    `users/${user}/chat/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`,
-  );
+    `users/${user}/chat/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`
+  )
 }
 
 /**
@@ -22,7 +22,7 @@ export async function createConversation(title: string) {
   return commonFetch("chat/conversations", {
     method: "POST",
     body: JSON.stringify({ title }),
-  });
+  })
 }
 
 /**
@@ -31,12 +31,12 @@ export async function createConversation(title: string) {
  */
 export async function updateConversation(
   id: string,
-  data: Record<string, any>,
+  data: Record<string, any>
 ) {
   return commonFetch(`chat/conversations/${id}`, {
     method: "PUT",
     body: JSON.stringify(data),
-  });
+  })
 }
 
 /**
@@ -46,7 +46,7 @@ export async function updateConversation(
 export async function deleteConversation(id: string) {
   return commonFetch(`chat/conversations/${id}`, {
     method: "DELETE",
-  });
+  })
 }
 
 /**
@@ -57,7 +57,7 @@ export async function createMessage(conversation: string, content: string) {
   return commonFetch(`chat/conversations/${conversation}/messages`, {
     method: "POST",
     body: JSON.stringify({ content }),
-  });
+  })
 }
 
 /**
@@ -65,7 +65,7 @@ export async function createMessage(conversation: string, content: string) {
  * @returns
  */
 export async function createSmartMessage(conversationId: string) {
-  const token = localStorage.getItem("login_token");
+  const token = localStorage.getItem("login_token")
 
   return fetch(
     `${API_DOMAIN}/api/chat/conversations/${conversationId}/completions`,
@@ -75,8 +75,8 @@ export async function createSmartMessage(conversationId: string) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
-  );
+    }
+  )
 }
 
 /**
@@ -85,10 +85,10 @@ export async function createSmartMessage(conversationId: string) {
  */
 export async function getConversationMessageList(
   conversation: string,
-  options?: { page?: number; pageSize?: number; sorts?: string },
+  options?: { page?: number; pageSize?: number; sorts?: string }
 ) {
-  const { page = 1, pageSize = 15, sorts = "id:desc" } = options || {};
+  const { page = 1, pageSize = 15, sorts = "id:desc" } = options || {}
   return commonFetch(
-    `chat/conversations/${conversation}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`,
-  );
+    `chat/conversations/${conversation}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`
+  )
 }
