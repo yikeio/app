@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./markdown.css";
+@import "./highlight.css";
+
 h1 {
   @apply text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl;
 }

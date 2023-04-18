@@ -22,7 +22,7 @@ import {
   parseTime,
   selectOrCopy,
 } from "@/utils"
-import { Edit2, FileDown, MessageSquare, Share2 } from "lucide-react"
+import { Edit2, FileDown, MessageSquare, Share2, Trash2 } from "lucide-react"
 import toast from "react-hot-toast"
 
 import { UserAvatar } from "@/components/avatar"
@@ -30,7 +30,6 @@ import { Icons } from "@/components/icons"
 import LoadingIcon from "../icons/loading.svg"
 import Locale from "../locales"
 import { ControllerPool } from "../utils/requests"
-import { showModal } from "./ui-lib"
 import { Button } from "./ui/button"
 import { Label } from "./ui/label"
 import { Textarea } from "./ui/textarea"
@@ -311,9 +310,9 @@ export function Chat(props: {
         <div className="rounded-lg">
           <div
             className={
-              `p-3 md:p-4 rounded-xl relative ` +
+              `p-3 md:p-4 rounded-xl relative prose prose-slate ` +
               (isUser
-                ? "bg-blue-500 justify-self-end rounded-br-none text-white"
+                ? "bg-blue-500 justify-self-end rounded-br-none text-white prose-invert"
                 : "bg-white rounded-bl-none text-gray-700")
             }
           >
@@ -322,7 +321,7 @@ export function Chat(props: {
               <LoadingIcon />
             ) : (
               <div
-                className="markdown-body"
+                className="markdown-body "
                 style={{ fontSize: `${chat_font_size}px` }}
                 onContextMenu={(e) => onRightClick(e, message)}
                 onDoubleClickCapture={() => {
@@ -459,6 +458,15 @@ export function Chat(props: {
             onClick={() => null} // 分享图片？
           >
             <Share2 className="h-4 w-4" />
+          </Button>
+
+          <Button
+            variant="outline"
+            className="flex items-center justify-center w-8 h-8 p-1"
+            title="重命名"
+            onClick={handleUpdate}
+          >
+            <Trash2 class="h-4 w-4" />
           </Button>
         </div>
       </div>
