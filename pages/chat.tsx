@@ -187,7 +187,6 @@ export default function ChatPage() {
               <span>删除选中会话</span>
             </Button>
             <Button
-              variant="outline"
               className="flex w-full items-center justify-center gap-2 p-2 px-4 hover:bg-slate-100"
               onClick={handleCreateConversation}
             >
