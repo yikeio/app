@@ -1,8 +1,9 @@
 import ReactMarkdown from "react-markdown"
 
 import "katex/dist/katex.min.css"
-import { RefObject, useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import { copyToClipboard } from "@/utils"
+import { Copy } from "lucide-react"
 import RehypeHighlight from "rehype-highlight"
 import RehypeKatex from "rehype-katex"
 import RemarkBreaks from "remark-breaks"
@@ -13,42 +14,22 @@ export function PreCode(props: { children: any }) {
   const ref = useRef<HTMLPreElement>(null)
 
   return (
-    <pre ref={ref}>
+    <pre ref={ref} className="relative group">
       <span
-        className="copy-code-button"
+        title="复制"
+        className="absolute right-0 hidden p-2 m-2 text-xs text-gray-300 rotate-[270deg] rounded cursor-pointer group-hover:block hover:bg-slate-600 bg-slate-700/50"
         onClick={() => {
           if (ref.current) {
             const code = ref.current.innerText
             copyToClipboard(code)
           }
         }}
-      ></span>
+      >
+        <Copy size={16} />
+      </span>
       {props.children}
     </pre>
   )
-}
-
-const useLazyLoad = (ref: RefObject<Element>): boolean => {
-  const [isIntersecting, setIntersecting] = useState<boolean>(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIntersecting(true)
-        observer.disconnect()
-      }
-    })
-
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [ref])
-
-  return isIntersecting
 }
 
 export function Markdown(props: { content: string }) {
@@ -59,9 +40,7 @@ export function Markdown(props: { content: string }) {
         RehypeKatex,
         [RehypeHighlight, { detect: true, ignoreMissing: true }],
       ]}
-      components={{
-        pre: PreCode,
-      }}
+      components={{ pre: PreCode }}
     >
       {props.content}
     </ReactMarkdown>

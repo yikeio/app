@@ -436,7 +436,7 @@ export function Chat(props: {
             title="重命名"
             onClick={handleUpdate}
           >
-            <Edit2 class="h-4 w-4" />
+            <Edit2 className="h-4 w-4" />
           </Button>
 
           {/* 暂时不做导出 */}
@@ -450,14 +450,14 @@ export function Chat(props: {
               )
             }}
           >
-            <FileDown class="h-4 w-4" />
+            <FileDown className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
             className="flex items-center justify-center w-8 h-8 p-1"
             onClick={() => null} // 分享图片？
           >
-            <Share2 class="h-4 w-4" />
+            <Share2 className="h-4 w-4" />
           </Button>
 
           <Button
