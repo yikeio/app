@@ -1,20 +1,20 @@
-import React from "react";
+import React from "react"
 
 interface IErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-  info: React.ErrorInfo | null;
+  hasError: boolean
+  error: Error | null
+  info: React.ErrorInfo | null
 }
 
 export class ErrorBoundary extends React.Component<any, IErrorBoundaryState> {
   constructor(props: any) {
-    super(props);
-    this.state = { hasError: false, error: null, info: null };
+    super(props)
+    this.state = { hasError: false, error: null, info: null }
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     // Update state with error details
-    this.setState({ hasError: true, error, info });
+    this.setState({ hasError: true, error, info })
   }
 
   render() {
@@ -28,9 +28,9 @@ export class ErrorBoundary extends React.Component<any, IErrorBoundaryState> {
             <code>{this.state.info?.componentStack}</code>
           </pre>
         </div>
-      );
+      )
     }
     // if no error occurred, render children
-    return this.props.children;
+    return this.props.children
   }
 }

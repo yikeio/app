@@ -1,4 +1,4 @@
-import { parseTime } from "../utils";
+import { parseTime } from "../utils"
 
 const cn = {
   WIP: "该功能仍在开发中……",
@@ -21,11 +21,11 @@ const cn = {
     Rename: "重命名对话",
     Typing: "正在输入…",
     Input: (chat_submit_key: string) => {
-      var inputHints = `输入消息，${chat_submit_key} 发送`;
-      if (chat_submit_key === String('Enter')) {
-        inputHints += "，Shift + Enter 换行";
+      var inputHints = `输入消息，${chat_submit_key} 发送`
+      if (chat_submit_key === String("Enter")) {
+        inputHints += "，Shift + Enter 换行"
       }
-      return inputHints;
+      return inputHints
     },
     Send: "发送",
   },
@@ -94,7 +94,7 @@ const cn = {
     Usage: {
       Title: "账户剩余 token 数",
       SubTitle(used: any) {
-        return `累计已使用 ${used}`;
+        return `累计已使用 ${used}`
       },
       IsChecking: "正在检查…",
       Check: "重新检查",
@@ -102,7 +102,7 @@ const cn = {
     Combo: {
       Title: "套餐",
       SubTitle(time: any) {
-        return time ? `过期时间: ${parseTime(time)}` : "暂无可用套餐";
+        return time ? `过期时间: ${parseTime(time)}` : "暂无可用套餐"
       },
     },
     AccessCode: {
@@ -147,8 +147,8 @@ const cn = {
     Edit: "前置上下文和历史记忆",
     Add: "新增一条",
   },
-};
+}
 
-export type LocaleType = typeof cn;
+export type LocaleType = typeof cn
 
-export default cn;
+export default cn

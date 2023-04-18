@@ -1,5 +1,5 @@
 // import { SubmitKey } from "../store/app";
-import { parseTime } from "../utils";
+import { parseTime } from "../utils"
 
 const en = {
   WIP: "WIP...",
@@ -22,11 +22,11 @@ const en = {
     Rename: "Rename Chat",
     Typing: "Typing…",
     Input: (chat_submit_key: string) => {
-      var inputHints = `Type something and press ${chat_submit_key} to send`;
-      if (chat_submit_key === String('Enter')) {
-        inputHints += ", press Shift + Enter to newline";
+      var inputHints = `Type something and press ${chat_submit_key} to send`
+      if (chat_submit_key === String("Enter")) {
+        inputHints += ", press Shift + Enter to newline"
       }
-      return inputHints;
+      return inputHints
     },
     Send: "Send",
   },
@@ -95,7 +95,7 @@ const en = {
     Usage: {
       Title: "Account Balance",
       SubTitle(used: any) {
-        return `Used this month ${used}`;
+        return `Used this month ${used}`
       },
       IsChecking: "Checking...",
       Check: "Check Again",
@@ -103,7 +103,7 @@ const en = {
     Combo: {
       Title: "Combo",
       SubTitle(time: any) {
-        return `expired at: ${parseTime(time)}`;
+        return `expired at: ${parseTime(time)}`
       },
     },
     AccessCode: {
@@ -150,6 +150,6 @@ const en = {
     Edit: "Contextual and Memory Prompts",
     Add: "Add One",
   },
-};
+}
 
-export default en;
+export default en

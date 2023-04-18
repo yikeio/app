@@ -17,7 +17,7 @@ export default function IndexPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <section className="">
-          <h2>FAQ</h2>
+        <h2>FAQ</h2>
       </section>
     </Layout>
   )
