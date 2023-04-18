@@ -22,7 +22,7 @@ import {
   parseTime,
   selectOrCopy,
 } from "@/utils"
-import { Edit2, FileDown, MessageSquare, Share2, Trash2 } from "lucide-react"
+import { Edit2, MessageSquare, Share2, Trash2 } from "lucide-react"
 import toast from "react-hot-toast"
 
 import { UserAvatar } from "@/components/avatar"
@@ -37,34 +37,6 @@ import { Textarea } from "./ui/textarea"
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <Icons.loading width={24} height={24} />,
 })
-
-function exportMessages(messages: Message[], topic: string) {
-  const mdText =
-    `# ${topic}\n\n` +
-    messages
-      .map((m) => {
-        return m.role === "user" ? `## ${m.content}` : m.content.trim()
-      })
-      .join("\n\n")
-  const filename = `${topic}.md`
-
-  // showModal({
-  //   title: Locale.Export.Title,
-  //   children: (
-  //     <div className="markdown-body">
-  //       <pre>{mdText}</pre>
-  //     </div>
-  //   ),
-  //   actions: [
-  //     <button key="copy" onClick={() => copyToClipboard(mdText)}>
-  //       复制
-  //     </button>,
-  //     <button key="download" onClick={() => downloadAs(mdText, filename)}>
-  //       下载
-  //     </button>,
-  //   ],
-  // })
-}
 
 function useSubmitHandler() {
   const config = useChatStore((state) => state.config)
@@ -119,10 +91,9 @@ export function Chat(props: {
   type RenderMessage = Message & { preview?: boolean }
 
   const chatStore = useChatStore()
-  const [session, sessionIndex, currentUserMessages] = useChatStore((state) => [
+  const [session, sessionIndex] = useChatStore((state) => [
     state.currentSession(),
     state.currentSessionIndex,
-    state.currentUserMessages()
   ])
 
   const [currentCombo, setActivateVisible, setBillingModalVisible] =
@@ -131,7 +102,6 @@ export function Chat(props: {
       state.setActivateVisible,
       state.setBillingModalVisible,
     ])
-  const [keyIndex , setKeyIndex] = useState(0)
 
   const chat_font_size = useChatStore((state) => state.config.chat_font_size)
 
@@ -182,7 +152,6 @@ export function Chat(props: {
   }
 
   useEffect(() => {
-    setKeyIndex(0)
     setUserInput('')
   }, [session])
 
@@ -228,20 +197,6 @@ export function Chat(props: {
 
   // check if should send message
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-      let newKeyIndex = keyIndex
-      if (e.key === "ArrowUp" && !newKeyIndex) {
-        newKeyIndex = currentUserMessages.length - 1
-      } else {
-        newKeyIndex = keyIndex + (e.key === "ArrowDown" ? 1 : -1)
-      }
-      const data  = currentUserMessages[newKeyIndex]
-      if (!data) return
-      setUserInput(data.content)
-      setKeyIndex(newKeyIndex)
-      e.preventDefault()
-      return
-    }
     if (shouldSubmit(e)) {
       onUserSubmit()
       e.preventDefault()
@@ -460,19 +415,6 @@ export function Chat(props: {
             <Edit2 className="w-4 h-4" />
           </Button>
 
-          {/* 暂时不做导出 */}
-          <Button
-            variant="outline"
-            className="flex items-center justify-center w-8 h-8 p-1"
-            onClick={() => {
-              exportMessages(
-                session.messages.filter((msg) => !msg.isError),
-                session.title
-              )
-            }}
-          >
-            <FileDown className="w-4 h-4" />
-          </Button>
           <Button
             variant="outline"
             className="flex items-center justify-center w-8 h-8 p-1"
