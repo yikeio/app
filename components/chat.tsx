@@ -466,7 +466,7 @@ export function Chat(props: {
             title="重命名"
             onClick={handleUpdate}
           >
-            <Trash2 class="h-4 w-4" />
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       </div>

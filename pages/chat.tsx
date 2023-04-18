@@ -156,19 +156,19 @@ export default function ChatPage() {
       <section className="flex w-full min-h-screen">
         <div
           className={
-            `fixed md:relative bg-white border-r inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col gap-6 ` +
+            `fixed md:relative bg-white border-r inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col gap-6 h-screen ` +
             (showSideBar ? "left-0" : "-left-[100%] md:left-0")
           }
         >
+          <Label className="text-gray-500">
+            会话历史({sessions.length})
+          </Label>
           <div
             ref={chatListRef}
-            className="flex flex-col flex-1 gap-4"
+            className="flex flex-col flex-1 gap-4 h-auto overflow-y-auto"
             onClick={() => toggleSidebar()}
             onScroll={handleSideBarScroll}
           >
-            <Label className="text-gray-500 ">
-              会话历史({sessions.length})
-            </Label>
             <div>
               <ChatList />
             </div>
