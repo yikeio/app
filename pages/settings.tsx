@@ -1,5 +1,5 @@
 import Head from "next/head"
-import * as dayjs from "dayjs"
+import dayjs from "dayjs"
 import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react"
 import toast from "react-hot-toast"
 
@@ -113,7 +113,7 @@ export default function Setting() {
               title="套餐"
               subTitle={
                 currentCombo?.expired_at
-                  ? `过期时间: ${dayjs(currentCombo?.expired_at).format(
+                  ? `过期时间: ${dayjs(currentCombo?.expired_at as string).format(
                       "YYYY/MM/DD HH:mm:ss"
                     )}`
                   : "暂无可用套餐"
@@ -160,7 +160,7 @@ export default function Setting() {
                     updateConfig(
                       (config) => (
                         (config.chat_submit_key =
-                          key.value as any as SubmitKey),
+                          key as any as SubmitKey),
                         user.id
                       ),
                       user.id,
@@ -211,11 +211,11 @@ export default function Setting() {
                 onValueChange={(value) =>
                   updateConfig(
                     (config) =>
-                      (config.chat_contexts_count = Number.parseInt(value[0])),
+                      (config.chat_contexts_count = value[0]),
                     user.id,
                     {
                       key: "chat_contexts_count",
-                      value: Number.parseInt(value[0]),
+                      value: value[0],
                     }
                   )
                 }
@@ -233,7 +233,7 @@ export default function Setting() {
                 onValueChange={(value) =>
                   updateConfig(
                     (config) =>
-                      (config.chat_font_size = Number.parseInt(value[0])),
+                      (config.chat_font_size = value[0]),
                     user.id,
                     { key: "chat_font_size", value: value[0] }
                   )

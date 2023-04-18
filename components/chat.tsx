@@ -48,22 +48,22 @@ function exportMessages(messages: Message[], topic: string) {
       .join("\n\n")
   const filename = `${topic}.md`
 
-  showModal({
-    title: Locale.Export.Title,
-    children: (
-      <div className="markdown-body">
-        <pre>{mdText}</pre>
-      </div>
-    ),
-    actions: [
-      <button key="copy" onClick={() => copyToClipboard(mdText)}>
-        复制
-      </button>,
-      <button key="download" onClick={() => downloadAs(mdText, filename)}>
-        下载
-      </button>,
-    ],
-  })
+  // showModal({
+  //   title: Locale.Export.Title,
+  //   children: (
+  //     <div className="markdown-body">
+  //       <pre>{mdText}</pre>
+  //     </div>
+  //   ),
+  //   actions: [
+  //     <button key="copy" onClick={() => copyToClipboard(mdText)}>
+  //       复制
+  //     </button>,
+  //     <button key="download" onClick={() => downloadAs(mdText, filename)}>
+  //       下载
+  //     </button>,
+  //   ],
+  // })
 }
 
 function useSubmitHandler() {
