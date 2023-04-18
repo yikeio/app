@@ -226,16 +226,9 @@ export function Chat(props: {
       e.preventDefault()
     }
   }
-  const onRightClick = (e: any, message: Message) => {
-    // auto fill user input
-    if (message.role === "user") {
-      setUserInput(message.content)
-    }
-
-    // copy to clipboard
-    if (selectOrCopy(e.currentTarget, message.content)) {
-      e.preventDefault()
-    }
+  const onRightClick = (e: any, message: Message, index: number) => {
+    e.preventDefault();
+    // 多选逻辑
   }
 
   const onResend = (botIndex: number) => {
@@ -323,7 +316,7 @@ export function Chat(props: {
               <div
                 className="markdown-body "
                 style={{ fontSize: `${chat_font_size}px` }}
-                onContextMenu={(e) => onRightClick(e, message)}
+                onContextMenu={(e) => onRightClick(e, message, index)}
                 onDoubleClickCapture={() => {
                   if (!isMobileScreen()) return
                   setUserInput(message.content)

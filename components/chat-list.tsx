@@ -52,7 +52,7 @@ export function ChatList() {
   )
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 pb-4">
       {sessions.map((item, i) => (
         <ChatItem
           id={item.id}

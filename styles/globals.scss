@@ -46,3 +46,22 @@ ul,
 ol {
   @apply my-6 ml-6 list-disc [&>li]:mt-2;
 }
+
+html, body, div {
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-corner {
+    width: 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    border: 4px solid transparent;
+    background-clip: content-box;
+    background-color: rgba(0, 0, 0, .14);
+  }
+}
