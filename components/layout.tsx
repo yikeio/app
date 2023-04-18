@@ -1,6 +1,6 @@
-import { SiteHeader } from "@/components/site-bar"
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react"
 
+import { Sidebar } from "@/components/sidebar"
 import BotIcon from "../icons/bot.svg"
 import LoadingIcon from "../icons/loading.svg"
 
@@ -19,17 +19,17 @@ const useHasHydrated = () => {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const loading = !useHasHydrated();
+  const loading = !useHasHydrated()
 
   return loading ? (
-    <div className="h-screen flex items-center justify-center gap-6">
+    <div className="flex items-center justify-center h-screen gap-6">
       <BotIcon />
       <LoadingIcon />
     </div>
   ) : (
     <div className="flex">
-      <SiteHeader />
-      <main className="grow h-screen overflow-y-auto">{children}</main>
+      <Sidebar />
+      <main className="h-screen overflow-y-auto grow">{children}</main>
     </div>
   )
 }

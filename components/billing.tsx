@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import * as React from "react";
-import { Spin } from "antd";
-import { useBillingStore, useChatStore } from "../store";
-import { createPayment, getPayment } from "../api/pay";
-import { getListUserPayment } from "../api/user";
-import Modal from "./modal";
+import * as React from "react"
+
+import { createPayment, getPayment } from "../api/pay"
+import { getListUserPayment } from "../api/user"
+import { useBillingStore, useChatStore } from "../store"
+import Modal from "./modal"
 
 export function BillingDialog() {
   const [
@@ -19,19 +19,19 @@ export function BillingDialog() {
     state.getPayableQuotas,
     state.payableQuotas,
     state.getUserQuotaInfo,
-  ]);
-  const [payStatus, setPayStatus] = React.useState<number>(0); // 0：未创建订单，1:创建订单，暂时支付二维码 2：支付成功
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [paymentDetail, setPaymentDetail] = React.useState<any>({});
-  const [user] = useChatStore((state) => [state.user]);
+  ])
+  const [payStatus, setPayStatus] = React.useState<number>(0) // 0：未创建订单，1:创建订单，暂时支付二维码 2：支付成功
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [paymentDetail, setPaymentDetail] = React.useState<any>({})
+  const [user] = useChatStore((state) => [state.user])
 
   React.useEffect(() => {
     if (billingModalVisible) {
-      setPayStatus(0);
-      getPayableQuotas("chat");
-      getListUserPaymentList();
+      setPayStatus(0)
+      getPayableQuotas("chat")
+      getListUserPaymentList()
     }
-  }, [billingModalVisible]);
+  }, [billingModalVisible])
 
   /**
    * loop查询支付状态
@@ -40,14 +40,14 @@ export function BillingDialog() {
     const timer = setInterval(() => {
       getPayment(id).then((res) => {
         if (res.result.state === "paid") {
-          setPayStatus(2);
-          clearInterval(timer);
+          setPayStatus(2)
+          clearInterval(timer)
           // 购买成功后，刷新一下用户套餐信息
-          getUserQuotaInfo(user.id);
+          getUserQuotaInfo(user.id)
         }
-      });
-    }, 3000);
-  };
+      })
+    }, 3000)
+  }
 
   /**
    * 支付
@@ -55,32 +55,32 @@ export function BillingDialog() {
    */
   const handlePay = async (item: any) => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       const res = await createPayment({
         quota_type: item.quota_type,
         pricing: item.pricing,
-      });
-      setPaymentDetail(res.result);
-      setPayStatus(1);
-      loopQueryPayment(res.result.id);
+      })
+      setPaymentDetail(res.result)
+      setPayStatus(1)
+      loopQueryPayment(res.result.id)
     } catch (e) {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   // 获取用户未付款的订单先展示
   const getListUserPaymentList = async () => {
-    const res = await getListUserPayment(user.id);
+    const res = await getListUserPayment(user.id)
     const recentPayment = res.result.filter(
-      (item: Record<string, string>) => item.state === "pending",
-    )[0];
+      (item: Record<string, string>) => item.state === "pending"
+    )[0]
 
     if (recentPayment) {
-      setPaymentDetail(recentPayment);
-      setPayStatus(1);
-      loopQueryPayment(recentPayment.id);
+      setPaymentDetail(recentPayment)
+      setPayStatus(1)
+      loopQueryPayment(recentPayment.id)
     }
-  };
+  }
 
   if (payStatus === 2) {
     return (
@@ -92,7 +92,7 @@ export function BillingDialog() {
         <div className="flex flex-col items-center gap-6">
           <h1 className="text-2xl font-bold">支付成功</h1>
           <svg
-            className="h-16 w-16 text-green-600"
+            className="w-16 h-16 text-green-600"
             viewBox="0 0 1024 1024"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +104,7 @@ export function BillingDialog() {
           </svg>
         </div>
       </Modal>
-    );
+    )
   } else if (payStatus === 1) {
     return (
       <Modal
@@ -117,12 +117,12 @@ export function BillingDialog() {
           <img
             src={paymentDetail.context.qrcode}
             alt=""
-            className="h-32 w-32"
+            className="w-32 h-32"
           />
           <div>请使用微信扫码支付</div>
         </div>
       </Modal>
-    );
+    )
   } else {
     return (
       <Modal
@@ -130,21 +130,21 @@ export function BillingDialog() {
         size="lg"
         onClose={() => setBillingModalVisible(false)}
       >
-        <Spin spinning={isLoading}>
+        <div>
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-3xl font-bold">购买套餐</h1>
             <div className="flex gap-6 justify-evenly">
               {payableQuotas.map((item: any, index: number) => (
                 <div
                   key={index}
-                  className="border-2 border-blue-500 rounded-lg shadow p-6 flex flex-col gap-4"
+                  className="flex flex-col gap-4 p-6 border-2 border-blue-500 rounded-lg shadow"
                 >
                   <div className="text-2xl font-bold">{item.title}</div>
-                  <div className="text-sm flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-sm">
                     <span className="font-bold text-blue-500">
                       {String(item.tokens_count).replace(
                         /\B(?=(\d{3})+(?!\d))/g,
-                        ",",
+                        ","
                       )}
                     </span>
                     <span>Token</span>
@@ -152,7 +152,7 @@ export function BillingDialog() {
                   <div className="text-xl font-semibold">￥{item.price}</div>
 
                   <button
-                    className="w-full px-4 py-1 bg-blue-500 hover:bg-blue-600 text-white border-blue-600/70"
+                    className="w-full px-4 py-1 text-white bg-blue-500 hover:bg-blue-600 border-blue-600/70"
                     onClick={() => handlePay(item)}
                   >
                     购买
@@ -161,8 +161,8 @@ export function BillingDialog() {
               ))}
             </div>
           </div>
-        </Spin>
+        </div>
       </Modal>
-    );
+    )
   }
 }

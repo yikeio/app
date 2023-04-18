@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h1 {
+  @apply text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl;
+}
+
+h2 {
+  @apply pb-2 mt-10 text-3xl font-semibold tracking-tight transition-colors scroll-m-20 first:mt-0;
+}
+
+h3 {
+  @apply mt-8 text-2xl font-semibold tracking-tight scroll-m-20;
+}
+
+h4 {
+  @apply mb-4 text-xl font-semibold scroll-m-20;
+}
+
+p {
+  @apply leading-7 [&:not(:first-child)]:mt-6;
+}
+
+blockquote {
+  @apply pl-6 mt-6 italic border-l-2;
+}
+
+table {
+  @apply w-full my-6;
+}
+
+th,
+td {
+  @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
+}
+
+th {
+  @apply font-bold;
+}
+
+ul,
+ol {
+  @apply my-6 ml-6 list-disc [&>li]:mt-2;
+}

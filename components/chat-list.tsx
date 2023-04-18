@@ -1,44 +1,44 @@
 import { Icons } from "@/components/icons"
-
-import Locale from "../locales";
-import { useChatStore } from "../store";
-import { isMobileScreen } from "../utils";
+import Locale from "../locales"
+import { useChatStore } from "../store"
+import { isMobileScreen } from "../utils"
+import { Label } from "./ui/label"
 
 export function ChatItem(props: {
-  onClick?: (e: React.MouseEvent) => void;
-  onDelete?: (e: React.MouseEvent) => void;
-  title: string;
-  count: number;
-  time: string;
-  selected: boolean;
-  id: string;
+  onClick?: (e: React.MouseEvent) => void
+  onDelete?: (e: React.MouseEvent) => void
+  title: string
+  count: number
+  time: string
+  selected: boolean
+  id: string
 }) {
   return (
     <div
-      className={`bg-slate-100 border-2 p-2 px-4 rounded-lg relative group ${
+      className={` border p-2 px-4 rounded-lg relative group ${
         props.selected ? "border-blue-500" : "border-slate-200"
       }`}
       onClick={props.onClick}
     >
-      <div className="font-bold">{props.title}</div>
+      <Label className="text-gray-700">{props.title}</Label>
       <div className="flex items-center justify-between text-xs">
         <div className="text-gray-500">
           {Locale.ChatItem.ChatItemCount(props.count)}
         </div>
-        <div className=" text-gray-400">{props.time}</div>
+        <div className="text-gray-400 ">{props.time}</div>
       </div>
       {props.id === "-1" ? (
         ""
       ) : (
         <div
-          className="absolute top-0 right-0 p-1 m-2 text-red-500 transition-all rounded-full opacity-0 group-hover:bg-red-200 group-hover:opacity-100 cursor-pointer"
+          className="absolute top-0 right-0 p-1 m-2 text-red-500 transition-all rounded-full opacity-0 cursor-pointer group-hover:bg-red-200 group-hover:opacity-100"
           onClick={props.onDelete}
         >
           <Icons.trash size={14} />
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export function ChatList() {
@@ -48,8 +48,8 @@ export function ChatList() {
       state.currentSessionIndex,
       state.selectSession,
       state.removeSession,
-    ],
-  );
+    ]
+  )
 
   return (
     <div className="flex flex-col gap-4">
@@ -63,13 +63,13 @@ export function ChatList() {
           selected={i === selectedIndex}
           onClick={() => selectSession(i)}
           onDelete={(e) => {
-            e.stopPropagation();
+            e.stopPropagation()
             if (!isMobileScreen() || confirm(Locale.Home.DeleteChat)) {
-              removeSession(i);
+              removeSession(i)
             }
           }}
         />
       ))}
     </div>
-  );
+  )
 }
