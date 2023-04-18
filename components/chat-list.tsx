@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Icons } from "@/components/icons"
 import Locale from "../locales"
 import { useChatStore } from "../store"
