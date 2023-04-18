@@ -73,7 +73,6 @@ specifiers:
   sass: ^1.62.0
   sharp: ^0.31.3
   tailwind-merge: ^1.8.0
-  tailwind-scrollbar: ^3.0.0
   tailwindcss: ^3.1.7
   tailwindcss-animate: ^1.0.5
   typescript: ^4.5.3
@@ -135,7 +134,6 @@ dependencies:
   sass: 1.62.0
   sharp: 0.31.3
   tailwind-merge: 1.12.0
-  tailwind-scrollbar: 3.0.0_tailwindcss@3.3.1
   tailwindcss-animate: 1.0.5_tailwindcss@3.3.1
   zustand: 4.3.7_react@18.2.0
 
@@ -7765,15 +7763,6 @@ packages:
 
   /tailwind-merge/1.12.0:
     resolution: {integrity: sha512-Y17eDp7FtN1+JJ4OY0Bqv9OA41O+MS8c1Iyr3T6JFLnOgLg3EvcyMKZAnQ8AGyvB5Nxm3t9Xb5Mhe139m8QT/g==}
-    dev: false
-
-  /tailwind-scrollbar/3.0.0_tailwindcss@3.3.1:
-    resolution: {integrity: sha512-OkVRX9Q1T769vk979UZ519jhj/j/zNBHql7zPLI+tlhX+ahksYO4ZryWD29lOETDx9Wj1sw+K1OeW7W3+ECQOA==}
-    engines: {node: '>=12.13.0'}
-    peerDependencies:
-      tailwindcss: 3.x
-    dependencies:
-      tailwindcss: 3.3.1_postcss@8.4.22
     dev: false
 
   /tailwindcss-animate/1.0.5_tailwindcss@3.3.1:
