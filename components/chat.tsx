@@ -1,18 +1,10 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import dynamic from "next/dynamic"
 import { updateConversation } from "@/api/conversations"
 import Locale from "@/locales"
 import {
   BOT_HELLO,
   Message,
-  SubmitKey,
   useBillingStore,
   useChatStore,
   useSettingsStore,
@@ -24,94 +16,19 @@ import {
   parseTime,
   selectOrCopy,
 } from "@/utils"
-import { Edit2, FileDown, MessageSquare, Share2, Trash2 } from "lucide-react"
 import toast from "react-hot-toast"
 
 import { UserAvatar } from "@/components/avatar"
 import { Icons } from "@/components/icons"
 import LoadingIcon from "../icons/loading.svg"
 import { ControllerPool } from "../utils/requests"
-import { Button } from "./ui/button"
-import { Label } from "./ui/label"
-import { Textarea } from "./ui/textarea"
+// import ChatBody from './chat-body';
+import ChatFooter from "./chat-footer"
+import ChatHeader from "./chat-header"
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <Icons.loading width={24} height={24} />,
 })
-
-function exportMessages(messages: Message[], topic: string) {
-  const mdText =
-    `# ${topic}\n\n` +
-    messages
-      .map((m) => {
-        return m.role === "user" ? `## ${m.content}` : m.content.trim()
-      })
-      .join("\n\n")
-  const filename = `${topic}.md`
-
-  // showModal({
-  //   title: Locale.Export.Title,
-  //   children: (
-  //     <div className="markdown-body">
-  //       <pre>{mdText}</pre>
-  //     </div>
-  //   ),
-  //   actions: [
-  //     <button key="copy" onClick={() => copyToClipboard(mdText)}>
-  //       复制
-  //     </button>,
-  //     <button key="download" onClick={() => downloadAs(mdText, filename)}>
-  //       下载
-  //     </button>,
-  //   ],
-  // })
-}
-
-function useSubmitHandler() {
-  const config = useSettingsStore((state) => state.config)
-  const chat_submit_key = config.chat_submit_key
-
-  const shouldSubmit = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key !== "Enter") return false
-    if (e.key === "Enter" && e.nativeEvent.isComposing) return false
-    return (
-      (config.chat_submit_key === SubmitKey.AltEnter && e.altKey) ||
-      (config.chat_submit_key === SubmitKey.CtrlEnter && e.ctrlKey) ||
-      (config.chat_submit_key === SubmitKey.ShiftEnter && e.shiftKey) ||
-      (config.chat_submit_key === SubmitKey.MetaEnter && e.metaKey) ||
-      (config.chat_submit_key === SubmitKey.Enter &&
-        !e.altKey &&
-        !e.ctrlKey &&
-        !e.shiftKey &&
-        !e.metaKey)
-    )
-  }
-
-  return {
-    chat_submit_key,
-    shouldSubmit,
-  }
-}
-
-function useScrollToBottom() {
-  // for auto-scroll
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const [autoScroll, setAutoScroll] = useState(true)
-
-  // auto scroll
-  useLayoutEffect(() => {
-    const dom = scrollRef.current
-    if (dom && autoScroll) {
-      setTimeout(() => (dom.scrollTop = dom.scrollHeight), 1)
-    }
-  })
-
-  return {
-    scrollRef,
-    autoScroll,
-    setAutoScroll,
-  }
-}
 
 type RenderMessage = Message & { preview?: boolean }
 
@@ -140,26 +57,15 @@ export function Chat(props: {
   const pager = messageHistoryPagerMap.get(currentSessionId)
 
   const [user, config] = useSettingsStore((state) => [state.user, state.config])
-  const { chat_font_size } = config
-
-  const [currentCombo, setActivateVisible, setBillingModalVisible] =
-    useBillingStore((state) => [
-      state.currentCombo,
-      state.setActivateVisible,
-      state.setBillingModalVisible,
-    ])
 
   const inputRef = useRef<HTMLTextAreaElement>(null)
-  const [userInput, setUserInput] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const chatBodyRef = useRef(null)
+  const [isLoading, setIsLoading] = useState(false) // 正在输入loading
   const [isLoadingMessage, setIsLoadingMessage] = useState(false)
-  const { chat_submit_key, shouldSubmit } = useSubmitHandler()
-  const { scrollRef, setAutoScroll } = useScrollToBottom()
 
   // 懒加载聊天内容
   const onChatBodyScroll = async (e: HTMLElement) => {
     if (e.scrollTop <= 0) {
-      setAutoScroll(false)
       if (currentSessionId === "-1" || !pager) return
       if (pager?.currentPage < pager?.lastPage) {
         const params = {
@@ -176,7 +82,7 @@ export function Chat(props: {
           updateCurrentSession((session) => {
             session.messages = [...prevMessages, ...session.messages]
           })
-          scrollRef.current?.scrollTo({ top: 2250 })
+          chatBodyRef.current?.scrollTo({ top: 2250 })
           setIsLoadingMessage(false)
         } catch (e) {
           setIsLoadingMessage(false)
@@ -185,53 +91,11 @@ export function Chat(props: {
     }
   }
 
-  const scrollInput = () => {
-    const dom = inputRef.current
-    if (!dom) return
-    const paddingBottomNum: number = parseInt(
-      window.getComputedStyle(dom).paddingBottom,
-      10
-    )
-    dom.scrollTop = dom.scrollHeight - dom.offsetHeight + paddingBottomNum
-  }
-
-  const onInput = (text: string) => {
-    scrollInput()
-    setUserInput(text)
-  }
-
-  // submit user input
-  const onUserSubmit = () => {
-    if (user.state === "unactivated") {
-      toast.error("账号未激活，请先激活!")
-      setActivateVisible(true)
-      return
-    }
-    if (!currentCombo.is_available) {
-      toast.error("当前无可用套餐，请购买套餐!")
-      setBillingModalVisible(true)
-      return
-    }
-    if (userInput.length <= 0) return
-    setIsLoading(true)
-    onUserInput(userInput).then(() => setIsLoading(false))
-    setUserInput("")
-    if (!isMobileScreen()) inputRef.current?.focus()
-    setAutoScroll(true)
-  }
-
   // stop response
   const onUserStop = (messageIndex: number) => {
     ControllerPool.stop(sessionIndex, messageIndex)
   }
 
-  // check if should send message
-  const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (shouldSubmit(e)) {
-      onUserSubmit()
-      e.preventDefault()
-    }
-  }
   const onRightClick = (e: any, message: Message, index: number) => {
     e.preventDefault()
     // 多选逻辑
@@ -319,12 +183,8 @@ export function Chat(props: {
             ) : (
               <div
                 className="markdown-body "
-                style={{ fontSize: `${chat_font_size}px` }}
+                style={{ fontSize: `${config.chat_font_size}px` }}
                 onContextMenu={(e) => onRightClick(e, message, index)}
-                onDoubleClickCapture={() => {
-                  if (!isMobileScreen()) return
-                  setUserInput(message.content)
-                }}
               >
                 <Markdown content={message.content} />
               </div>
@@ -404,79 +264,14 @@ export function Chat(props: {
 
   return (
     <div className="flex flex-col flex-1 max-h-screen overflow-y-auto bg-slate-100">
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b">
-        <div
-          className="items-center gap-4 md:flex"
-          onClick={() => props.toggleSidebar?.()}
-        >
-          <div className="flex items-center gap-2">
-            <MessageSquare className="text-gray-500" />
-            <Label className="text-lg">{session.title}</Label>
-          </div>
-          <div className="text-sm text-gray-400"></div>
-        </div>
-        <div className="flex items-center gap-2 text-gray-500">
-          <div className="md:hidden">
-            <button
-              className="flex items-center gap-1 p-2"
-              title={Locale.Chat.Actions.ChatList}
-              onClick={() => props.toggleSidebar?.()}
-            >
-              <Icons.menu size={22} />
-              <span>会话列表</span>
-            </button>
-          </div>
-
-          <Button
-            variant="outline"
-            className="flex items-center justify-center w-8 h-8 p-1"
-            title="重命名"
-            onClick={handleUpdate}
-          >
-            <Edit2 className="w-4 h-4" />
-          </Button>
-
-          {/* 暂时不做导出 */}
-          <Button
-            variant="outline"
-            className="flex items-center justify-center w-8 h-8 p-1"
-            onClick={() => {
-              exportMessages(
-                session.messages.filter((msg) => !msg.isError),
-                session.title
-              )
-            }}
-          >
-            <FileDown className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="outline"
-            className="flex items-center justify-center w-8 h-8 p-1"
-            onClick={() => null} // 分享图片？
-          >
-            <Share2 className="w-4 h-4" />
-          </Button>
-
-          <Button
-            variant="outline"
-            className="flex items-center justify-center w-8 h-8 p-1"
-            title="重命名"
-            onClick={handleUpdate}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      <ChatHeader toggleSidebar={props.toggleSidebar} />
 
       {/* 对话列表 */}
       <div
         className="flex flex-col flex-1 gap-2 p-6 overflow-y-auto"
-        ref={scrollRef}
+        ref={chatBodyRef}
         onScroll={(e) => onChatBodyScroll(e.currentTarget)}
-        onTouchStart={() => {
-          inputRef.current?.blur()
-          setAutoScroll(false)
-        }}
+        onTouchStart={() => inputRef.current?.blur()}
       >
         {isLoadingMessage && <div className="block animate-spin" />}
         {messages.map((message, i) => (
@@ -484,28 +279,11 @@ export function Chat(props: {
         ))}
       </div>
 
-      <div className="sticky bottom-0 p-6">
-        <div className="relative flex flex-col items-center gap-2 md:flex-row">
-          <Textarea
-            ref={inputRef}
-            className="flex-1 w-full bg-white"
-            placeholder={Locale.Chat.Input(chat_submit_key)}
-            onInput={(e) => onInput(e.currentTarget.value)}
-            value={userInput}
-            onKeyDown={onInputKeyDown}
-            onFocus={() => setAutoScroll(true)}
-            onBlur={() => setAutoScroll(false)}
-            autoFocus={!props.showSideBar}
-          />
-          <Button
-            className="flex items-center gap-2 -ml-28"
-            onClick={onUserSubmit}
-          >
-            <Icons.telegram size={20} />
-            <span>发送</span>
-          </Button>
-        </div>
-      </div>
+      <ChatFooter
+        showSideBar={props.showSideBar}
+        chatBodyRef={chatBodyRef}
+        setIsLoading={setIsLoading}
+      />
     </div>
   )
 }
