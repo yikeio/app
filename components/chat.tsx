@@ -14,6 +14,7 @@ import {
   SubmitKey,
   useBillingStore,
   useChatStore,
+  useSettingsStore,
 } from "@/store"
 import {
   copyToClipboard,
@@ -67,7 +68,7 @@ function exportMessages(messages: Message[], topic: string) {
 }
 
 function useSubmitHandler() {
-  const config = useChatStore((state) => state.config)
+  const config = useSettingsStore((state) => state.config)
   const chat_submit_key = config.chat_submit_key
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -112,17 +113,34 @@ function useScrollToBottom() {
   }
 }
 
+type RenderMessage = Message & { preview?: boolean }
+
 export function Chat(props: {
   showSideBar?: () => void
   sideBarShowing?: boolean
 }) {
-  type RenderMessage = Message & { preview?: boolean }
-
-  const chatStore = useChatStore()
-  const [session, sessionIndex] = useChatStore((state) => [
+  const [
+    sessions,
+    session,
+    sessionIndex,
+    messageHistoryPagerMap,
+    getConversationHistory,
+    updateCurrentSession,
+    onUserInput,
+  ] = useChatStore((state) => [
+    state.sessions,
     state.currentSession(),
     state.currentSessionIndex,
+    state.messageHistoryPagerMap,
+    state.getConversationHistory,
+    state.updateCurrentSession,
+    state.onUserInput,
   ])
+  const { id: currentSessionId } = session
+  const pager = messageHistoryPagerMap.get(currentSessionId)
+
+  const [user, config] = useSettingsStore((state) => [state.user, state.config])
+  const { chat_font_size } = config
 
   const [currentCombo, setActivateVisible, setBillingModalVisible] =
     useBillingStore((state) => [
@@ -131,25 +149,12 @@ export function Chat(props: {
       state.setBillingModalVisible,
     ])
 
-  const chat_font_size = useChatStore((state) => state.config.chat_font_size)
-
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const [userInput, setUserInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingMessage, setIsLoadingMessage] = useState(false)
   const { chat_submit_key, shouldSubmit } = useSubmitHandler()
   const { scrollRef, setAutoScroll } = useScrollToBottom()
-
-  const {
-    user,
-    sessions,
-    currentSessionIndex,
-    messageHistoryPagerMap,
-    getConversationHistory,
-    updateCurrentSession,
-  } = chatStore
-  const { id: currentSessionId } = sessions[currentSessionIndex]
-  const pager = messageHistoryPagerMap.get(currentSessionId)
 
   const onChatBodyScroll = async (e: HTMLElement) => {
     if (e.scrollTop <= 0) {
@@ -208,7 +213,7 @@ export function Chat(props: {
     }
     if (userInput.length <= 0) return
     setIsLoading(true)
-    chatStore.onUserInput(userInput).then(() => setIsLoading(false))
+    onUserInput(userInput).then(() => setIsLoading(false))
     setUserInput("")
     if (!isMobileScreen()) inputRef.current?.focus()
     setAutoScroll(true)
@@ -227,7 +232,7 @@ export function Chat(props: {
     }
   }
   const onRightClick = (e: any, message: Message, index: number) => {
-    e.preventDefault();
+    e.preventDefault()
     // 多选逻辑
   }
 
@@ -236,9 +241,7 @@ export function Chat(props: {
     for (let i = botIndex; i >= 0; i -= 1) {
       if (messages[i].role === "user") {
         setIsLoading(true)
-        chatStore
-          .onUserInput(messages[i].content)
-          .then(() => setIsLoading(false))
+        onUserInput(messages[i].content).then(() => setIsLoading(false))
         inputRef.current?.focus()
         return
       }
@@ -276,7 +279,7 @@ export function Chat(props: {
   const handleUpdate = () => {
     const newTopic = prompt(Locale.Chat.Rename, session.title)
     if (newTopic && newTopic !== session.title) {
-      chatStore.updateCurrentSession((session) => {
+      updateCurrentSession((session) => {
         session.title = newTopic!
         updateConversation(session.id, { title: newTopic })
       })

@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from "react"
 import Head from "next/head"
 import { getConversationList } from "@/api/conversations"
 import Locale from "@/locales"
-import { ChatSession, useBillingStore, useChatStore } from "@/store"
+import {
+  ChatSession,
+  useBillingStore,
+  useChatStore,
+  useSettingsStore,
+} from "@/store"
 import { isMobileScreen } from "@/utils"
 import toast from "react-hot-toast"
 
@@ -17,48 +22,33 @@ import { Label } from "@/components/ui/label"
 
 export default function ChatPage() {
   const [
-    user,
-    config,
     sessions,
     currentIndex,
     createConversation,
     removeSession,
     conversationPager,
-    getUserSettings,
   ] = useChatStore((state) => [
-    state.user,
-    state.config,
     state.sessions,
     state.currentSessionIndex,
     state.createConversation,
     state.removeSession,
     state.conversationPager,
-    state.getUserSettings,
   ])
-  const [
-    currentCombo,
-    getUserQuotaInfo,
-    setActivateVisible,
-    setBillingModalVisible,
-  ] = useBillingStore((state) => [
-    state.currentCombo,
-    state.getUserQuotaInfo,
-    state.setActivateVisible,
-    state.setBillingModalVisible,
-  ])
+
+  const [user] = useSettingsStore((state) => [state.user])
+
+  const [currentCombo, setActivateVisible, setBillingModalVisible] =
+    useBillingStore((state) => [
+      state.currentCombo,
+      state.setActivateVisible,
+      state.setBillingModalVisible,
+    ])
 
   const [showSideBar, setShowSideBar] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const chatListRef = useRef<HTMLDivElement>(null)
 
-  // setting
-  const [openSettings, setOpenSettings] = useState(false)
-
-  // 退出登陆的时候关掉设置页
   useEffect(() => {
-    if (!user.id && !localStorage.getItem("login_token")) {
-      setOpenSettings(false)
-    }
     // 未注册用户展示激活弹窗
     if (user.id && localStorage.getItem("login_token")) {
       if (user.state === "unactivated") {
@@ -67,14 +57,6 @@ export default function ChatPage() {
       }
     }
   }, [user])
-
-  useEffect(() => {
-    if (openSettings) {
-      getUserQuotaInfo(user.id)
-      getUserSettings(user.id)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openSettings])
 
   const toggleSidebar = () => {
     if (!isMobileScreen()) return
@@ -160,9 +142,7 @@ export default function ChatPage() {
             (showSideBar ? "left-0" : "-left-[100%] md:left-0")
           }
         >
-          <Label className="text-gray-500">
-            会话历史({sessions.length})
-          </Label>
+          <Label className="text-gray-500">会话历史({sessions.length})</Label>
           <div
             ref={chatListRef}
             className="flex flex-col flex-1 gap-4 h-auto overflow-y-auto"

@@ -8,7 +8,7 @@ import {
   loginUser,
   sendVerificationCode,
 } from "../api/user"
-import { useBillingStore, useChatStore } from "../store"
+import { useBillingStore, useChatStore, useSettingsStore } from "../store"
 import Modal from "./modal"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
@@ -16,13 +16,13 @@ import { Label } from "./ui/label"
 
 const useUserLogin = () => {
   const [loginModalVisible, setLoginModalVisible] = React.useState(false)
-  const [updateUser, getConversationList, getUserSettings] = useChatStore(
-    (state) => [
-      state.updateUser,
-      state.getConversationList,
-      state.getUserSettings,
-    ]
-  )
+  const [getConversationList] = useChatStore((state) => [
+    state.getConversationList,
+  ])
+  const [updateUser, getUserSettings] = useSettingsStore((state) => [
+    state.updateUser,
+    state.getUserSettings,
+  ])
 
   React.useEffect(() => {
     checkUser()
@@ -48,8 +48,8 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
   const [count, setCount] = React.useState(0)
   const timerRef = React.useRef<any>(0)
 
-  const [updateUser, getConversationList] = useChatStore((state) => [
-    state.updateUser,
+  const [updateUser] = useSettingsStore((state) => [state.updateUser])
+  const [getConversationList] = useChatStore((state) => [
     state.getConversationList,
   ])
 
@@ -170,7 +170,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
 
 export function LoginDialog() {
   const { loginModalVisible, setLoginModalVisible } = useUserLogin()
-  const [user] = useChatStore((state) => [state.user])
+  const [user] = useSettingsStore((state) => [state.user])
   const [getUserQuotaInfo] = useBillingStore((state) => [
     state.getUserQuotaInfo,
   ])
@@ -208,7 +208,7 @@ export function LoginDialog() {
 // 激活弹窗
 export function ActivateDialog() {
   const [inviteCode, setInviteCode] = React.useState("")
-  const [user] = useChatStore((state) => [state.user])
+  const [user] = useSettingsStore((state) => [state.user])
   const [activateVisible, setActivateVisible] = useBillingStore((state) => [
     state.activateVisible,
     state.setActivateVisible,

@@ -3,7 +3,7 @@ import * as React from "react"
 
 import { createPayment, getPayment } from "../api/pay"
 import { getListUserPayment } from "../api/user"
-import { useBillingStore, useChatStore } from "../store"
+import { useBillingStore, useSettingsStore } from "../store"
 import Modal from "./modal"
 
 export function BillingDialog() {
@@ -23,7 +23,7 @@ export function BillingDialog() {
   const [payStatus, setPayStatus] = React.useState<number>(0) // 0：未创建订单，1:创建订单，暂时支付二维码 2：支付成功
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [paymentDetail, setPaymentDetail] = React.useState<any>({})
-  const [user] = useChatStore((state) => [state.user])
+  const [user] = useSettingsStore((state) => [state.user])
 
   React.useEffect(() => {
     if (billingModalVisible) {

@@ -1,11 +1,13 @@
+import { useEffect } from "react"
 import Head from "next/head"
+import { SubmitKey, useBillingStore, useSettingsStore } from "@/store"
 import dayjs from "dayjs"
 import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react"
 import toast from "react-hot-toast"
 
+import { UserAvatar } from "@/components/avatar"
 import { Layout } from "@/components/layout"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import {
   Popover,
@@ -20,8 +22,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
-import { UserAvatar } from "../components/avatar"
-import { SubmitKey, useBillingStore, useChatStore } from "../store"
 
 function SettingItem(props: {
   title: string
@@ -42,20 +42,34 @@ function SettingItem(props: {
 }
 
 export default function Setting() {
-  const [user, config, updateConfig, updateUser] = useChatStore((state) => [
-    state.user,
-    state.config,
-    state.updateConfig,
-    state.updateUser,
+  const [
+    currentCombo,
+    totalUsage,
+    setBillingModalVisible,
+    getUserQuotaInfo,
+    setActivateVisible,
+  ] = useBillingStore((state) => [
+    state.currentCombo,
+    state.totalUsage(),
+    state.setBillingModalVisible,
+    state.getUserQuotaInfo,
+    state.setActivateVisible,
   ])
 
-  const [currentCombo, totalUsage, setBillingModalVisible] = useBillingStore(
-    (state) => [
-      state.currentCombo,
-      state.totalUsage(),
-      state.setBillingModalVisible,
-    ]
-  )
+  const [user, updateUser, config, updateConfig, getUserSettings] =
+    useSettingsStore((state) => [
+      state.user,
+      state.updateUser,
+      state.config,
+      state.updateConfig,
+      state.getUserSettings,
+    ])
+
+  useEffect(() => {
+    getUserQuotaInfo(user.id)
+    getUserSettings(user.id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   function handleLogout() {
     localStorage.removeItem("login_token")
@@ -113,9 +127,9 @@ export default function Setting() {
               title="套餐"
               subTitle={
                 currentCombo?.expired_at
-                  ? `过期时间: ${dayjs(currentCombo?.expired_at as string).format(
-                      "YYYY/MM/DD HH:mm:ss"
-                    )}`
+                  ? `过期时间: ${dayjs(
+                      currentCombo?.expired_at as string
+                    ).format("YYYY/MM/DD HH:mm:ss")}`
                   : "暂无可用套餐"
               }
             >
@@ -159,8 +173,7 @@ export default function Setting() {
                   onValueChange={(key) => {
                     updateConfig(
                       (config) => (
-                        (config.chat_submit_key =
-                          key as any as SubmitKey),
+                        (config.chat_submit_key = key as any as SubmitKey),
                         user.id
                       ),
                       user.id,
@@ -210,8 +223,7 @@ export default function Setting() {
                 className="w-64"
                 onValueChange={(value) =>
                   updateConfig(
-                    (config) =>
-                      (config.chat_contexts_count = value[0]),
+                    (config) => (config.chat_contexts_count = value[0]),
                     user.id,
                     {
                       key: "chat_contexts_count",
@@ -232,8 +244,7 @@ export default function Setting() {
                 className="w-64"
                 onValueChange={(value) =>
                   updateConfig(
-                    (config) =>
-                      (config.chat_font_size = value[0]),
+                    (config) => (config.chat_font_size = value[0]),
                     user.id,
                     { key: "chat_font_size", value: value[0] }
                   )

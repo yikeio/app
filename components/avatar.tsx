@@ -4,7 +4,7 @@ import Image from "next/image"
 import classNames from "classnames"
 
 import { Icons } from "@/components/icons"
-import { Message, useChatStore } from "../store"
+import { Message, useSettingsStore } from "../store"
 
 interface AvatarProps {
   src: string
@@ -44,7 +44,7 @@ const Emoji = dynamic(async () => (await import("emoji-picker-react")).Emoji, {
 })
 
 export function UserAvatar(props: { role: Message["role"] }) {
-  const config = useChatStore((state) => state.config)
+  const config = useSettingsStore((state) => state.config)
 
   if (props.role !== "user") {
     return (
