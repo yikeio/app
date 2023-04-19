@@ -4,7 +4,7 @@ import { useUserStore } from "@/store"
 import { isMobileScreen } from "@/utils"
 import { IconArrowAutofitContent } from "@tabler/icons-react"
 import classNames from "classnames"
-import { MessageSquare, Settings2, User } from "lucide-react"
+import { MessageSquare, Settings2, User, Wand2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -82,6 +82,15 @@ export function Sidebar(props) {
         >
           <Settings2></Settings2>
           <span className="sr-only">设置</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-slate-700 dark:text-slate-400"
+          onClick={handleClickNav("/roles")}
+        >
+          <Wand2></Wand2>
+          <span className="sr-only">角色</span>
         </Button>
         {/* 待页面支持暗黑模式后开启 */}
         {/* <ThemeToggle /> */}
