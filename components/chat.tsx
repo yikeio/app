@@ -8,6 +8,7 @@ import {
 } from "react"
 import dynamic from "next/dynamic"
 import { updateConversation } from "@/api/conversations"
+import Locale from "@/locales"
 import {
   BOT_HELLO,
   Message,
@@ -29,7 +30,6 @@ import toast from "react-hot-toast"
 import { UserAvatar } from "@/components/avatar"
 import { Icons } from "@/components/icons"
 import LoadingIcon from "../icons/loading.svg"
-import Locale from "../locales"
 import { ControllerPool } from "../utils/requests"
 import { Button } from "./ui/button"
 import { Label } from "./ui/label"
@@ -116,8 +116,8 @@ function useScrollToBottom() {
 type RenderMessage = Message & { preview?: boolean }
 
 export function Chat(props: {
-  showSideBar?: () => void
-  sideBarShowing?: boolean
+  showSideBar: boolean
+  toggleSidebar: () => void
 }) {
   const [
     sessions,
@@ -156,6 +156,7 @@ export function Chat(props: {
   const { chat_submit_key, shouldSubmit } = useSubmitHandler()
   const { scrollRef, setAutoScroll } = useScrollToBottom()
 
+  // 懒加载聊天内容
   const onChatBodyScroll = async (e: HTMLElement) => {
     if (e.scrollTop <= 0) {
       setAutoScroll(false)
@@ -288,7 +289,7 @@ export function Chat(props: {
 
   // Auto focus
   useEffect(() => {
-    if (props.sideBarShowing && isMobileScreen()) return
+    if (props.showSideBar && isMobileScreen()) return
     inputRef.current?.focus()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -406,7 +407,7 @@ export function Chat(props: {
       <div className="flex items-center justify-between px-6 py-4 bg-white border-b">
         <div
           className="items-center gap-4 md:flex"
-          onClick={props?.showSideBar}
+          onClick={() => props.toggleSidebar?.()}
         >
           <div className="flex items-center gap-2">
             <MessageSquare className="text-gray-500" />
@@ -419,7 +420,7 @@ export function Chat(props: {
             <button
               className="flex items-center gap-1 p-2"
               title={Locale.Chat.Actions.ChatList}
-              onClick={props?.showSideBar}
+              onClick={() => props.toggleSidebar?.()}
             >
               <Icons.menu size={22} />
               <span>会话列表</span>
@@ -494,7 +495,7 @@ export function Chat(props: {
             onKeyDown={onInputKeyDown}
             onFocus={() => setAutoScroll(true)}
             onBlur={() => setAutoScroll(false)}
-            autoFocus={!props?.sideBarShowing}
+            autoFocus={!props.showSideBar}
           />
           <Button
             className="flex items-center gap-2 -ml-28"
