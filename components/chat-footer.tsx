@@ -1,8 +1,6 @@
-import { useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import Locale from "@/locales"
 import {
-  BOT_HELLO,
-  Message,
   SubmitKey,
   useBillingStore,
   useChatStore,
@@ -21,21 +19,8 @@ export default function ChatFooter(props) {
 
   const [user, config] = useSettingsStore((state) => [state.user, state.config])
 
-  const [
-    sessions,
-    session,
-    sessionIndex,
-    messageHistoryPagerMap,
-    getConversationHistory,
-    updateCurrentSession,
-    onUserInput,
-  ] = useChatStore((state) => [
-    state.sessions,
+  const [session, onUserInput] = useChatStore((state) => [
     state.currentSession(),
-    state.currentSessionIndex,
-    state.messageHistoryPagerMap,
-    state.getConversationHistory,
-    state.updateCurrentSession,
     state.onUserInput,
   ])
 
@@ -84,12 +69,23 @@ export default function ChatFooter(props) {
     props.setIsLoading?.(true)
     onUserInput(userInput).then(() => props.setIsLoading?.(false))
     setUserInput("")
+    if (!isMobileScreen()) inputRef.current?.focus()
+  }
+
+  useLayoutEffect(() => {
+    console.log("session.messages", session.messages)
     props.chatBodyRef.current?.scrollTo(
       0,
       props.chatBodyRef.current.scrollHeight
     )
-    if (!isMobileScreen()) inputRef.current?.focus()
-  }
+  }, [session.messages])
+
+  // Auto focus
+  useEffect(() => {
+    if (props.showSideBar && isMobileScreen()) return
+    inputRef.current?.focus()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="sticky bottom-0 p-6">

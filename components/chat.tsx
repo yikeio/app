@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import classNames from 'classnames'
 import dynamic from "next/dynamic"
 import { updateConversation } from "@/api/conversations"
 import Locale from "@/locales"
 import {
   BOT_HELLO,
   Message,
-  useBillingStore,
   useChatStore,
   useSettingsStore,
 } from "@/store"
@@ -22,9 +22,20 @@ import { UserAvatar } from "@/components/avatar"
 import { Icons } from "@/components/icons"
 import LoadingIcon from "../icons/loading.svg"
 import { ControllerPool } from "../utils/requests"
-// import ChatBody from './chat-body';
 import ChatFooter from "./chat-footer"
 import ChatHeader from "./chat-header"
+
+import { useLazyLoadMessage } from '@/hooks/use-lazy-load-message'
+import { useMessageActions } from '@/hooks/use-message-actions'
+import { usePrompt } from '@/hooks/use-prompt'
+
+const LOADING_MESSAGE = {
+  id: "loading",
+  role: "assistant",
+  content: "……",
+  date: new Date().toLocaleString(),
+  preview: true,
+}
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <Icons.loading width={24} height={24} />,
@@ -37,108 +48,34 @@ export function Chat(props: {
   toggleSidebar: () => void
 }) {
   const [
-    sessions,
     session,
     sessionIndex,
-    messageHistoryPagerMap,
-    getConversationHistory,
     updateCurrentSession,
     onUserInput,
   ] = useChatStore((state) => [
-    state.sessions,
     state.currentSession(),
     state.currentSessionIndex,
-    state.messageHistoryPagerMap,
-    state.getConversationHistory,
     state.updateCurrentSession,
     state.onUserInput,
   ])
-  const { id: currentSessionId } = session
-  const pager = messageHistoryPagerMap.get(currentSessionId)
 
   const [user, config] = useSettingsStore((state) => [state.user, state.config])
 
   const inputRef = useRef<HTMLTextAreaElement>(null)
-  const chatBodyRef = useRef(null)
   const [isLoading, setIsLoading] = useState(false) // 正在输入loading
-  const [isLoadingMessage, setIsLoadingMessage] = useState(false)
 
-  // 懒加载聊天内容
-  const onChatBodyScroll = async (e: HTMLElement) => {
-    if (e.scrollTop <= 0) {
-      if (currentSessionId === "-1" || !pager) return
-      if (pager?.currentPage < pager?.lastPage) {
-        const params = {
-          page: pager.currentPage + 1,
-          pageSize: pager.pageSize,
-        }
+  const { chatBodyRef, isLoadingMessage, onChatBodyScroll } = useLazyLoadMessage()
+  const { onCopy, onResend, onRightClick } = useMessageActions({setIsLoading, onUserInput, inputRef, session});
+  // TODO
+  const { xxx } = usePrompt();
+  
 
-        try {
-          setIsLoadingMessage(true)
-          const prevMessages = await getConversationHistory(
-            currentSessionId,
-            params
-          )
-          updateCurrentSession((session) => {
-            session.messages = [...prevMessages, ...session.messages]
-          })
-          chatBodyRef.current?.scrollTo({ top: 2250 })
-          setIsLoadingMessage(false)
-        } catch (e) {
-          setIsLoadingMessage(false)
-        }
-      }
+  // 请求消息时打字 loading
+  useEffect(() => {
+    if (isLoading) {
+      session.messages.concat([LOADING_MESSAGE]);
     }
-  }
-
-  // stop response
-  const onUserStop = (messageIndex: number) => {
-    ControllerPool.stop(sessionIndex, messageIndex)
-  }
-
-  const onRightClick = (e: any, message: Message, index: number) => {
-    e.preventDefault()
-    // 多选逻辑
-  }
-
-  const onResend = (botIndex: number) => {
-    // find last user input message and resend
-    for (let i = botIndex; i >= 0; i -= 1) {
-      if (messages[i].role === "user") {
-        setIsLoading(true)
-        onUserInput(messages[i].content).then(() => setIsLoading(false))
-        inputRef.current?.focus()
-        return
-      }
-    }
-  }
-
-  if (
-    session.context.length === 0 &&
-    session.messages.at(0)?.content !== BOT_HELLO.content &&
-    pager?.currentPage === pager?.lastPage
-  ) {
-    session.context.push(BOT_HELLO)
-  }
-
-  // preview messages
-  const messages: RenderMessage[] = useMemo(
-    () =>
-      session.context.concat(session.messages as RenderMessage[]).concat(
-        isLoading
-          ? [
-              {
-                id: "loading",
-                role: "assistant",
-                content: "……",
-                date: new Date().toLocaleString(),
-                preview: true,
-              },
-            ]
-          : []
-      ),
-    [session.messages, session.context, isLoading]
-  )
+  }, [isLoading, session.messages]);
 
   // 更新对话
   const handleUpdate = () => {
@@ -150,13 +87,6 @@ export function Chat(props: {
       })
     }
   }
-
-  // Auto focus
-  useEffect(() => {
-    if (props.showSideBar && isMobileScreen()) return
-    inputRef.current?.focus()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const MessageBody = ({
     message,
@@ -204,14 +134,14 @@ export function Chat(props: {
               {message.streaming ? (
                 <div
                   className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
-                  onClick={() => onUserStop(index)}
+                  onClick={() => onCopy(message)}
                 >
                   <Icons.copy size={12} /> 复制
                 </div>
               ) : (
                 <div
                   className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
-                  onClick={() => onResend(index)}
+                  onClick={() => onResend(message)}
                 >
                   <Icons.reload size={12} /> 重新生成
                 </div>
@@ -230,38 +160,6 @@ export function Chat(props: {
     )
   }
 
-  const MessageItem = useCallback(
-    ({ message, index = 0 }: { message: RenderMessage; index?: number }) => {
-      const isUser = message.role === "user"
-      const messageBody = (
-        <MessageBody
-          key={`${message.id}_body`}
-          message={message}
-          index={index}
-        />
-      )
-      const avatar = (
-        <UserAvatar
-          key={isUser ? "user_avatar" : "bot_avatar"}
-          role={message.role}
-        />
-      )
-
-      return (
-        <div
-          className={`flex flex-col md:flex-row items-start gap-2 md:gap-4 ${
-            isUser ? "items-end md:items-start justify-end" : "items-start"
-          }`}
-        >
-          {isUser && !isMobileScreen()
-            ? [messageBody, avatar]
-            : [avatar, messageBody]}
-        </div>
-      )
-    },
-    []
-  )
-
   return (
     <div className="flex flex-col flex-1 max-h-screen overflow-y-auto bg-slate-100">
       <ChatHeader toggleSidebar={props.toggleSidebar} />
@@ -270,12 +168,21 @@ export function Chat(props: {
       <div
         className="flex flex-col flex-1 gap-2 p-6 overflow-y-auto"
         ref={chatBodyRef}
-        onScroll={(e) => onChatBodyScroll(e.currentTarget)}
+        onScroll={onChatBodyScroll}
         onTouchStart={() => inputRef.current?.blur()}
       >
         {isLoadingMessage && <div className="block animate-spin" />}
-        {messages.map((message, i) => (
-          <MessageItem key={message.id} message={message} index={i} />
+        {session.messages.map((message, index) => (
+          <div
+            key={message.id}
+            className={classNames('flex flex-col-reverse md:flex-row items-start gap-2 md:gap-4', {
+              'items-end md:items-start md:justify-end': message.role === "user",
+              'items-start md:flex-row-reverse md:justify-end': message.role !== "user",
+            })}
+          >
+            <MessageBody message={message} index={index} />
+            <UserAvatar role={message.role} />
+          </div>
         ))}
       </div>
 

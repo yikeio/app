@@ -118,7 +118,6 @@ export function ChatList({
           const newList: ChatSession[] = [
             ...sessions,
             ...list.map((conversation) => {
-              conversation.context = []
               conversation.messages = []
               conversation.updated_at = new Date(
                 conversation.updated_at

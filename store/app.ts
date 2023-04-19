@@ -27,7 +27,6 @@ export interface ChatSession {
   id: string
   title: string
   memoryPrompt: string
-  context: Message[]
   messages: Message[]
   updated_at: string
 }
@@ -47,7 +46,6 @@ function createEmptySession(): ChatSession {
     id: "-1",
     title: DEFAULT_TOPIC,
     memoryPrompt: "",
-    context: [],
     messages: [],
     messages_count: 0,
     updated_at: createDate,
@@ -120,7 +118,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
     set(() => ({
       sessions: list.map((conversation) => {
-        conversation.context = []
         conversation.messages = []
         conversation.updated_at = new Date(
           conversation.updated_at
@@ -145,7 +142,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   async createConversation() {
     const res = await createConversation(DEFAULT_TOPIC)
     const conversation = res.result
-    conversation.context = []
     conversation.messages = []
     conversation.updated_at = new Date(conversation.updated_at).toLocaleString()
 
