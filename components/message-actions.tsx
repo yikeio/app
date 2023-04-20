@@ -1,22 +1,16 @@
-import { Icons } from "@/components/icons"
-
-import {
-  copyToClipboard,
-  downloadAs,
-  isMobileScreen,
-  parseTime,
-} from "@/utils"
-
-import {
-  Message,
-  useChatStore,
-} from "@/store"
-
+import { Message, useChatStore } from "@/store"
+import { copyToClipboard, parseTime } from "@/utils"
 import { ControllerPool } from "@/utils/requests"
+
+import { Icons } from "@/components/icons"
 
 export default function MessageActions({ message, inputRef }) {
   const isUser = message.role === "user"
-  const [session, onUserInput, setIsLoadingAnswer] = useChatStore((state) => [state.currentSession(), state.onUserInput, state.setIsLoadingAnswer])
+  const [session, onUserInput, setIsLoadingAnswer] = useChatStore((state) => [
+    state.currentSession(),
+    state.onUserInput,
+    state.setIsLoadingAnswer,
+  ])
 
   const onResend = (message: Message) => {
     setIsLoadingAnswer(true)
@@ -24,45 +18,43 @@ export default function MessageActions({ message, inputRef }) {
     inputRef.current?.focus()
   }
 
-  const onCopy = (message: Message) => {
-
-  }
+  const onCopy = (message: Message) => {}
 
   return (
     <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100">
-        {!isUser && !message.preview && (
-          <div className="text-xs text-gray-400">
-            {parseTime(message.date.toLocaleString())}
-          </div>
-        )}
+      {!isUser && !message.preview && (
+        <div className="text-xs text-gray-400">
+          {parseTime(message.date.toLocaleString())}
+        </div>
+      )}
 
-        {!isUser && !(message.preview || message.content.length === 0) && (
-          // 工具栏
-          <div className="flex items-center gap-4 text-xs text-gray-400">
-            {message.streaming ? (
-              <div
-                className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
-                onClick={() => onCopy(message)}
-              >
-                <Icons.copy size={12} /> 复制
-              </div>
-            ) : (
-              <div
-                className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
-                onClick={() => onResend(message)}
-              >
-                <Icons.reload size={12} /> 重新生成
-              </div>
-            )}
-
+      {!isUser && !(message.preview || message.content.length === 0) && (
+        // 工具栏
+        <div className="flex items-center gap-4 text-xs text-gray-400">
+          {message.streaming ? (
             <div
               className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
-              onClick={() => copyToClipboard(message.content)}
+              onClick={() => onCopy(message)}
             >
               <Icons.copy size={12} /> 复制
             </div>
+          ) : (
+            <div
+              className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
+              onClick={() => onResend(message)}
+            >
+              <Icons.reload size={12} /> 重新生成
+            </div>
+          )}
+
+          <div
+            className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
+            onClick={() => copyToClipboard(message.content)}
+          >
+            <Icons.copy size={12} /> 复制
           </div>
-        )}
-      </div>
+        </div>
+      )}
+    </div>
   )
 }
