@@ -15,19 +15,11 @@ export default function ChatHeader(props) {
   const [
     sessions,
     session,
-    sessionIndex,
-    messageHistoryPagerMap,
-    getConversationHistory,
     updateCurrentSession,
-    onUserInput,
   ] = useChatStore((state) => [
     state.sessions,
     state.currentSession(),
-    state.currentSessionIndex,
-    state.messageHistoryPagerMap,
-    state.getConversationHistory,
     state.updateCurrentSession,
-    state.onUserInput,
   ])
 
     // 更新对话

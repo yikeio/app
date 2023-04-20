@@ -49,12 +49,8 @@ export function Chat(props: {
 }) {
   const [
     session,
-    sessionIndex,
-    updateCurrentSession,
   ] = useChatStore((state) => [
     state.currentSession(),
-    state.currentSessionIndex,
-    state.updateCurrentSession,
   ])
 
   const [user, config] = useSettingsStore((state) => [state.user, state.config])
@@ -70,21 +66,9 @@ export function Chat(props: {
 
   // 请求消息时打字 loading
   useEffect(() => {
-    if (isLoading) {
-      session.messages.concat([LOADING_MESSAGE]);
-    }
+    if (!isLoading) return;
+    session.messages.concat([LOADING_MESSAGE]);
   }, [isLoading, session.messages]);
-
-  // 更新对话
-  const handleUpdate = () => {
-    const newTopic = prompt(Locale.Chat.Rename, session.title)
-    if (newTopic && newTopic !== session.title) {
-      updateCurrentSession((session) => {
-        session.title = newTopic!
-        updateConversation(session.id, { title: newTopic })
-      })
-    }
-  }
 
   const MessageActions = useCallback(({ message }) => {
     const isUser = message.role === "user"
