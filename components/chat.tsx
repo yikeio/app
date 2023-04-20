@@ -64,7 +64,7 @@ export function Chat(props: {
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const [isLoading, setIsLoading] = useState(false) // 正在输入loading
 
-  const { chatBodyRef, isLoadingMessage, onChatBodyScroll } = useLazyLoadMessage()
+  const { chatBodyRef, isLoadingMessage, onChatBodyScroll, autoScrollBottomRef } = useLazyLoadMessage()
   const { onCopy, onResend, onRightClick } = useMessageActions({setIsLoading, onUserInput, inputRef, session});
   // TODO
   const { xxx } = usePrompt();
@@ -88,40 +88,11 @@ export function Chat(props: {
     }
   }
 
-  const MessageBody = ({
-    message,
-    index,
-  }: {
-    message: RenderMessage
-    index: number
-  }) => {
+  const MessageActions = useCallback(({ message }) => {
     const isUser = message.role === "user"
+
     return (
-      <div className="relative max-w-[90%] md:max-w-[75%] flex flex-col gap-2 overflow-hidden group">
-        <div className="rounded-lg">
-          <div
-            className={
-              `p-3 md:p-4 lg:p-5 xl:p-8 rounded-xl relative ` +
-              (isUser
-                ? "bg-blue-500 justify-self-end rounded-br-none text-white"
-                : "bg-white rounded-bl-none text-gray-700")
-            }
-          >
-            {/* 消息内容 */}
-            {(message.preview || message.content.length === 0) && !isUser ? (
-              <LoadingIcon />
-            ) : (
-              <div
-                className="markdown-body "
-                style={{ fontSize: `${config.chat_font_size}px` }}
-                onContextMenu={(e) => onRightClick(e, message, index)}
-              >
-                <Markdown content={message.content} />
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100">
+      <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100">
           {!isUser && !message.preview && (
             <div className="text-xs text-gray-400">
               {parseTime(message.date.toLocaleString())}
@@ -156,6 +127,43 @@ export function Chat(props: {
             </div>
           )}
         </div>
+    )
+  }, []);
+
+  const MessageBody = ({
+    message,
+    index,
+  }: {
+    message: RenderMessage
+    index: number
+  }) => {
+    const isUser = message.role === "user"
+    return (
+      <div className="relative max-w-[90%] md:max-w-[75%] flex flex-col gap-2 overflow-hidden group">
+        <div className="rounded-lg">
+          <div
+            className={
+              `p-3 md:p-4 lg:p-5 xl:p-8 rounded-xl relative ` +
+              (isUser
+                ? "bg-blue-500 justify-self-end rounded-br-none text-white"
+                : "bg-white rounded-bl-none text-gray-700")
+            }
+          >
+            {/* 消息内容 */}
+            {(message.preview || message.content.length === 0) && !isUser ? (
+              <LoadingIcon />
+            ) : (
+              <div
+                className="markdown-body "
+                style={{ fontSize: `${config.chat_font_size}px` }}
+                onContextMenu={(e) => onRightClick(e, message, index)}
+              >
+                <Markdown content={message.content} />
+              </div>
+            )}
+          </div>
+        </div>
+        <MessageActions message={message} />
       </div>
     )
   }
@@ -188,7 +196,7 @@ export function Chat(props: {
 
       <ChatFooter
         showSideBar={props.showSideBar}
-        chatBodyRef={chatBodyRef}
+        autoScrollBottomRef={autoScrollBottomRef}
         setIsLoading={setIsLoading}
       />
     </div>

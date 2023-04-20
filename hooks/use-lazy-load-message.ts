@@ -1,9 +1,10 @@
-import { useRef, useState } from "react"
+import { useLayoutEffect, useRef, useState } from "react"
 import { BOT_HELLO, useChatStore } from "@/store"
 
 // 懒加载消息列表
 export const useLazyLoadMessage = () => {
   const chatBodyRef = useRef(null)
+  const autoScrollBottomRef = useRef(true)
   const [isLoadingMessage, setIsLoadingMessage] = useState(false)
 
   const [
@@ -19,7 +20,7 @@ export const useLazyLoadMessage = () => {
   ])
 
   const pager = messageHistoryPagerMap.get(session.id)
-
+  
   // 首次进入聊天界面，如果没有历史消息，发送欢迎语
   if (
     session.messages.length === 0 &&
@@ -32,6 +33,9 @@ export const useLazyLoadMessage = () => {
   // 懒加载聊天内容
   const onChatBodyScroll = async (e) => {
     if (e.currentTarget.scrollTop <= 0) {
+      // 加载列表时禁止滚动到底部
+      autoScrollBottomRef.current = false;
+
       if (session.id === "-1" || !pager) return
       if (pager?.currentPage < pager?.lastPage) {
         const params = {
@@ -54,8 +58,15 @@ export const useLazyLoadMessage = () => {
     }
   }
 
+   // Auto scroll to bottom
+   useLayoutEffect(() => {
+    if (!autoScrollBottomRef.current) return;
+    chatBodyRef.current?.scrollTo(0, chatBodyRef.current.scrollHeight)
+  })
+
   return {
     chatBodyRef,
+    autoScrollBottomRef,
     isLoadingMessage,
     onChatBodyScroll,
   }

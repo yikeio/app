@@ -14,6 +14,7 @@ import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
 
 export default function ChatFooter(props) {
+  const { autoScrollBottomRef, showSideBar } = props;
   const [userInput, setUserInput] = useState("")
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -72,20 +73,11 @@ export default function ChatFooter(props) {
     if (!isMobileScreen()) inputRef.current?.focus()
   }
 
-  useLayoutEffect(() => {
-    console.log("session.messages", session.messages)
-    props.chatBodyRef.current?.scrollTo(
-      0,
-      props.chatBodyRef.current.scrollHeight
-    )
-  }, [session.messages])
-
   // Auto focus
   useEffect(() => {
-    if (props.showSideBar && isMobileScreen()) return
-    inputRef.current?.focus()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (showSideBar) return
+    inputRef.current.focus?.()
+  }, [showSideBar])
 
   return (
     <div className="sticky bottom-0 p-6">
@@ -95,6 +87,8 @@ export default function ChatFooter(props) {
           className="flex-1 w-full bg-white"
           placeholder={Locale.Chat.Input(config.chat_submit_key)}
           onChange={(e) => setUserInput(e.currentTarget.value)}
+          onFocus={() => autoScrollBottomRef.current = true}
+          onBlur={() => autoScrollBottomRef.current = true}
           value={userInput}
           onKeyDown={onInputKeyDown}
           autoFocus={!props.showSideBar}
