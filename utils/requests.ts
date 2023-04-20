@@ -1,5 +1,4 @@
-import { API_DOMAIN } from "../api/common"
-import { createMessage } from "../api/conversations"
+import { createMessage, createSmartMessage } from "../api/conversations"
 
 const TIME_OUT_MS = 30000
 
@@ -20,16 +19,7 @@ export async function requestChatStream(
   // TODO: 替换统一的接口
   try {
     await createMessage(options.conversationId, content)
-    const res = await fetch(
-      `${API_DOMAIN}/api/chat/conversations/${options.conversationId}/completions`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    const res = await createSmartMessage(options.conversationId)
     clearTimeout(reqTimeoutId)
 
     let responseText = ""
