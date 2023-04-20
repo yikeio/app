@@ -14,9 +14,8 @@ import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
 
 export default function ChatFooter(props) {
-  const { autoScrollBottomRef, showSideBar } = props;
+  const { autoScrollBottomRef, showSideBar, inputRef } = props;
   const [userInput, setUserInput] = useState("")
-  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const [user, config] = useSettingsStore((state) => [state.user, state.config])
 

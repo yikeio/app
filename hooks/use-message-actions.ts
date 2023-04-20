@@ -6,12 +6,9 @@ import {
   useSettingsStore,
 } from "@/store"
 
-export const useMessageActions = ({
-  setIsLoading,
-  onUserInput,
-  inputRef,
-  session,
-}) => {
+export const useMessageActions = ({ setIsLoading, inputRef }) => {
+  const [session, onUserInput] = useChatStore((state) => [state.currentSession(), state.onUserInput])
+
   const onRightClick = (e: any, message: Message, index: number) => {
     e.preventDefault()
     // 多选逻辑

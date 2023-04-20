@@ -51,12 +51,10 @@ export function Chat(props: {
     session,
     sessionIndex,
     updateCurrentSession,
-    onUserInput,
   ] = useChatStore((state) => [
     state.currentSession(),
     state.currentSessionIndex,
     state.updateCurrentSession,
-    state.onUserInput,
   ])
 
   const [user, config] = useSettingsStore((state) => [state.user, state.config])
@@ -65,7 +63,7 @@ export function Chat(props: {
   const [isLoading, setIsLoading] = useState(false) // 正在输入loading
 
   const { chatBodyRef, isLoadingMessage, onChatBodyScroll, autoScrollBottomRef } = useLazyLoadMessage()
-  const { onCopy, onResend, onRightClick } = useMessageActions({setIsLoading, onUserInput, inputRef, session});
+  const { onCopy, onResend, onRightClick } = useMessageActions({setIsLoading, inputRef});
   // TODO
   const { xxx } = usePrompt();
   
@@ -195,9 +193,10 @@ export function Chat(props: {
       </div>
 
       <ChatFooter
+        inputRef={inputRef}
         showSideBar={props.showSideBar}
-        autoScrollBottomRef={autoScrollBottomRef}
         setIsLoading={setIsLoading}
+        autoScrollBottomRef={autoScrollBottomRef}
       />
     </div>
   )
