@@ -7,6 +7,7 @@ import {
   useSettingsStore,
 } from "@/store"
 import { isMobileScreen } from "@/utils"
+import { ControllerPool } from '@/utils/requests'
 import toast from "react-hot-toast"
 
 import { Icons } from "@/components/icons"
@@ -56,6 +57,10 @@ export default function ChatFooter(props) {
 
   // submit user input
   const onUserSubmit = () => {
+    // 输入中不允许发送
+    if (ControllerPool.isStreaming) return
+    if (userInput.length <= 0) return
+
     if (user.state === "unactivated") {
       toast.error("账号未激活，请先激活!")
       setActivateVisible(true)
@@ -66,7 +71,6 @@ export default function ChatFooter(props) {
       setBillingModalVisible(true)
       return
     }
-    if (userInput.length <= 0) return
     setIsLoadingAnswer(true)
     onUserInput(userInput).then(() => setIsLoadingAnswer(false))
     setUserInput("")
