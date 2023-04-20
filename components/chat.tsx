@@ -24,9 +24,9 @@ import LoadingIcon from "../icons/loading.svg"
 import { ControllerPool } from "../utils/requests"
 import ChatFooter from "./chat-footer"
 import ChatHeader from "./chat-header"
+import MessageActions from "./message-actions"
 
 import { useLazyLoadMessage } from '@/hooks/use-lazy-load-message'
-import { useMessageActions } from '@/hooks/use-message-actions'
 import { usePrompt } from '@/hooks/use-prompt'
 
 const LOADING_MESSAGE = {
@@ -59,10 +59,8 @@ export function Chat(props: {
   const [isLoading, setIsLoading] = useState(false) // 正在输入loading
 
   const { chatBodyRef, isLoadingMessage, onChatBodyScroll, autoScrollBottomRef } = useLazyLoadMessage()
-  const { onCopy, onResend, onRightClick } = useMessageActions({setIsLoading, inputRef});
   // TODO
   const { xxx } = usePrompt();
-  
 
   // 请求消息时打字 loading
   useEffect(() => {
@@ -70,47 +68,10 @@ export function Chat(props: {
     session.messages.concat([LOADING_MESSAGE]);
   }, [isLoading, session.messages]);
 
-  const MessageActions = useCallback(({ message }) => {
-    const isUser = message.role === "user"
-
-    return (
-      <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100">
-          {!isUser && !message.preview && (
-            <div className="text-xs text-gray-400">
-              {parseTime(message.date.toLocaleString())}
-            </div>
-          )}
-
-          {!isUser && !(message.preview || message.content.length === 0) && (
-            // 工具栏
-            <div className="flex items-center gap-4 text-xs text-gray-400">
-              {message.streaming ? (
-                <div
-                  className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
-                  onClick={() => onCopy(message)}
-                >
-                  <Icons.copy size={12} /> 复制
-                </div>
-              ) : (
-                <div
-                  className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
-                  onClick={() => onResend(message)}
-                >
-                  <Icons.reload size={12} /> 重新生成
-                </div>
-              )}
-
-              <div
-                className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
-                onClick={() => copyToClipboard(message.content)}
-              >
-                <Icons.copy size={12} /> 复制
-              </div>
-            </div>
-          )}
-        </div>
-    )
-  }, []);
+  const onRightClick = (e: any, message: Message, index: number) => {
+    e.preventDefault()
+    // 多选逻辑
+  }
 
   const MessageBody = ({
     message,
@@ -145,7 +106,7 @@ export function Chat(props: {
             )}
           </div>
         </div>
-        <MessageActions message={message} />
+        <MessageActions message={message} inputRef={inputRef} setIsLoading={setIsLoading} />
       </div>
     )
   }
