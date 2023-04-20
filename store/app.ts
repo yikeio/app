@@ -89,6 +89,10 @@ interface ChatStore {
     updater: (message?: Message) => void
   ) => void
   clearAllData: () => void
+
+  // 答案是否正在加载
+  isLoadingAnswer: boolean;
+  setIsLoadingAnswer: (isLoading: boolean) => void
 }
 
 // 记录会话缓存
@@ -321,4 +325,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       location.reload()
     }
   },
+
+  isLoadingAnswer: false,
+  setIsLoadingAnswer(isLoadingAnswer: boolean) {
+    set(() => ({ isLoadingAnswer }))
+  }
 }))

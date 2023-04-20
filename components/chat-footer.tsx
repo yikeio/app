@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import Locale from "@/locales"
 import {
   SubmitKey,
@@ -14,14 +14,15 @@ import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
 
 export default function ChatFooter(props) {
-  const { autoScrollBottomRef, showSideBar, inputRef } = props;
+  const { autoScrollBottomRef, showSideBar, inputRef } = props
   const [userInput, setUserInput] = useState("")
 
   const [user, config] = useSettingsStore((state) => [state.user, state.config])
 
-  const [session, onUserInput] = useChatStore((state) => [
+  const [session, onUserInput, setIsLoadingAnswer] = useChatStore((state) => [
     state.currentSession(),
     state.onUserInput,
+    state.setIsLoadingAnswer,
   ])
 
   const [currentCombo, setActivateVisible, setBillingModalVisible] =
@@ -66,8 +67,8 @@ export default function ChatFooter(props) {
       return
     }
     if (userInput.length <= 0) return
-    props.setIsLoading?.(true)
-    onUserInput(userInput).then(() => props.setIsLoading?.(false))
+    setIsLoadingAnswer(true)
+    onUserInput(userInput).then(() => setIsLoadingAnswer(false))
     setUserInput("")
     if (!isMobileScreen()) inputRef.current?.focus()
   }
@@ -86,8 +87,8 @@ export default function ChatFooter(props) {
           className="flex-1 w-full bg-white"
           placeholder={Locale.Chat.Input(config.chat_submit_key)}
           onChange={(e) => setUserInput(e.currentTarget.value)}
-          onFocus={() => autoScrollBottomRef.current = true}
-          onBlur={() => autoScrollBottomRef.current = true}
+          onFocus={() => (autoScrollBottomRef.current = true)}
+          onBlur={() => (autoScrollBottomRef.current = true)}
           value={userInput}
           onKeyDown={onInputKeyDown}
           autoFocus={!props.showSideBar}

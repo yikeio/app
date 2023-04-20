@@ -5,23 +5,22 @@ import {
   downloadAs,
   isMobileScreen,
   parseTime,
-  selectOrCopy,
 } from "@/utils"
 
 import {
-  BOT_HELLO,
   Message,
   useChatStore,
-  useSettingsStore,
 } from "@/store"
 
-export default function MessageActions({ message, setIsLoading, inputRef }) {
+import { ControllerPool } from "@/utils/requests"
+
+export default function MessageActions({ message, inputRef }) {
   const isUser = message.role === "user"
-  const [session, onUserInput] = useChatStore((state) => [state.currentSession(), state.onUserInput])
+  const [session, onUserInput, setIsLoadingAnswer] = useChatStore((state) => [state.currentSession(), state.onUserInput, state.setIsLoadingAnswer])
 
   const onResend = (message: Message) => {
-    setIsLoading(true)
-    onUserInput(message.content).then(() => setIsLoading(false))
+    setIsLoadingAnswer(true)
+    onUserInput(message.content).then(() => setIsLoadingAnswer(false))
     inputRef.current?.focus()
   }
 
