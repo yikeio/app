@@ -63,11 +63,6 @@ export default function ChatFooter(props) {
     if (ControllerPool.isStreaming) return
     if (userInput.length <= 0) return
 
-    if (user.state === "unactivated") {
-      toast.error("账号未激活，请先激活!")
-      setActivateVisible(true)
-      return
-    }
     if (!currentCombo.is_available) {
       toast.error("当前无可用套餐，请购买套餐!")
       setBillingModalVisible(true)
