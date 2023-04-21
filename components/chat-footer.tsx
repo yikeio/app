@@ -8,7 +8,7 @@ import {
   useUserStore,
 } from "@/store"
 import { isMobileScreen } from "@/utils"
-import { ControllerPool } from '@/utils/requests'
+import { ControllerPool } from "@/utils/requests"
 import toast from "react-hot-toast"
 
 import { Icons } from "@/components/icons"
@@ -16,7 +16,7 @@ import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
 
 export default function ChatFooter(props) {
-  const { autoScrollBottomRef, showSideBar, inputRef } = props
+  const { autoScrollBottomRef, inputRef } = props
   const [userInput, setUserInput] = useState("")
 
   const [config] = useSettingsStore((state) => [state.config])
@@ -28,12 +28,10 @@ export default function ChatFooter(props) {
     state.setIsLoadingAnswer,
   ])
 
-  const [currentCombo, setActivateVisible, setBillingModalVisible] =
-    useBillingStore((state) => [
-      state.currentCombo,
-      state.setActivateVisible,
-      state.setBillingModalVisible,
-    ])
+  const [currentCombo, setBillingModalVisible] = useBillingStore((state) => [
+    state.currentCombo,
+    state.setBillingModalVisible,
+  ])
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key !== "Enter") return false
@@ -70,15 +68,15 @@ export default function ChatFooter(props) {
     }
     setIsLoadingAnswer(true)
     onUserInput(userInput).then(() => setIsLoadingAnswer(false))
+    autoScrollBottomRef.current = true
     setUserInput("")
     if (!isMobileScreen()) inputRef.current?.focus()
   }
 
   // Auto focus
   useEffect(() => {
-    if (showSideBar) return
     inputRef.current.focus?.()
-  }, [showSideBar])
+  }, [])
 
   return (
     <div className="sticky bottom-0 p-6">

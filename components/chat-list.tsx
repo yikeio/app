@@ -166,7 +166,7 @@ export function ChatList({
                 title={item.title}
                 time={item.updated_at}
                 count={item.messages_count || item.messages.length || 0}
-                key={i}
+                key={item.id}
                 selected={i === currentIndex}
                 onClick={() => selectSession(i)}
                 onDelete={(e) => {

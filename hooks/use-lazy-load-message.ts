@@ -49,20 +49,26 @@ export const useLazyLoadMessage = () => {
           updateCurrentSession((session) => {
             session.messages = [...prevMessages, ...session.messages]
           })
-          chatBodyRef.current?.scrollTo({ top: 2250 })
+          chatBodyRef.current?.scrollTo({ top: 200 })
         } catch (e) {} finally {
           setIsLoadingMessage(false)
-          autoScrollBottomRef.current = true;
         }
       }
     }
   }
+    
+  // Auto scroll to bottom
+  useLayoutEffect(() => {
+    const observer = new MutationObserver(() => {
+      if (!autoScrollBottomRef.current) return
+      chatBodyRef.current.scrollTo?.(0, chatBodyRef.current.scrollHeight)
+    })
+    observer.observe(chatBodyRef.current, { attributes: true, childList: true, subtree: true })
 
-   // Auto scroll to bottom
-   useLayoutEffect(() => {
-    if (!autoScrollBottomRef.current) return;
-    chatBodyRef.current?.scrollTo(0, chatBodyRef.current.scrollHeight)
-  })
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   return {
     chatBodyRef,

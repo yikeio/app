@@ -56,11 +56,7 @@ export function Chat(props: {
         ))}
       </div>
 
-      <ChatFooter
-        inputRef={inputRef}
-        showSideBar={props.showSideBar}
-        autoScrollBottomRef={autoScrollBottomRef}
-      />
+      <ChatFooter inputRef={inputRef} autoScrollBottomRef={autoScrollBottomRef} />
     </div>
   )
 }
