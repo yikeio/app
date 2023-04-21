@@ -47,9 +47,8 @@ export default function ChatPage() {
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <section className="flex w-full min-h-screen">
-        <ChatList showSideBar={showSideBar} toggleSidebar={toggleSidebar} />
-
+      <ChatList showSideBar={showSideBar} toggleSidebar={toggleSidebar} />
+      <section className="col-span-3 lg:col-span-5 flex flex-col">
         <div className="flex flex-col flex-1 overflow-hidden bg-slate-100">
           <Chat showSideBar={showSideBar} toggleSidebar={toggleSidebar} />
         </div>

@@ -1,5 +1,4 @@
 import { useRef, useState } from "react"
-import toast from "react-hot-toast"
 import { getConversationList } from "@/api/conversations"
 import {
   ChatSession,
@@ -8,11 +7,13 @@ import {
   useSettingsStore,
 } from "@/store"
 import { isMobileScreen } from "@/utils"
+import toast from "react-hot-toast"
 
 import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
-import { Label } from "./ui/label"
 import Locale from "../locales"
+import SecondMenubar from "./second-menubar"
+import { Label } from "./ui/label"
 
 export function ChatItem(props: {
   onClick?: (e: React.MouseEvent) => void
@@ -145,11 +146,8 @@ export function ChatList({
   }
 
   return (
-    <div
-      className={
-        `fixed md:relative bg-white border-r inset-0 w-full shrink-0 md:w-72 md:max-w-sm z-10 p-6 flex flex-col gap-6 h-screen ` +
-        (showSideBar ? "left-0" : "-left-[100%] md:left-0")
-      }
+    <SecondMenubar
+      className={showSideBar ? "left-0" : "-left-[100%] md:left-0"}
     >
       <Label className="text-gray-500">会话历史({sessions.length})</Label>
       <div
@@ -202,6 +200,6 @@ export function ChatList({
           <span>开启新的会话</span>
         </Button>
       </div>
-    </div>
+    </SecondMenubar>
   )
 }

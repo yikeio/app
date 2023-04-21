@@ -108,6 +108,10 @@ export async function getListUserSettings(id: any) {
   return commonFetch(`users/${id}/settings`)
 }
 
+export async function getReferrals(id: any) {
+  return commonFetch(`users/${id}/referrals`)
+}
+
 /**
  * 修改用户设置
  */
