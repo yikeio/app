@@ -50,10 +50,8 @@ export const useLazyLoadMessage = () => {
             session.messages = [...prevMessages, ...session.messages]
           })
           chatBodyRef.current?.scrollTo({ top: 2250 })
+        } catch (e) {} finally {
           setIsLoadingMessage(false)
-        } catch (e) {
-          setIsLoadingMessage(false)
-        } finally {
           autoScrollBottomRef.current = true;
         }
       }
