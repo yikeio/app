@@ -1,4 +1,4 @@
-import * as React from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import toast from "react-hot-toast"
 
@@ -20,14 +20,14 @@ import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 
 const useUserLogin = () => {
-  const [loginModalVisible, setLoginModalVisible] = React.useState(false)
+  const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [getConversationList] = useChatStore((state) => [
     state.getConversationList,
   ])
   const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
   const [updateUser] = useUserStore((state) => [state.updateUser])
 
-  React.useEffect(() => {
+  useEffect(() => {
     checkUser()
       .then((res) => {
         updateUser(res.result)
@@ -45,11 +45,11 @@ const useUserLogin = () => {
 }
 
 export function LoginForm({ closeModal }: { closeModal: Function }) {
-  const [phoneNumber, setPhoneNumber] = React.useState("")
-  const [code, setCode] = React.useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [code, setCode] = useState("")
 
-  const [count, setCount] = React.useState(0)
-  const timerRef = React.useRef<any>(0)
+  const [count, setCount] = useState(0)
+  const timerRef = useRef<any>(0)
 
   const [updateUser] = useUserStore((state) => [state.updateUser])
   const [getConversationList] = useChatStore((state) => [
@@ -62,48 +62,48 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
     setCount(0)
   }
 
-  function getCode() {
+  async function getCode() {
     if (!phoneNumber) return toast.error("请填写手机号")
     if (count) return
 
     setCount(60)
     // 场景值
     const params = { phoneNumber: `+86:${phoneNumber}`, scene: "login" }
-    sendVerificationCode(params)
-      .then(() => {
-        timerRef.current = setInterval(() => {
-          setCount((count) => {
-            if (count <= 0) {
-              clearInterval(timerRef.current)
-              return 0
-            }
-            return count - 1
-          })
-        }, 1000)
-      })
-      .catch(() => {
-        setCount(0)
-        clearInterval(timerRef.current)
-      })
+    try {
+      await sendVerificationCode(params)
+
+      timerRef.current = setInterval(() => {
+        setCount((count) => {
+          if (count <= 0) {
+            clearInterval(timerRef.current)
+            return 0
+          }
+          return count - 1
+        })
+      }, 1000)
+    } catch(e) {
+      setCount(0)
+      clearInterval(timerRef.current)
+    }
   }
 
   // 登录
-  function handleLogin() {
+  async function handleLogin() {
     if (!code) return toast.error("请填写验证码")
     if (!phoneNumber) return toast.error("请填写手机号")
 
-    const params = { phoneNumber: `+86:${phoneNumber}`, code }
-    loginUser(params).then((res) => {
-      localStorage.setItem("login_token", res.result.value)
+    try {
+      const params = { phoneNumber: `+86:${phoneNumber}`, code }
+      const loginRes = await loginUser(params)
+      localStorage.setItem("login_token", loginRes.result.value)
       closeModal()
       resetForm()
       toast.success("登录成功")
 
-      checkUser().then((res) => {
-        updateUser(res.result)
-        getConversationList(res.result.id)
-      })
-    })
+      const userRes = await checkUser()
+      updateUser(userRes.result)
+      getConversationList(userRes.result.id) 
+    } catch(e) {}
   }
 
   return (
@@ -178,7 +178,7 @@ export function LoginDialog() {
     state.getUserQuotaInfo,
   ])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!user.id && !localStorage.getItem("login_token")) {
       setLoginModalVisible(true)
     }
@@ -210,22 +210,23 @@ export function LoginDialog() {
 
 // 激活弹窗
 export function ActivateDialog() {
-  const [inviteCode, setInviteCode] = React.useState("")
+  const [inviteCode, setInviteCode] = useState("")
   const [user] = useUserStore((state) => [state.user])
   const [activateVisible, setActivateVisible] = useBillingStore((state) => [
     state.activateVisible,
     state.setActivateVisible,
   ])
 
-  function handleActivate() {
+  async function handleActivate() {
     if (!inviteCode) return toast.error("请输入邀请码")
-    activateUser({ userId: user.id, inviteCode }).then(() => {
+    try {
+      await activateUser({ userId: user.id, inviteCode })
       toast.success("激活成功")
       setActivateVisible(false)
-    })
+    } catch(e) {}
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (user.state === "unactivated" && !activateVisible) {
       toast.error("账号未激活，请先激活!")
       setActivateVisible(true)

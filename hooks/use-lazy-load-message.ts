@@ -53,6 +53,8 @@ export const useLazyLoadMessage = () => {
           setIsLoadingMessage(false)
         } catch (e) {
           setIsLoadingMessage(false)
+        } finally {
+          autoScrollBottomRef.current = true;
         }
       }
     }
