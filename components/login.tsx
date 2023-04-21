@@ -8,7 +8,12 @@ import {
   loginUser,
   sendVerificationCode,
 } from "../api/user"
-import { useBillingStore, useChatStore, useSettingsStore } from "../store"
+import {
+  useBillingStore,
+  useChatStore,
+  useSettingsStore,
+  useUserStore,
+} from "../store"
 import Modal from "./modal"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
@@ -19,10 +24,8 @@ const useUserLogin = () => {
   const [getConversationList] = useChatStore((state) => [
     state.getConversationList,
   ])
-  const [updateUser, getUserSettings] = useSettingsStore((state) => [
-    state.updateUser,
-    state.getUserSettings,
-  ])
+  const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
+  const [updateUser] = useUserStore((state) => [state.updateUser])
 
   React.useEffect(() => {
     checkUser()
@@ -48,7 +51,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
   const [count, setCount] = React.useState(0)
   const timerRef = React.useRef<any>(0)
 
-  const [updateUser] = useSettingsStore((state) => [state.updateUser])
+  const [updateUser] = useUserStore((state) => [state.updateUser])
   const [getConversationList] = useChatStore((state) => [
     state.getConversationList,
   ])
@@ -170,7 +173,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
 
 export function LoginDialog() {
   const { loginModalVisible, setLoginModalVisible } = useUserLogin()
-  const [user] = useSettingsStore((state) => [state.user])
+  const [user] = useUserStore((state) => [state.user])
   const [getUserQuotaInfo] = useBillingStore((state) => [
     state.getUserQuotaInfo,
   ])
@@ -208,7 +211,7 @@ export function LoginDialog() {
 // 激活弹窗
 export function ActivateDialog() {
   const [inviteCode, setInviteCode] = React.useState("")
-  const [user] = useSettingsStore((state) => [state.user])
+  const [user] = useUserStore((state) => [state.user])
   const [activateVisible, setActivateVisible] = useBillingStore((state) => [
     state.activateVisible,
     state.setActivateVisible,

@@ -5,6 +5,7 @@ import {
   useBillingStore,
   useChatStore,
   useSettingsStore,
+  useUserStore,
 } from "@/store"
 import { isMobileScreen } from "@/utils"
 import { ControllerPool } from '@/utils/requests'
@@ -18,7 +19,8 @@ export default function ChatFooter(props) {
   const { autoScrollBottomRef, showSideBar, inputRef } = props
   const [userInput, setUserInput] = useState("")
 
-  const [user, config] = useSettingsStore((state) => [state.user, state.config])
+  const [config] = useSettingsStore((state) => [state.config])
+  const [user] = useUserStore((state) => [state.user])
 
   const [session, onUserInput, setIsLoadingAnswer] = useChatStore((state) => [
     state.currentSession(),

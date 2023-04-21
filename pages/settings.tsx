@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import Head from "next/head"
-import { SubmitKey, useBillingStore, useSettingsStore } from "@/store"
+import { SubmitKey, useBillingStore, useSettingsStore, useUserStore } from "@/store"
 import dayjs from "dayjs"
 import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react"
 import toast from "react-hot-toast"
@@ -56,14 +56,15 @@ export default function Setting() {
     state.setActivateVisible,
   ])
 
-  const [user, updateUser, config, updateConfig, getUserSettings] =
-    useSettingsStore((state) => [
-      state.user,
-      state.updateUser,
-      state.config,
-      state.updateConfig,
-      state.getUserSettings,
-    ])
+  const [config, updateConfig, getUserSettings] = useSettingsStore((state) => [
+    state.config,
+    state.updateConfig,
+    state.getUserSettings,
+  ])
+  const [user, updateUser] = useUserStore((state) => [
+    state.user,
+    state.updateUser,
+  ])
 
   useEffect(() => {
     getUserQuotaInfo(user.id)
