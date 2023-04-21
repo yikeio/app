@@ -31,9 +31,6 @@ const DEFAULT_CONFIG: ChatConfig = {
 }
 
 interface SettingsStore {
-  user: Record<string, any>
-  updateUser: (user: Record<string, string>) => void
-
   config: ChatConfig
   getConfig: () => ChatConfig
   updateConfig: (
@@ -46,11 +43,6 @@ interface SettingsStore {
 }
 
 export const useSettingsStore = create<SettingsStore>()((set, get) => ({
-  user: {},
-  updateUser(user: Record<string, string>) {
-    set(() => ({ user }))
-  },
-  
   config: { ...DEFAULT_CONFIG },
   getConfig() {
     return get().config
