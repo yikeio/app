@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { getReferrals as fetchReferrals } from "@/api/user"
+import { useUserStore } from "@/store"
 import { Gift } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -8,12 +9,14 @@ import UserLayout from "./layout"
 
 export default function UserInvitationPage() {
   const [getReferrals, setReferrals] = useState([])
+  const [user] = useUserStore((state) => [state.user])
 
   useEffect(() => {
-    fetchReferrals().then((res) => {
+    if (!user.id) return
+    fetchReferrals(user.id).then((res) => {
       setReferrals(res.data)
     })
-  }, [])
+  }, [user])
 
   return (
     <UserLayout>
