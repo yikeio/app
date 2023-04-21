@@ -1,5 +1,4 @@
-import { API_DOMAIN } from "../api/common"
-import { createMessage } from "../api/conversations"
+import { createMessage, createSmartMessage } from "../api/conversations"
 
 const TIME_OUT_MS = 30000
 
@@ -12,24 +11,12 @@ export async function requestChatStream(
     onController?: (controller: AbortController) => void
   }
 ) {
-  const token = localStorage.getItem("login_token")
-
   const controller = new AbortController()
   const reqTimeoutId = setTimeout(() => controller.abort(), TIME_OUT_MS)
 
-  // TODO: 替换统一的接口
   try {
     await createMessage(options.conversationId, content)
-    const res = await fetch(
-      `${API_DOMAIN}/api/chat/conversations/${options.conversationId}/completions`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    const res = await createSmartMessage(options.conversationId)
     clearTimeout(reqTimeoutId)
 
     let responseText = ""
@@ -55,18 +42,21 @@ export async function requestChatStream(
 
         const done = !content || content.done
         options?.onMessage(responseText, false)
-
+        ControllerPool.isStreaming = true
+        
         if (done) {
           break
         }
       }
 
       finish()
+      ControllerPool.isStreaming = false
     } else {
       console.error("Stream Error", res.body)
       options?.onError(new Error("Stream Error"), res.status)
     }
   } catch (err) {
+    ControllerPool.isStreaming = false
     console.error("NetWork Error", err)
     options?.onError(err as Error)
   }
@@ -74,6 +64,7 @@ export async function requestChatStream(
 
 // To store message streaming controller
 export const ControllerPool = {
+  isStreaming: false,
   controllers: {} as Record<string, AbortController>,
 
   addController(

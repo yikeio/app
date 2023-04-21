@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Head from "next/head"
-import { useBillingStore, useSettingsStore } from "@/store"
+import { useBillingStore, useUserStore } from "@/store"
 import { isMobileScreen } from "@/utils"
 import toast from "react-hot-toast"
 
@@ -11,7 +11,7 @@ import { ChatList } from "@/components/chat-list"
 import { Layout } from "@/components/layout"
 
 export default function ChatPage() {
-  const [user] = useSettingsStore((state) => [state.user])
+  const [user] = useUserStore((state) => [state.user])
 
   const [setActivateVisible] = useBillingStore((state) => [
     state.setActivateVisible,

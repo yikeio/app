@@ -30,10 +30,7 @@ const DEFAULT_CONFIG: ChatConfig = {
   chat_font_size: 14, //字体大小
 }
 
-interface BillingStore {
-  user: Record<string, any>
-  updateUser: (user: Record<string, string>) => void
-
+interface SettingsStore {
   config: ChatConfig
   getConfig: () => ChatConfig
   updateConfig: (
@@ -45,12 +42,7 @@ interface BillingStore {
   getUserSettings: (userId: string) => Promise<void>
 }
 
-export const useSettingsStore = create<BillingStore>()((set, get) => ({
-  user: {},
-  updateUser(user: Record<string, string>) {
-    set(() => ({ user }))
-  },
-  
+export const useSettingsStore = create<SettingsStore>()((set, get) => ({
   config: { ...DEFAULT_CONFIG },
   getConfig() {
     return get().config

@@ -4,7 +4,7 @@ import {
   ChatSession,
   useBillingStore,
   useChatStore,
-  useSettingsStore,
+  useUserStore,
 } from "@/store"
 import { isMobileScreen } from "@/utils"
 import toast from "react-hot-toast"
@@ -81,7 +81,7 @@ export function ChatList({
       state.setActivateVisible,
       state.setBillingModalVisible,
     ])
-  const [user] = useSettingsStore((state) => [state.user])
+  const [user] = useUserStore((state) => [state.user])
 
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const chatListRef = useRef<HTMLDivElement>(null)

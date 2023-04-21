@@ -88,7 +88,6 @@ interface ChatStore {
     messageIndex: number,
     updater: (message?: Message) => void
   ) => void
-  clearAllData: () => void
 
   // 答案是否正在加载
   isLoadingAnswer: boolean;
@@ -317,13 +316,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     const index = get().currentSessionIndex
     updater(sessions[index])
     set(() => ({ sessions }))
-  },
-
-  clearAllData() {
-    if (confirm(Locale.Store.ConfirmClearAll)) {
-      localStorage.clear()
-      location.reload()
-    }
   },
 
   isLoadingAnswer: false,

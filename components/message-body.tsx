@@ -28,7 +28,7 @@ export default function MessageBody({ message, inputRef }) {
       state.setIsLoadingAnswer,
     ]
   )
-  const [user, config] = useSettingsStore((state) => [state.user, state.config])
+  const [config] = useSettingsStore((state) => [state.config])
 
   // 请求消息时打字 loading
   useEffect(() => {
