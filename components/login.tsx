@@ -229,7 +229,6 @@ export function ActivateDialog() {
     if (user.state === "unactivated") {
       toast.error("账号未激活，请先激活!")
       setActivateVisible(true)
-      return
     }
   }, [user])
 
