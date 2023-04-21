@@ -107,19 +107,19 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
   }
 
   return (
-    <div className="flex flex-col max-w-xs gap-6">
+    <div className="flex max-w-xs flex-col gap-6">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl">欢迎回来</h1>
       </div>
       <div className="flex flex-col gap-2">
         <Label
           htmlFor="phone-number-input"
-          className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+          className="mb-1 block text-sm font-medium text-gray-900 dark:text-white"
         >
           手机号
         </Label>
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             +86
           </div>
           <Input
@@ -137,7 +137,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
       <div className="relative flex flex-col gap-2">
         <Label
           htmlFor="verify-code-input"
-          className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+          className="mb-1 block text-sm font-medium text-gray-900 dark:text-white"
         >
           验证码
         </Label>
@@ -145,7 +145,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
           <Input
             type="text"
             id="verify-code-input"
-            className="w-full pr-24 rounded-md"
+            className="w-full rounded-md pr-24"
             placeholder="请输入验证码"
             maxLength={4}
             value={code}
@@ -155,7 +155,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
           <Button
             variant="ghost"
             size="sm"
-            className="absolute inset-y-0 right-0 z-10 flex items-center mt-0.5 mr-0.5"
+            className="absolute inset-y-0 right-0 z-10 mr-0.5 mt-0.5 flex items-center"
             onClick={getCode}
           >
             {count || "获取验证码"}
@@ -196,11 +196,11 @@ export function LoginDialog() {
       noPadding
       onClose={() => setLoginModalVisible(false)}
     >
-      <div className="p-6 space-y-4">
+      <div className="space-y-4 p-6">
         <div className="flex items-center justify-center">
           <Image src="/logo.svg" alt="" height={80} width={80} />
         </div>
-        <div className="flex items-center justify-center flex-1">
+        <div className="flex flex-1 items-center justify-center">
           <LoginForm closeModal={setLoginModalVisible} />
         </div>
       </div>
@@ -211,7 +211,7 @@ export function LoginDialog() {
 // 激活弹窗
 export function ActivateDialog() {
   const [inviteCode, setInviteCode] = useState("")
-  const [user] = useUserStore((state) => [state.user])
+  const [user, updateUser] = useUserStore((state) => [state.user, state.updateUser])
   const [activateVisible, setActivateVisible] = useBillingStore((state) => [
     state.activateVisible,
     state.setActivateVisible,
@@ -226,10 +226,36 @@ export function ActivateDialog() {
     } catch(e) {}
   }
 
+  async function tryActivate() {
+    try {
+      await activateUser({ userId: user.id, inviteCode })
+      const userRes = await checkUser()
+      updateUser(userRes.result)
+    } catch(e) {
+
+    } finally {
+      localStorage.removeItem("referrer")
+    }
+  }
+
   useEffect(() => {
+    const { searchParams } = new URL(location.href)
+    if (searchParams.get("referrer")) {
+      localStorage.setItem("referrer", searchParams.get("referrer"))
+    }
+
     if (user.state === "unactivated" && !activateVisible) {
-      toast.error("账号未激活，请先激活!")
-      setActivateVisible(true)
+      const referrer = localStorage.getItem("referrer")
+      const token = localStorage.getItem("login_token")
+      
+      // 登录了没激活，但是有邀请码，尝试激活
+      if (user.id && token && referrer) {
+        setInviteCode(referrer)
+        tryActivate()
+      } else {
+        toast.error("账号未激活，请先激活!")
+        setActivateVisible(true)
+      }
     }
   }, [activateVisible, user])
 
