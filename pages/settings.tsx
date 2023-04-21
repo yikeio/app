@@ -47,13 +47,11 @@ export default function Setting() {
     totalUsage,
     setBillingModalVisible,
     getUserQuotaInfo,
-    setActivateVisible,
   ] = useBillingStore((state) => [
     state.currentCombo,
     state.totalUsage(),
     state.setBillingModalVisible,
     state.getUserQuotaInfo,
-    state.setActivateVisible,
   ])
 
   const [config, updateConfig, getUserSettings] = useSettingsStore((state) => [
@@ -67,6 +65,7 @@ export default function Setting() {
   ])
 
   useEffect(() => {
+    if (!user.id) return
     getUserQuotaInfo(user.id)
     getUserSettings(user.id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
