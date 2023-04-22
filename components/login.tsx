@@ -231,7 +231,6 @@ export function ActivateDialog() {
       await activateUser({ userId: user.id, inviteCode: referrer })
       const userRes = await checkUser()
       updateUser(userRes.result)
-      setActivateVisible(false)
     } catch(e) {
       setInviteCode(referrer)
       toast.error("账号未激活，请先激活!")
@@ -244,9 +243,10 @@ export function ActivateDialog() {
   useEffect(() => {
     if (user.state === "unactivated" && !activateVisible) {
       const referrer = localStorage.getItem("referrer")
+      const token = localStorage.getItem("login_token")
       
       // 登录了没激活，但是本地存储有邀请码，尝试激活
-      if (user && user.id && referrer) {
+      if (user.id && token && referrer) {
         tryActivate(referrer)
       } else {
         toast.error("账号未激活，请先激活!")

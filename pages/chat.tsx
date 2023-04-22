@@ -13,21 +13,7 @@ import { Layout } from "@/components/layout"
 export default function ChatPage() {
   const [user] = useUserStore((state) => [state.user])
 
-  const [setActivateVisible] = useBillingStore((state) => [
-    state.setActivateVisible,
-  ])
-
   const [showSideBar, setShowSideBar] = useState(true)
-
-  useEffect(() => {
-    // 未注册用户展示激活弹窗
-    if (user.id && localStorage.getItem("login_token")) {
-      if (user.state === "unactivated") {
-        toast.error("账号未激活，请先激活!")
-        setActivateVisible(true)
-      }
-    }
-  }, [user])
 
   const toggleSidebar = () => {
     if (!isMobileScreen()) return
@@ -47,10 +33,10 @@ export default function ChatPage() {
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <section className="flex w-full min-h-screen">
+      <section className="flex min-h-screen w-full">
         <ChatList showSideBar={showSideBar} toggleSidebar={toggleSidebar} />
 
-        <div className="flex flex-col flex-1 overflow-hidden bg-slate-100">
+        <div className="flex flex-1 flex-col overflow-hidden bg-slate-100">
           <Chat showSideBar={showSideBar} toggleSidebar={toggleSidebar} />
         </div>
       </section>
