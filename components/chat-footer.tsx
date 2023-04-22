@@ -2,13 +2,15 @@ import { useEffect, useState } from "react"
 import Locale from "@/locales"
 import {
   SubmitKey,
+  useActionsStore,
   useBillingStore,
   useChatStore,
   useSettingsStore,
   useUserStore,
 } from "@/store"
 import { isMobileScreen } from "@/utils"
-import { ControllerPool } from '@/utils/requests'
+import { ControllerPool } from "@/utils/requests"
+import classNames from "classnames"
 import toast from "react-hot-toast"
 
 import { Icons } from "@/components/icons"
@@ -16,7 +18,7 @@ import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
 
 export default function ChatFooter(props) {
-  const { autoScrollBottomRef, showSideBar, inputRef } = props
+  const { autoScrollBottomRef, inputRef } = props
   const [userInput, setUserInput] = useState("")
 
   const [config] = useSettingsStore((state) => [state.config])
@@ -28,11 +30,17 @@ export default function ChatFooter(props) {
     state.setIsLoadingAnswer,
   ])
 
-  const [currentCombo, setActivateVisible, setBillingModalVisible] =
-    useBillingStore((state) => [
-      state.currentCombo,
-      state.setActivateVisible,
-      state.setBillingModalVisible,
+  const [currentCombo, setBillingModalVisible] = useBillingStore((state) => [
+    state.currentCombo,
+    state.setBillingModalVisible,
+  ])
+
+  const [mode, setMode, selectedMessages, setExportImageVisible] =
+    useActionsStore((state) => [
+      state.mode,
+      state.setMode,
+      state.selectedMessages,
+      state.setExportImageVisible,
     ])
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -70,36 +78,59 @@ export default function ChatFooter(props) {
     }
     setIsLoadingAnswer(true)
     onUserInput(userInput).then(() => setIsLoadingAnswer(false))
+    autoScrollBottomRef.current = true
     setUserInput("")
     if (!isMobileScreen()) inputRef.current?.focus()
   }
 
   // Auto focus
   useEffect(() => {
-    if (showSideBar) return
     inputRef.current.focus?.()
-  }, [showSideBar])
+  }, [])
 
   return (
-    <div className="sticky bottom-0 p-6">
-      <div className="relative flex flex-col items-center gap-2 md:flex-row">
+    <div className="sticky bottom-0 pt-4 pb-10 px-10">
+      <div
+        className={classNames(
+          "relative flex flex-col items-start gap-2 md:flex-row",
+          {
+            hidden: mode !== "normal",
+          }
+        )}
+      >
         <Textarea
           ref={inputRef}
-          className="flex-1 w-full bg-white"
+          className="flex-1 w-full h-auto bg-white"
           placeholder={Locale.Chat.Input(config.chat_submit_key)}
           onChange={(e) => setUserInput(e.currentTarget.value)}
           onFocus={() => (autoScrollBottomRef.current = true)}
           onBlur={() => (autoScrollBottomRef.current = true)}
           value={userInput}
+          rows={1}
           onKeyDown={onInputKeyDown}
           autoFocus={!props.showSideBar}
         />
         <Button
-          className="flex items-center gap-2 -ml-28"
+          className="flex items-center gap-2 w-full md:w-auto"
           onClick={onUserSubmit}
         >
-          <Icons.telegram size={20} />
+          <Icons.telegram size={12} />
           <span>发送</span>
+        </Button>
+      </div>
+      <div
+        className={classNames("flex gap-4 justify-center", {
+          hidden: mode !== "select",
+        })}
+      >
+        <Button
+          disabled={!selectedMessages.length}
+          onClick={() => setExportImageVisible(true)}
+        >
+          导出图片
+        </Button>
+        <Button variant="destructive" onClick={() => setMode("normal")}>
+          取消
         </Button>
       </div>
     </div>

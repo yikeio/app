@@ -8,6 +8,7 @@ import { Button } from "./ui/button"
 import { Label } from "./ui/label"
 
 export default function ChatHeader(props) {
+  const { autoScrollBottomRef, toggleSidebar } = props
   const [session, currentIndex, updateCurrentSession, removeSession] = useChatStore((state) => [
     state.currentSession(),
     state.currentSessionIndex,
@@ -15,7 +16,12 @@ export default function ChatHeader(props) {
     state.removeSession,
   ])
 
-  const [setMode] = useActionsStore(state => [state.setMode])
+  const [mode, setMode] = useActionsStore(state => [state.mode, state.setMode])
+
+  const switchMode = () => {
+    autoScrollBottomRef.current = false;
+    setMode('select');
+  }
 
   // 更新对话
   const handleUpdate = () => {
@@ -29,7 +35,7 @@ export default function ChatHeader(props) {
   }
 
   const handleDelete = () => {
-    const result = confirm('确认删除？')
+    const result = confirm('确认删除当前会话？')
     if (result) {
       removeSession(currentIndex)
     }
@@ -39,7 +45,7 @@ export default function ChatHeader(props) {
     <div className="flex items-center justify-between px-6 py-4 bg-white border-b">
       <div
         className="items-center gap-4 md:flex"
-        onClick={() => props.toggleSidebar?.()}
+        onClick={() => toggleSidebar?.()}
       >
         <div className="flex items-center gap-2">
           <MessageSquare className="text-gray-500" />
@@ -52,10 +58,9 @@ export default function ChatHeader(props) {
           <button
             className="flex items-center gap-1 p-2"
             title={Locale.Chat.Actions.ChatList}
-            onClick={() => props.toggleSidebar?.()}
+            onClick={() => toggleSidebar?.()}
           >
             <Icons.menu size={22} />
-            <span>会话列表</span>
           </button>
         </div>
 
@@ -72,7 +77,7 @@ export default function ChatHeader(props) {
         <Button
           variant="outline"
           className="flex items-center justify-center w-8 h-8 p-1"
-          onClick={() => setMode('select')}
+          onClick={switchMode}
         >
           <FileDown className="w-4 h-4" />
         </Button>

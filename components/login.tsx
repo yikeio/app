@@ -1,4 +1,4 @@
-import * as React from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import toast from "react-hot-toast"
 
@@ -20,14 +20,14 @@ import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 
 const useUserLogin = () => {
-  const [loginModalVisible, setLoginModalVisible] = React.useState(false)
+  const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [getConversationList] = useChatStore((state) => [
     state.getConversationList,
   ])
   const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
   const [updateUser] = useUserStore((state) => [state.updateUser])
 
-  React.useEffect(() => {
+  useEffect(() => {
     checkUser()
       .then((res) => {
         updateUser(res.result)
@@ -45,11 +45,11 @@ const useUserLogin = () => {
 }
 
 export function LoginForm({ closeModal }: { closeModal: Function }) {
-  const [phoneNumber, setPhoneNumber] = React.useState("")
-  const [code, setCode] = React.useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [code, setCode] = useState("")
 
-  const [count, setCount] = React.useState(0)
-  const timerRef = React.useRef<any>(0)
+  const [count, setCount] = useState(0)
+  const timerRef = useRef<any>(0)
 
   const [updateUser] = useUserStore((state) => [state.updateUser])
   const [getConversationList] = useChatStore((state) => [
@@ -62,64 +62,64 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
     setCount(0)
   }
 
-  function getCode() {
+  async function getCode() {
     if (!phoneNumber) return toast.error("请填写手机号")
     if (count) return
 
     setCount(60)
     // 场景值
     const params = { phoneNumber: `+86:${phoneNumber}`, scene: "login" }
-    sendVerificationCode(params)
-      .then(() => {
-        timerRef.current = setInterval(() => {
-          setCount((count) => {
-            if (count <= 0) {
-              clearInterval(timerRef.current)
-              return 0
-            }
-            return count - 1
-          })
-        }, 1000)
-      })
-      .catch(() => {
-        setCount(0)
-        clearInterval(timerRef.current)
-      })
+    try {
+      await sendVerificationCode(params)
+
+      timerRef.current = setInterval(() => {
+        setCount((count) => {
+          if (count <= 0) {
+            clearInterval(timerRef.current)
+            return 0
+          }
+          return count - 1
+        })
+      }, 1000)
+    } catch(e) {
+      setCount(0)
+      clearInterval(timerRef.current)
+    }
   }
 
   // 登录
-  function handleLogin() {
+  async function handleLogin() {
     if (!code) return toast.error("请填写验证码")
     if (!phoneNumber) return toast.error("请填写手机号")
 
-    const params = { phoneNumber: `+86:${phoneNumber}`, code }
-    loginUser(params).then((res) => {
-      localStorage.setItem("login_token", res.result.value)
+    try {
+      const params = { phoneNumber: `+86:${phoneNumber}`, code }
+      const loginRes = await loginUser(params)
+      localStorage.setItem("login_token", loginRes.result.value)
       closeModal()
       resetForm()
       toast.success("登录成功")
 
-      checkUser().then((res) => {
-        updateUser(res.result)
-        getConversationList(res.result.id)
-      })
-    })
+      const userRes = await checkUser()
+      updateUser(userRes.result)
+      getConversationList(userRes.result.id) 
+    } catch(e) {}
   }
 
   return (
-    <div className="flex flex-col max-w-xs gap-6">
+    <div className="flex max-w-xs flex-col gap-6">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl">欢迎回来</h1>
       </div>
       <div className="flex flex-col gap-2">
         <Label
           htmlFor="phone-number-input"
-          className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+          className="mb-1 block text-sm font-medium text-gray-900 dark:text-white"
         >
           手机号
         </Label>
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             +86
           </div>
           <Input
@@ -137,7 +137,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
       <div className="relative flex flex-col gap-2">
         <Label
           htmlFor="verify-code-input"
-          className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+          className="mb-1 block text-sm font-medium text-gray-900 dark:text-white"
         >
           验证码
         </Label>
@@ -145,7 +145,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
           <Input
             type="text"
             id="verify-code-input"
-            className="w-full pr-24 rounded-md"
+            className="w-full rounded-md pr-24"
             placeholder="请输入验证码"
             maxLength={4}
             value={code}
@@ -155,7 +155,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
           <Button
             variant="ghost"
             size="sm"
-            className="absolute inset-y-0 right-0 z-10 flex items-center mt-0.5 mr-0.5"
+            className="absolute inset-y-0 right-0 z-10 mr-0.5 mt-0.5 flex items-center"
             onClick={getCode}
           >
             {count || "获取验证码"}
@@ -178,7 +178,7 @@ export function LoginDialog() {
     state.getUserQuotaInfo,
   ])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!user.id && !localStorage.getItem("login_token")) {
       setLoginModalVisible(true)
     }
@@ -196,11 +196,11 @@ export function LoginDialog() {
       noPadding
       onClose={() => setLoginModalVisible(false)}
     >
-      <div className="p-6 space-y-4">
+      <div className="space-y-4 p-6">
         <div className="flex items-center justify-center">
           <Image src="/logo.svg" alt="" height={80} width={80} />
         </div>
-        <div className="flex items-center justify-center flex-1">
+        <div className="flex flex-1 items-center justify-center">
           <LoginForm closeModal={setLoginModalVisible} />
         </div>
       </div>
@@ -210,25 +210,51 @@ export function LoginDialog() {
 
 // 激活弹窗
 export function ActivateDialog() {
-  const [inviteCode, setInviteCode] = React.useState("")
-  const [user] = useUserStore((state) => [state.user])
+  const [inviteCode, setInviteCode] = useState("")
+  const [user, updateUser] = useUserStore((state) => [state.user, state.updateUser])
   const [activateVisible, setActivateVisible] = useBillingStore((state) => [
     state.activateVisible,
     state.setActivateVisible,
   ])
 
-  function handleActivate() {
+  async function handleActivate() {
     if (!inviteCode) return toast.error("请输入邀请码")
-    activateUser({ userId: user.id, inviteCode }).then(() => {
+    try {
+      await activateUser({ userId: user.id, inviteCode })
       toast.success("激活成功")
       setActivateVisible(false)
-    })
+    } catch(e) {}
   }
 
-  React.useEffect(() => {
-    if (user.state === "unactivated" && !activateVisible) {
+  async function tryActivate(referrer) {
+    try {
+      await activateUser({ userId: user.id, inviteCode: referrer })
+      const userRes = await checkUser()
+      updateUser(userRes.result)      
+      if (userRes.result.state === "activated") {
+        toast.success("账号已激活")
+      }
+    } catch(e) {
+      setInviteCode(referrer)
       toast.error("账号未激活，请先激活!")
       setActivateVisible(true)
+    } finally {
+      localStorage.removeItem("referrer")
+    }
+  }
+
+  useEffect(() => {
+    if (user.state === "unactivated" && !activateVisible) {
+      const referrer = localStorage.getItem("referrer")
+      const token = localStorage.getItem("login_token")
+      
+      // 登录了没激活，但是本地存储有邀请码，尝试激活
+      if (user.id && token && referrer) {
+        tryActivate(referrer)
+      } else {
+        toast.error("账号未激活，请先激活!")
+        setActivateVisible(true)
+      }
     }
   }, [activateVisible, user])
 

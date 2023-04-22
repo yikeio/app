@@ -1,11 +1,12 @@
 import { create } from "zustand"
+import { Message } from './app'
 
 type ActionsStore = {
   mode: 'select' | 'normal'
   setMode: (mode: 'select' | 'normal') => void
 
-  selectedMessages: string[]
-  setSelectedMessages: (selected: string[]) => void
+  selectedMessages: Message[]
+  setSelectedMessages: (selected: Message[]) => void
 
   exportImageVisible: boolean
   setExportImageVisible: (visible: boolean) => void
@@ -18,7 +19,7 @@ export const useActionsStore = create<ActionsStore>()((set, get) => ({
   },
 
   selectedMessages: [],
-  setSelectedMessages: (selected: string[]) => {
+  setSelectedMessages: (selected: Message[]) => {
     set(() => ({ selectedMessages: selected }))
   },
 
