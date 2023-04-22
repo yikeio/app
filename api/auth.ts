@@ -1,4 +1,4 @@
-import { commonFetch, API_DOMAIN } from "./common"
+import { API_DOMAIN, commonFetch } from "./common"
 
 /**
  * 获取跳转地址

@@ -53,10 +53,10 @@ export default function UserIndexPage() {
       </Head>
       <section className="p-8">
         <h2>个人资料</h2>
-        <div className="bg-white p-6 rounded-lg max-w-5xl shadow">
+        <div className="max-w-5xl rounded-lg bg-white p-6 shadow">
           <div className="flex items-center gap-6"></div>
 
-          <div className="flex flex-col text-gray-600 divide-y">
+          <div className="flex flex-col divide-y text-gray-600">
             <div className="flex items-center justify-between py-4">
               <Label className="uppercase text-gray-500">{user.name}</Label>
               <div>

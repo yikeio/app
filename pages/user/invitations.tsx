@@ -102,24 +102,24 @@ export default function UserInvitationPage() {
           <div>
             <Label>我的邀请记录（{referrals.length}）</Label>
           </div>
-          <div className="bg-white p-6 mt-2 rounded-lg shadow">
-            <div className="flex items-center text-sm text-gray-500 font-bold">
-              <div className="w-1/3 py-2 px-4">用户</div>
-              <div className="w-1/3 py-2 px-4">注册时间</div>
-              <div className="w-1/3 py-2 px-4">获得奖励</div>
+          <div className="mt-2 rounded-lg bg-white p-6 shadow">
+            <div className="flex items-center text-sm font-bold text-gray-500">
+              <div className="w-1/3 px-4 py-2">用户</div>
+              <div className="w-1/3 px-4 py-2">注册时间</div>
+              <div className="w-1/3 px-4 py-2">获得奖励</div>
             </div>
             {referrals.length <= 0 && <EmptyState className="min-h-[200px]" />}
             <div>
               {referrals.map((referral) => (
                 <div
                   key={referral.id}
-                  className="flex items-center text-sm text-gray-500 border-t"
+                  className="flex items-center border-t text-sm text-gray-500"
                 >
-                  <div className="w-1/3 py-3 px-4">{referral.name}</div>
-                  <div className="w-1/3 py-3 px-4">
+                  <div className="w-1/3 px-4 py-3">{referral.name}</div>
+                  <div className="w-1/3 px-4 py-3">
                     {formatDatetime(referral.created_at)}
                   </div>
-                  <div className="w-1/3 py-3 px-4">
+                  <div className="w-1/3 px-4 py-3">
                     {referral.has_paid ? referral.referrals_count : "未支付"}
                   </div>
                 </div>
