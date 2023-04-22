@@ -24,7 +24,7 @@ export async function copyToClipboard(text: string) {
     document.execCommand("copy")
     document.body.removeChild(textarea)
   } finally {
-    toast.success(Locale.Copy.Success)
+    toast.success("已复制")
   }
 }
 

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { isMobileScreen } from "@/utils"
 import { IconArrowAutofitContent } from "@tabler/icons-react"
 import classNames from "classnames"
-import { MessageSquare, Settings2 } from "lucide-react"
+import { MessageSquare, Settings2, User } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -35,7 +35,7 @@ export function Sidebar(props) {
             className="text-slate-700 dark:text-slate-400"
           >
             <Image src="/logo.svg" height={24} width={24} alt="logo" />
-            <span className="sr-only">Chat</span>
+            <span className="sr-only">首页</span>
           </Button>
         </Link>
         <Link href="/chat" rel="noreferrer">
@@ -46,6 +46,16 @@ export function Sidebar(props) {
           >
             <MessageSquare></MessageSquare>
             <span className="sr-only">会话</span>
+          </Button>
+        </Link>
+        <Link href="/user" rel="noreferrer">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-slate-700 dark:text-slate-400"
+          >
+            <User></User>
+            <span className="sr-only">我的</span>
           </Button>
         </Link>
         <Link href="/settings" rel="noreferrer">

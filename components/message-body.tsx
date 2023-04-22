@@ -38,10 +38,10 @@ export default function MessageBody({ message, inputRef }) {
       <div className="rounded-lg">
         <div
           className={
-            `p-3 md:p-4 lg:p-5 xl:p-8 rounded-xl relative ` +
+            `p-3 md:p-4 lg:p-5 rounded-xl text-gray-700 relative ` +
             (isUser
-              ? "bg-blue-500 justify-self-end rounded-br-none text-white"
-              : "bg-white rounded-bl-none text-gray-700")
+              ? "bg-blue-200 justify-self-end rounded-br-none"
+              : "bg-white rounded-bl-none")
           }
         >
           {/* 消息内容 */}

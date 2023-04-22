@@ -22,14 +22,16 @@ export function Layout({ children }: LayoutProps) {
   const loading = !useHasHydrated()
 
   return loading ? (
-    <div className="flex items-center justify-center h-screen gap-6">
+    <div className="flex flex-col h-screen items-center justify-center gap-6">
       <BotIcon />
       <LoadingIcon />
     </div>
   ) : (
     <div className="flex">
       <Sidebar />
-      <main className="h-screen overflow-y-auto grow">{children}</main>
+      <main className="flex flex-1 min-h-screen grow overflow-y-auto bg-slate-100">
+        {children}
+      </main>
     </div>
   )
 }

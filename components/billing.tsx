@@ -5,6 +5,7 @@ import { createPayment, getPayment } from "../api/pay"
 import { getListUserPayment } from "../api/user"
 import { useBillingStore, useUserStore } from "../store"
 import Modal from "./modal"
+import { Button } from "./ui/button"
 
 export function BillingDialog() {
   const [
@@ -127,17 +128,17 @@ export function BillingDialog() {
     return (
       <Modal
         show={billingModalVisible}
-        size="lg"
+        size="xl"
         onClose={() => setBillingModalVisible(false)}
       >
         <div>
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-3xl font-bold">购买套餐</h1>
-            <div className="flex gap-6 justify-evenly">
+            <div className="flex flex-col lg:flex-row gap-2 md:gap-4 lg:gap-6 justify-evenly">
               {payableQuotas.map((item: any, index: number) => (
                 <div
                   key={index}
-                  className="flex flex-col gap-4 p-6 border-2 border-blue-500 rounded-lg shadow"
+                  className="flex flex-col gap-4 p-6 border-2 border-blue-500 rounded-lg shadow w-64"
                 >
                   <div className="text-2xl font-bold">{item.title}</div>
                   <div className="flex items-center gap-2 text-sm">
@@ -151,12 +152,9 @@ export function BillingDialog() {
                   </div>
                   <div className="text-xl font-semibold">￥{item.price}</div>
 
-                  <button
-                    className="w-full px-4 py-1 text-white bg-blue-500 hover:bg-blue-600 border-blue-600/70"
-                    onClick={() => handlePay(item)}
-                  >
+                  <Button className="w-full" onClick={() => handlePay(item)}>
                     购买
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
