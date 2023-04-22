@@ -9,16 +9,22 @@ import Transition from "@/components/transition"
 import "@/styles/globals.scss"
 
 export default function App({ Component, pageProps }: AppProps) {
+  const isStaticPage = ['Privacy', 'Terms'].includes(Component.name)
+
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <NextNProgress />
       <Transition>
         <Component {...pageProps} />
       </Transition>
-      <LoginDialog />
-      <BillingDialog />
-      <ActivateDialog />
-      <Toaster />
+      {!isStaticPage && (
+        <>
+          <LoginDialog />
+          <BillingDialog />
+          <ActivateDialog />
+          <Toaster />
+        </>
+      )}
     </ThemeProvider>
   )
 }
