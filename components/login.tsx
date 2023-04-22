@@ -230,7 +230,10 @@ export function ActivateDialog() {
     try {
       await activateUser({ userId: user.id, inviteCode: referrer })
       const userRes = await checkUser()
-      updateUser(userRes.result)
+      updateUser(userRes.result)      
+      if (userRes.result.state === "activated") {
+        toast.success("账号已激活")
+      }
     } catch(e) {
       setInviteCode(referrer)
       toast.error("账号未激活，请先激活!")
