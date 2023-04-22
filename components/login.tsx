@@ -239,11 +239,6 @@ export function ActivateDialog() {
   }
 
   useEffect(() => {
-    const { searchParams } = new URL(location.href)
-    if (searchParams.get("referrer")) {
-      localStorage.setItem("referrer", searchParams.get("referrer"))
-    }
-
     if (user.state === "unactivated" && !activateVisible) {
       const referrer = localStorage.getItem("referrer")
       const token = localStorage.getItem("login_token")
