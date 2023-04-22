@@ -1,7 +1,8 @@
 import { useRef } from "react"
 import { useLazyLoadMessage } from "@/hooks/use-lazy-load-message"
+import { useSelectMode } from "@/hooks/use-select-mode"
 import { usePrompt } from "@/hooks/use-prompt"
-import { useActionsStore, useChatStore } from "@/store"
+import { useChatStore } from "@/store"
 import classNames from "classnames"
 
 import { UserAvatar } from "@/components/avatar"
@@ -18,24 +19,19 @@ export function Chat(props: {
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const [session] = useChatStore((state) => [state.currentSession()])
-  const [mode, selectedMessages, setSelectedMessages] = useActionsStore(
-    (state) => [state.mode, state.selectedMessages, state.setSelectedMessages]
-  )
+
   const {
     chatBodyRef,
     isLoadingMessage,
     onChatBodyScroll,
     autoScrollBottomRef,
   } = useLazyLoadMessage()
+
+  const { mode, selectedMessages, handleSelect } = useSelectMode()
+
   // TODO
   const { xxx } = usePrompt()
 
-  const handleSelect = (checked: boolean, message) => {
-    const nextMessages = checked
-      ? [...selectedMessages, message]
-      : selectedMessages.filter((m) => m.id !== message.id)
-    setSelectedMessages(nextMessages)
-  }
 
   return (
     <div className="flex flex-col flex-1 max-h-screen overflow-y-auto bg-slate-100">
