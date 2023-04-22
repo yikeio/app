@@ -20,7 +20,7 @@ export const useLazyLoadMessage = () => {
   ])
 
   const pager = messageHistoryPagerMap.get(session.id)
-  
+
   // 首次进入聊天界面，如果没有历史消息，发送欢迎语
   if (
     session.messages.length === 0 &&
@@ -33,7 +33,6 @@ export const useLazyLoadMessage = () => {
   // 懒加载聊天内容
   const onChatBodyScroll = async (e) => {
     if (e.currentTarget.scrollTop <= 0) {
-
       if (session.id === "-1" || !pager) return
       if (pager?.currentPage < pager?.lastPage) {
         const params = {
@@ -44,15 +43,16 @@ export const useLazyLoadMessage = () => {
         try {
           setIsLoadingMessage(true)
           // 加载列表时禁止滚动到底部
-          autoScrollBottomRef.current = false;
+          autoScrollBottomRef.current = false
           const prevMessages = await getConversationHistory(session.id, params)
           updateCurrentSession((session) => {
             session.messages = [...prevMessages, ...session.messages]
           })
           chatBodyRef.current?.scrollTo({ top: 200 })
-        } catch (e) {} finally {
+        } catch (e) {
+        } finally {
           setIsLoadingMessage(false)
-          autoScrollBottomRef.current = true;
+          autoScrollBottomRef.current = true
         }
       }
     }
@@ -64,7 +64,11 @@ export const useLazyLoadMessage = () => {
       if (!autoScrollBottomRef.current) return
       chatBodyRef.current.scrollTo?.(0, chatBodyRef.current.scrollHeight)
     })
-    observer.observe(chatBodyRef.current, { attributes: true, childList: true, subtree: true })
+    observer.observe(chatBodyRef.current, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    })
 
     return () => {
       observer.disconnect()

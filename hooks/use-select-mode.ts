@@ -1,5 +1,5 @@
-import { useActionsStore, useChatStore } from "@/store"
 import { useEffect } from "react"
+import { useActionsStore, useChatStore } from "@/store"
 
 export const useSelectMode = () => {
   const [session] = useChatStore((state) => [state.currentSession()])
@@ -19,5 +19,5 @@ export const useSelectMode = () => {
     setSelectedMessages([])
   }, [session])
 
-  return { mode, selectedMessages, handleSelect };
+  return { mode, selectedMessages, handleSelect }
 }

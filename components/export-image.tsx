@@ -1,25 +1,27 @@
-import Modal from './modal';
-import { Button } from "@/components/ui/button"
+import { useEffect, useRef } from "react"
 import { useActionsStore } from "@/store"
-import { useEffect, useRef } from 'react';
+
+import { Button } from "@/components/ui/button"
+import Modal from "./modal"
 
 export default function ExportImage() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [setMode, selectedMessages, exportImageVisible, setExportImageVisible] = useActionsStore(state => [
-    state.setMode,
-    state.selectedMessages,
-    state.exportImageVisible,
-    state.setExportImageVisible,
-  ]);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [setMode, selectedMessages, exportImageVisible, setExportImageVisible] =
+    useActionsStore((state) => [
+      state.setMode,
+      state.selectedMessages,
+      state.exportImageVisible,
+      state.setExportImageVisible,
+    ])
 
   // TODO: 生成聊天图片
   useEffect(() => {
-    console.log('render', canvasRef.current, exportImageVisible)
+    console.log("render", canvasRef.current, exportImageVisible)
     // if (exportImageVisible) {
     //   const canvas = canvasRef.current;
     //   const ctx = canvas.getContext('2d');
     // }
-  }, [exportImageVisible]);
+  }, [exportImageVisible])
 
   return (
     <Modal

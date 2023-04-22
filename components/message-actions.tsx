@@ -34,14 +34,14 @@ export default function MessageActions({ message, inputRef }) {
         <div className="flex items-center gap-4 text-xs text-gray-400">
           {message.streaming ? (
             <div
-              className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
+              className="flex cursor-pointer items-center gap-1 hover:text-blue-500"
               onClick={() => onCopy(message)}
             >
               <Icons.copy size={12} /> 复制
             </div>
           ) : (
             <div
-              className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
+              className="flex cursor-pointer items-center gap-1 hover:text-blue-500"
               onClick={() => onResend(message)}
             >
               <Icons.reload size={12} /> 重新生成
@@ -49,7 +49,7 @@ export default function MessageActions({ message, inputRef }) {
           )}
 
           <div
-            className="flex items-center gap-1 cursor-pointer hover:text-blue-500"
+            className="flex cursor-pointer items-center gap-1 hover:text-blue-500"
             onClick={() => copyToClipboard(message.content)}
           >
             <Icons.copy size={12} /> 复制

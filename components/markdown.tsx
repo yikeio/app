@@ -14,10 +14,10 @@ export function PreCode(props: { children: any }) {
   const ref = useRef<HTMLPreElement>(null)
 
   return (
-    <pre ref={ref} className="relative group">
+    <pre ref={ref} className="group relative">
       <span
         title="复制"
-        className="absolute right-0 hidden p-2 m-2 text-xs text-gray-300 rotate-[270deg] rounded cursor-pointer group-hover:block hover:bg-slate-600 bg-slate-700/50"
+        className="absolute right-0 m-2 hidden rotate-[270deg] cursor-pointer rounded bg-slate-700/50 p-2 text-xs text-gray-300 hover:bg-slate-600 group-hover:block"
         onClick={() => {
           if (ref.current) {
             const code = ref.current.innerText

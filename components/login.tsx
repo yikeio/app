@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import toast from "react-hot-toast"
 
@@ -81,7 +81,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
           return count - 1
         })
       }, 1000)
-    } catch(e) {
+    } catch (e) {
       setCount(0)
       clearInterval(timerRef.current)
     }
@@ -102,8 +102,8 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
 
       const userRes = await checkUser()
       updateUser(userRes.result)
-      getConversationList(userRes.result.id) 
-    } catch(e) {}
+      getConversationList(userRes.result.id)
+    } catch (e) {}
   }
 
   return (
@@ -211,7 +211,10 @@ export function LoginDialog() {
 // 激活弹窗
 export function ActivateDialog() {
   const [inviteCode, setInviteCode] = useState("")
-  const [user, updateUser] = useUserStore((state) => [state.user, state.updateUser])
+  const [user, updateUser] = useUserStore((state) => [
+    state.user,
+    state.updateUser,
+  ])
   const [activateVisible, setActivateVisible] = useBillingStore((state) => [
     state.activateVisible,
     state.setActivateVisible,
@@ -223,18 +226,18 @@ export function ActivateDialog() {
       await activateUser({ userId: user.id, inviteCode })
       toast.success("激活成功")
       setActivateVisible(false)
-    } catch(e) {}
+    } catch (e) {}
   }
 
   async function tryActivate(referrer) {
     try {
       await activateUser({ userId: user.id, inviteCode: referrer })
       const userRes = await checkUser()
-      updateUser(userRes.result)      
+      updateUser(userRes.result)
       if (userRes.result.state === "activated") {
         toast.success("账号已激活")
       }
-    } catch(e) {
+    } catch (e) {
       setInviteCode(referrer)
       toast.error("账号未激活，请先激活!")
       setActivateVisible(true)
@@ -247,7 +250,7 @@ export function ActivateDialog() {
     if (user.state === "unactivated" && !activateVisible) {
       const referrer = localStorage.getItem("referrer")
       const token = localStorage.getItem("login_token")
-      
+
       // 登录了没激活，但是本地存储有邀请码，尝试激活
       if (user.id && token && referrer) {
         tryActivate(referrer)

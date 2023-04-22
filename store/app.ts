@@ -1,6 +1,3 @@
-import { getCurrentDate } from "@/utils"
-import { create } from "zustand"
-
 import {
   createConversation,
   deleteConversation,
@@ -8,7 +5,9 @@ import {
   getConversationMessageList,
 } from "@/api/conversations"
 import Locale from "@/locales"
+import { getCurrentDate } from "@/utils"
 import { ControllerPool, requestChatStream } from "@/utils/requests"
+import { create } from "zustand"
 
 export type Message = {
   id: string
@@ -90,7 +89,7 @@ interface ChatStore {
   ) => void
 
   // 答案是否正在加载
-  isLoadingAnswer: boolean;
+  isLoadingAnswer: boolean
   setIsLoadingAnswer: (isLoading: boolean) => void
 }
 
@@ -321,5 +320,5 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   isLoadingAnswer: false,
   setIsLoadingAnswer(isLoadingAnswer: boolean) {
     set(() => ({ isLoadingAnswer }))
-  }
+  },
 }))

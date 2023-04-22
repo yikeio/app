@@ -1,10 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Head from "next/head"
-import { useBillingStore, useUserStore } from "@/store"
+import { useUserStore } from "@/store"
 import { isMobileScreen } from "@/utils"
-import toast from "react-hot-toast"
 
 import { Chat } from "@/components/chat"
 import { ChatList } from "@/components/chat-list"

@@ -48,12 +48,12 @@ export function UserAvatar(props: { role: Message["role"] }) {
 
   if (props.role !== "user") {
     return (
-      <Avatar src="/logo.svg" className="w-10 h-10 rounded-full shrink-0" />
+      <Avatar src="/logo.svg" className="h-10 w-10 shrink-0 rounded-full" />
     )
   }
 
   return (
-    <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-inner shrink-0 shadow-gray-300">
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-inner shadow-gray-300">
       <Emoji unified={config.avatar} size={32} />
     </div>
   )
