@@ -25,7 +25,7 @@ export function ChatItem(props: {
 }) {
   return (
     <div
-      className={` border p-2 px-4 rounded-lg relative group ${
+      className={` group relative rounded-lg border p-2 px-4 ${
         props.selected ? "border-blue-500" : "border-slate-200"
       }`}
       onClick={props.onClick}
@@ -41,7 +41,7 @@ export function ChatItem(props: {
         ""
       ) : (
         <div
-          className="absolute top-0 right-0 p-1 m-2 text-red-500 transition-all rounded-full opacity-0 cursor-pointer group-hover:bg-red-200 group-hover:opacity-100"
+          className="absolute right-0 top-0 m-2 cursor-pointer rounded-full p-1 text-red-500 opacity-0 transition-all group-hover:bg-red-200 group-hover:opacity-100"
           onClick={props.onDelete}
         >
           <Icons.trash size={14} />
@@ -74,10 +74,9 @@ export function ChatList({
     state.removeSession,
   ])
 
-  const [currentCombo, setActivateVisible, setBillingModalVisible] =
+  const [currentCombo, setBillingModalVisible] =
     useBillingStore((state) => [
       state.currentCombo,
-      state.setActivateVisible,
       state.setBillingModalVisible,
     ])
   const [user] = useUserStore((state) => [state.user])
@@ -86,11 +85,6 @@ export function ChatList({
   const chatListRef = useRef<HTMLDivElement>(null)
 
   const handleCreateConversation = () => {
-    if (user.state === "unactivated") {
-      toast.error("账号未激活，请先激活!")
-      setActivateVisible(true)
-      return
-    }
     if (!currentCombo.is_available) {
       toast.error("当前无可用套餐，请购买套餐!")
       setBillingModalVisible(true)
@@ -154,7 +148,7 @@ export function ChatList({
       <Label className="text-gray-500">会话历史({sessions.length})</Label>
       <div
         ref={chatListRef}
-        className="flex flex-col flex-1 gap-4 h-auto overflow-y-auto"
+        className="flex h-auto flex-1 flex-col gap-4 overflow-y-auto"
         onClick={() => toggleSidebar()}
         onScroll={handleSideBarScroll}
       >
@@ -184,7 +178,7 @@ export function ChatList({
 
       <div className="flex flex-col gap-4">
         <Button
-          className="flex items-center justify-center w-full p-2 px-4 text-white bg-red-500 border-red-400 md:hidden"
+          className="flex w-full items-center justify-center border-red-400 bg-red-500 p-2 px-4 text-white md:hidden"
           onClick={() => {
             if (confirm(Locale.Home.DeleteChat)) {
               removeSession(currentIndex)
@@ -195,7 +189,7 @@ export function ChatList({
           <span>删除选中会话</span>
         </Button>
         <Button
-          className="flex items-center justify-center w-full gap-2"
+          className="flex w-full items-center justify-center gap-2"
           onClick={handleCreateConversation}
         >
           <Icons.plus size={22} />

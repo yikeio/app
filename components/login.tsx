@@ -226,32 +226,28 @@ export function ActivateDialog() {
     } catch(e) {}
   }
 
-  async function tryActivate() {
+  async function tryActivate(referrer) {
     try {
-      await activateUser({ userId: user.id, inviteCode })
+      await activateUser({ userId: user.id, inviteCode: referrer })
       const userRes = await checkUser()
       updateUser(userRes.result)
     } catch(e) {
-
+      setInviteCode(referrer)
+      toast.error("账号未激活，请先激活!")
+      setActivateVisible(true)
     } finally {
       localStorage.removeItem("referrer")
     }
   }
 
   useEffect(() => {
-    const { searchParams } = new URL(location.href)
-    if (searchParams.get("referrer")) {
-      localStorage.setItem("referrer", searchParams.get("referrer"))
-    }
-
     if (user.state === "unactivated" && !activateVisible) {
       const referrer = localStorage.getItem("referrer")
       const token = localStorage.getItem("login_token")
       
-      // 登录了没激活，但是有邀请码，尝试激活
+      // 登录了没激活，但是本地存储有邀请码，尝试激活
       if (user.id && token && referrer) {
-        setInviteCode(referrer)
-        tryActivate()
+        tryActivate(referrer)
       } else {
         toast.error("账号未激活，请先激活!")
         setActivateVisible(true)
