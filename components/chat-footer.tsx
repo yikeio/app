@@ -79,7 +79,7 @@ export default function ChatFooter(props) {
   }, [])
 
   return (
-    <div className="sticky bottom-0 p-6">
+    <div className="sticky bottom-0 py-6 px-10">
       <div className="relative flex flex-col items-center gap-2 md:flex-row">
         <Textarea
           ref={inputRef}
@@ -93,7 +93,7 @@ export default function ChatFooter(props) {
           autoFocus={!props.showSideBar}
         />
         <Button
-          className="flex items-center gap-2 -ml-28"
+          className="flex items-center gap-2 w-full md:w-auto"
           onClick={onUserSubmit}
         >
           <Icons.telegram size={20} />
