@@ -19,7 +19,7 @@ export default function ChatHeader(props) {
   const [mode, setMode] = useActionsStore(state => [state.mode, state.setMode])
 
   const switchMode = () => {
-    autoScrollBottomRef.current = true;
+    autoScrollBottomRef.current = false;
     setMode('select');
   }
 
@@ -61,7 +61,6 @@ export default function ChatHeader(props) {
             onClick={() => toggleSidebar?.()}
           >
             <Icons.menu size={22} />
-            <span>会话列表</span>
           </button>
         </div>
 
