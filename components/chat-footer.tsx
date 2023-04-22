@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Locale from "@/locales"
 import {
   SubmitKey,
+  useActionsStore,
   useBillingStore,
   useChatStore,
   useSettingsStore,
@@ -9,6 +10,7 @@ import {
 } from "@/store"
 import { isMobileScreen } from "@/utils"
 import { ControllerPool } from "@/utils/requests"
+import classNames from "classnames"
 import toast from "react-hot-toast"
 
 import { Icons } from "@/components/icons"
@@ -32,6 +34,14 @@ export default function ChatFooter(props) {
     state.currentCombo,
     state.setBillingModalVisible,
   ])
+
+  const [mode, setMode, selectedMessages, setExportImageVisible] =
+    useActionsStore((state) => [
+      state.mode,
+      state.setMode,
+      state.selectedMessages,
+      state.setExportImageVisible,
+    ])
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key !== "Enter") return false
@@ -79,8 +89,15 @@ export default function ChatFooter(props) {
   }, [])
 
   return (
-    <div className="sticky bottom-0 py-6 px-10">
-      <div className="relative flex flex-col items-center gap-2 md:flex-row">
+    <div className="sticky bottom-0 pt-4 pb-10 px-10">
+      <div
+        className={classNames(
+          "relative flex flex-col items-center gap-2 md:flex-row",
+          {
+            hidden: mode !== "normal",
+          }
+        )}
+      >
         <Textarea
           ref={inputRef}
           className="flex-1 w-full bg-white"
@@ -98,6 +115,21 @@ export default function ChatFooter(props) {
         >
           <Icons.telegram size={20} />
           <span>发送</span>
+        </Button>
+      </div>
+      <div
+        className={classNames("flex gap-4 justify-center", {
+          hidden: mode !== "select",
+        })}
+      >
+        <Button
+          disabled={!selectedMessages.length}
+          onClick={() => setExportImageVisible(true)}
+        >
+          导出图片
+        </Button>
+        <Button variant="destructive" onClick={() => setMode("normal")}>
+          取消
         </Button>
       </div>
     </div>

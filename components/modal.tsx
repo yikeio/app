@@ -7,6 +7,7 @@ interface ModalProps {
   children: ReactNode
   noPadding?: boolean
   size?: "xs" | "sm" | "md" | "lg" | "xl"
+  closeOnClickMask?: boolean
 }
 
 export default function Modal({
@@ -15,6 +16,7 @@ export default function Modal({
   children,
   size = "md",
   noPadding = false,
+  closeOnClickMask = false,
 }: ModalProps) {
   let panelClassNames =
     "inline-block w-full my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl -mt-20"
@@ -50,7 +52,10 @@ export default function Modal({
             leaveFrom="opacity-100"
             leaveTo="opacity-"
           >
-            <div className="fixed inset-0 bg-black/40" />
+            <div
+              className="fixed inset-0 bg-black/40"
+              onClick={closeOnClickMask ? onClose : undefined}
+            />
           </Transition.Child>
           <span
             className="inline-block h-screen align-middle"

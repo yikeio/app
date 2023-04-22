@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import ChatFooter from "./chat-footer"
 import ChatHeader from "./chat-header"
 import MessageBody from "./message-body"
+import ExportImage from "./export-image"
 
 export function Chat(props: {
   showSideBar: boolean
@@ -45,7 +46,7 @@ export function Chat(props: {
 
       {/* 对话列表 */}
       <div
-        className={"flex flex-col flex-1 gap-2 p-10 overflow-y-auto"}
+        className={"flex flex-col flex-1 gap-2 py-6 px-10 overflow-y-auto"}
         ref={chatBodyRef}
         onScroll={onChatBodyScroll}
         onTouchStart={() => inputRef.current?.blur()}
@@ -53,6 +54,7 @@ export function Chat(props: {
         {isLoadingMessage && <div className="block animate-spin" />}
         {session.messages.map((message) => (
           <div
+            key={message.id}
             className={classNames(
               "flex flex-col-reverse md:flex-row items-start gap-2 md:gap-4 relative",
               {
@@ -83,6 +85,8 @@ export function Chat(props: {
         inputRef={inputRef}
         autoScrollBottomRef={autoScrollBottomRef}
       />
+
+      <ExportImage />
     </div>
   )
 }

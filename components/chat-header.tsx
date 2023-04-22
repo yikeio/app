@@ -19,9 +19,8 @@ export default function ChatHeader(props) {
   const [mode, setMode] = useActionsStore(state => [state.mode, state.setMode])
 
   const switchMode = () => {
-    const nextMode = mode === 'normal' ? 'select' :'normal';
-    autoScrollBottomRef.current = nextMode === 'normal' ? true : false;
-    setMode(nextMode);
+    autoScrollBottomRef.current = true;
+    setMode('select');
   }
 
   // 更新对话
@@ -36,7 +35,7 @@ export default function ChatHeader(props) {
   }
 
   const handleDelete = () => {
-    const result = confirm('确认删除？')
+    const result = confirm('确认删除当前会话？')
     if (result) {
       removeSession(currentIndex)
     }
