@@ -28,6 +28,9 @@ export function commonFetch(url: string, options: Record<string, any> = {}) {
           reject({ result, status: res.status })
         })
       }
+    }).catch(() => {
+      toast.error("网络错误")
+      reject({ result: '网络错误', status: 500 })
     })
   })
 }
