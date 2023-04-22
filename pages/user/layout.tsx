@@ -17,9 +17,9 @@ export default function UserLayout(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SecondMenubar className="hidden lg:block">
-        <Sidebar></Sidebar>
+        <Sidebar />
       </SecondMenubar>
-      <main className="col-span-3 lg:col-span-5">{props.children}</main>
+      <main className="flex-1">{props.children}</main>
     </Layout>
   )
 }

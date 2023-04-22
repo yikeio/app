@@ -112,6 +112,10 @@ export async function getReferrals(id: any) {
   return commonFetch(`users/${id}/referrals`)
 }
 
+export async function getPayments(id: any) {
+  return commonFetch(`users/${id}/payments`)
+}
+
 /**
  * 修改用户设置
  */

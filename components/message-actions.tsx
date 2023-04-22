@@ -2,6 +2,7 @@ import { Message, useChatStore } from "@/store"
 import { copyToClipboard, parseTime } from "@/utils"
 import { ControllerPool } from "@/utils/requests"
 
+import { formatTimeAgo } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 
 export default function MessageActions({ message, inputRef }) {
@@ -24,7 +25,7 @@ export default function MessageActions({ message, inputRef }) {
     <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100">
       {!isUser && !message.preview && (
         <div className="text-xs text-gray-400">
-          {parseTime(message.date.toLocaleString())}
+          {formatTimeAgo(message.date)}
         </div>
       )}
 

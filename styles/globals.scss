@@ -6,19 +6,19 @@
 @import "./highlight.css";
 
 h1 {
-  @apply text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl;
+  @apply text-3xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl;
 }
 
 h2 {
-  @apply pb-2 mt-10 text-3xl font-semibold tracking-tight transition-colors scroll-m-20 first:mt-0;
+  @apply pb-2 mt-10 text-2xl font-semibold tracking-tight transition-colors scroll-m-20 first:mt-0;
 }
 
 h3 {
-  @apply mt-8 text-2xl font-semibold tracking-tight scroll-m-20;
+  @apply mt-8 text-xl font-semibold tracking-tight scroll-m-20;
 }
 
 h4 {
-  @apply mb-4 text-xl font-semibold scroll-m-20;
+  @apply mb-4 text-lg font-semibold scroll-m-20;
 }
 
 p {
