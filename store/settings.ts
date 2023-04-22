@@ -1,6 +1,5 @@
-import { create } from "zustand"
-
 import { getListUserSettings, updateListUserSettings } from "@/api/user"
+import { create } from "zustand"
 
 export enum SubmitKey {
   Enter = "Enter",

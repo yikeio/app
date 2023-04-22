@@ -89,7 +89,7 @@ export default function ChatFooter(props) {
   }, [])
 
   return (
-    <div className="sticky bottom-0 pt-4 pb-10 px-10">
+    <div className="sticky bottom-0 px-10 pb-10 pt-4">
       <div
         className={classNames(
           "relative flex flex-col items-start gap-2 md:flex-row",
@@ -100,7 +100,7 @@ export default function ChatFooter(props) {
       >
         <Textarea
           ref={inputRef}
-          className="flex-1 w-full h-auto bg-white"
+          className="h-auto w-full flex-1 bg-white"
           placeholder={Locale.Chat.Input(config.chat_submit_key)}
           onChange={(e) => setUserInput(e.currentTarget.value)}
           onFocus={() => (autoScrollBottomRef.current = true)}
@@ -111,7 +111,7 @@ export default function ChatFooter(props) {
           autoFocus={!props.showSideBar}
         />
         <Button
-          className="flex items-center gap-2 w-full md:w-auto"
+          className="flex w-full items-center gap-2 md:w-auto"
           onClick={onUserSubmit}
         >
           <Icons.telegram size={12} />

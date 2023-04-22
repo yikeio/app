@@ -34,7 +34,7 @@ export default function MessageBody({ message, inputRef }) {
   }, [isLoadingAnswer, session.messages])
 
   return (
-    <div className="relative max-w-[90%] md:max-w-[75%] flex flex-col gap-2 overflow-hidden group">
+    <div className="group relative flex max-w-[90%] flex-col gap-2 overflow-hidden md:max-w-[75%]">
       <div className="rounded-lg">
         <div
           className={

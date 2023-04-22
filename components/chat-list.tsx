@@ -75,11 +75,10 @@ export function ChatList({
     state.removeSession,
   ])
 
-  const [currentCombo, setBillingModalVisible] =
-    useBillingStore((state) => [
-      state.currentCombo,
-      state.setBillingModalVisible,
-    ])
+  const [currentCombo, setBillingModalVisible] = useBillingStore((state) => [
+    state.currentCombo,
+    state.setBillingModalVisible,
+  ])
   const [user] = useUserStore((state) => [state.user])
 
   const [isLoadingMore, setIsLoadingMore] = useState(false)

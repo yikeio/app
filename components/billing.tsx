@@ -93,7 +93,7 @@ export function BillingDialog() {
         <div className="flex flex-col items-center gap-6">
           <h1 className="text-2xl font-bold">支付成功</h1>
           <svg
-            className="w-16 h-16 text-green-600"
+            className="h-16 w-16 text-green-600"
             viewBox="0 0 1024 1024"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +118,7 @@ export function BillingDialog() {
           <img
             src={paymentDetail.context.qrcode}
             alt=""
-            className="w-32 h-32"
+            className="h-32 w-32"
           />
           <div>请使用微信扫码支付</div>
         </div>
@@ -134,11 +134,11 @@ export function BillingDialog() {
         <div>
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-3xl font-bold">购买套餐</h1>
-            <div className="flex flex-col lg:flex-row gap-2 md:gap-4 lg:gap-6 justify-evenly">
+            <div className="flex flex-col justify-evenly gap-2 md:gap-4 lg:flex-row lg:gap-6">
               {payableQuotas.map((item: any, index: number) => (
                 <div
                   key={index}
-                  className="flex flex-col gap-4 p-6 border-2 border-blue-500 rounded-lg shadow w-64"
+                  className="flex w-64 flex-col gap-4 rounded-lg border-2 border-blue-500 p-6 shadow"
                 >
                   <div className="text-2xl font-bold">{item.title}</div>
                   <div className="flex items-center gap-2 text-sm">

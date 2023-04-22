@@ -9,7 +9,7 @@ const STORE_PARAMS = ["referrer"]
 export const useStorageParams = () => {
   useEffect(() => {
     const { searchParams } = new URL(location.href)
-    STORE_PARAMS.forEach(param => {
+    STORE_PARAMS.forEach((param) => {
       if (searchParams.get(param)) {
         localStorage.setItem(param, searchParams.get(param))
       }

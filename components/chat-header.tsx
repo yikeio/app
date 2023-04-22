@@ -1,6 +1,6 @@
 import { updateConversation } from "@/api/conversations"
 import Locale from "@/locales"
-import { useChatStore, useActionsStore } from "@/store"
+import { useActionsStore, useChatStore } from "@/store"
 import { Edit2, FileDown, MessageSquare, Share2, Trash2 } from "lucide-react"
 
 import { Icons } from "@/components/icons"
@@ -9,18 +9,22 @@ import { Label } from "./ui/label"
 
 export default function ChatHeader(props) {
   const { autoScrollBottomRef, toggleSidebar } = props
-  const [session, currentIndex, updateCurrentSession, removeSession] = useChatStore((state) => [
-    state.currentSession(),
-    state.currentSessionIndex,
-    state.updateCurrentSession,
-    state.removeSession,
+  const [session, currentIndex, updateCurrentSession, removeSession] =
+    useChatStore((state) => [
+      state.currentSession(),
+      state.currentSessionIndex,
+      state.updateCurrentSession,
+      state.removeSession,
+    ])
+
+  const [mode, setMode] = useActionsStore((state) => [
+    state.mode,
+    state.setMode,
   ])
 
-  const [mode, setMode] = useActionsStore(state => [state.mode, state.setMode])
-
   const switchMode = () => {
-    autoScrollBottomRef.current = false;
-    setMode('select');
+    autoScrollBottomRef.current = false
+    setMode("select")
   }
 
   // 更新对话
@@ -35,14 +39,14 @@ export default function ChatHeader(props) {
   }
 
   const handleDelete = () => {
-    const result = confirm('确认删除当前会话？')
+    const result = confirm("确认删除当前会话？")
     if (result) {
       removeSession(currentIndex)
     }
   }
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 bg-white border-b">
+    <div className="flex items-center justify-between border-b bg-white px-6 py-4">
       <div
         className="items-center gap-4 md:flex"
         onClick={() => toggleSidebar?.()}
@@ -66,33 +70,33 @@ export default function ChatHeader(props) {
 
         <Button
           variant="outline"
-          className="flex items-center justify-center w-8 h-8 p-1"
+          className="flex h-8 w-8 items-center justify-center p-1"
           title="重命名"
           onClick={handleUpdate}
         >
-          <Edit2 className="w-4 h-4" />
+          <Edit2 className="h-4 w-4" />
         </Button>
 
         {/* 导出聊天内容 */}
         <Button
           variant="outline"
-          className="flex items-center justify-center w-8 h-8 p-1"
+          className="flex h-8 w-8 items-center justify-center p-1"
           onClick={switchMode}
         >
-          <FileDown className="w-4 h-4" />
+          <FileDown className="h-4 w-4" />
         </Button>
 
         <Button
           variant="outline"
-          className="flex items-center justify-center w-8 h-8 p-1"
+          className="flex h-8 w-8 items-center justify-center p-1"
           onClick={() => null} // 分享图片？
         >
-          <Share2 className="w-4 h-4" />
+          <Share2 className="h-4 w-4" />
         </Button>
 
         <Button
           variant="outline"
-          className="flex items-center justify-center w-8 h-8 p-1"
+          className="flex h-8 w-8 items-center justify-center p-1"
           title="重命名"
           onClick={handleDelete}
         >

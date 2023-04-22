@@ -43,7 +43,7 @@ export async function requestChatStream(
         const done = !content || content.done
         options?.onMessage(responseText, false)
         ControllerPool.isStreaming = true
-        
+
         if (done) {
           break
         }
