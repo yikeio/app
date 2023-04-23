@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { createTokens, getAuthRedirect } from "@/api/auth"
+import { getAuthRedirect } from "@/api/auth"
 import GitHubIcon from "@/icons/github.svg"
 import GoogleIcon from "@/icons/google.svg"
 import toast from "react-hot-toast"
@@ -34,18 +34,6 @@ const useUserLogin = () => {
   const [updateUser] = useUserStore((state) => [state.updateUser])
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    const code = urlParams.get("code")
-    const state = urlParams.get("state")
-    // 走 oauth 登陆
-    if (code && state) {
-      createTokens({ code, state }).then((loginRes) => {
-        localStorage.setItem("login_token", loginRes.result.value)
-        toast.success("登录成功")
-        window.location.href = "/chat"
-      })
-      return
-    }
     checkUser()
       .then((res) => {
         updateUser(res.result)

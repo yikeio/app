@@ -23,6 +23,7 @@ export default function UserIndexPage() {
     ])
 
   useEffect(() => {
+    if (!user.id) return
     getUserQuotaInfo(user.id)
   }, [user])
 
