@@ -149,26 +149,24 @@ export function ChatList({
         onClick={() => toggleSidebar()}
         onScroll={handleSideBarScroll}
       >
-        <div>
-          <div className="flex flex-col gap-4 pb-4">
-            {sessions.map((item, i) => (
-              <ChatItem
-                id={item.id}
-                title={item.title}
-                time={item.updated_at}
-                count={item.messages_count || item.messages.length || 0}
-                key={item.id}
-                selected={i === currentIndex}
-                onClick={() => selectSession(i)}
-                onDelete={(e) => {
-                  e.stopPropagation()
-                  if (!isMobileScreen() || confirm(Locale.Home.DeleteChat)) {
-                    removeSession(i)
-                  }
-                }}
-              />
-            ))}
-          </div>
+        <div className="flex flex-col gap-4 pb-4">
+          {sessions.map((item, i) => (
+            <ChatItem
+              id={item.id}
+              title={item.title}
+              time={item.updated_at}
+              count={item.messages_count || item.messages.length || 0}
+              key={item.id}
+              selected={i === currentIndex}
+              onClick={() => selectSession(i)}
+              onDelete={(e) => {
+                e.stopPropagation()
+                if (!isMobileScreen() || confirm(Locale.Home.DeleteChat)) {
+                  removeSession(i)
+                }
+              }}
+            />
+          ))}
         </div>
         {isLoadingMore && <div className="animate-spin"></div>}
       </div>
