@@ -25,7 +25,7 @@ export function commonFetch(url: string, options: Record<string, any> = {}) {
           })
         } else {
           res.json().then((result: any) => {
-            toast.error(result.message)
+            toast.error(res.status == 401 ? "用户身份过期" : result.message)
             reject({ result, status: res.status })
           })
         }
