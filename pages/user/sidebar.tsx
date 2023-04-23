@@ -10,7 +10,7 @@ const menus = [
   { icon: CreditCard, label: "我的订单", href: "/user/payments" },
 ]
 
-export function Sidebar({ className = "" }) {
+export default function Sidebar({ className = "" }) {
   return (
     <div className={cn("pb-12", className)}>
       <div className="flex flex-col gap-2 space-y-4">

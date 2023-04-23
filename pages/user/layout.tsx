@@ -2,7 +2,7 @@ import Head from "next/head"
 
 import { Layout } from "@/components/layout"
 import SecondMenubar from "@/components/second-menubar"
-import { Sidebar } from "./sidebar"
+import Sidebar from "./sidebar"
 
 export default function UserLayout(props) {
   return (
