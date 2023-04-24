@@ -10,7 +10,9 @@ import Transition from "@/components/transition"
 import "@/styles/globals.scss"
 
 export default function App({ Component, pageProps }: AppProps) {
-  const isStaticPage = ["Privacy", "Terms"].includes(Component.name)
+  const isStaticPage = ["Privacy", "Terms", "OAuthCallback"].includes(
+    Component.name
+  )
 
   useStorageParams()
 
