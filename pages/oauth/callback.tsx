@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { createTokens } from "@/api/auth"
 import toast from "react-hot-toast"
 
-export default function IndexPage() {
+export default function OAuthCallback() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const code = urlParams.get("code")
@@ -19,5 +19,5 @@ export default function IndexPage() {
       window.location.href = "/"
     }
   }, [])
-  return <>redirecting...</>
+  return <p>redirecting...</p>
 }

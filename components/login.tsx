@@ -23,8 +23,6 @@ import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 
-const authWhiteList = ["/oauth/callback"]
-
 const useUserLogin = () => {
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [getConversationList] = useChatStore((state) => [
@@ -43,9 +41,7 @@ const useUserLogin = () => {
         }
       })
       .catch(() => {
-        if (!authWhiteList.includes(location.pathname)) {
-          setLoginModalVisible(true)
-        }
+        setLoginModalVisible(true)
         localStorage.removeItem("login_token")
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -220,20 +216,10 @@ export function LoginDialog() {
   ])
 
   useEffect(() => {
-    if (
-      !user.id &&
-      !localStorage.getItem("login_token") &&
-      !authWhiteList.includes(location.pathname)
-    ) {
-      setLoginModalVisible(true)
-    }
+    if (!user.id) setLoginModalVisible(true)
 
-    if (
-      user.id &&
-      localStorage.getItem("login_token") &&
-      user.state !== "unactivated"
-    ) {
-      // 获取用户的套餐信息
+    // 获取用户的套餐信息
+    if (user.id && user.state !== "unactivated") {
       getUserQuotaInfo(user.id)
     }
   }, [user])
