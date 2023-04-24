@@ -54,6 +54,7 @@
     "dayjs": "^1.11.7",
     "emoji-picker-react": "^4.4.8",
     "framer-motion": "^10.12.4",
+    "html2canvas": "^1.4.1",
     "lucide-react": "0.105.0-alpha.4",
     "next": "^13.3.0",
     "next-pwa": "^5.6.0",

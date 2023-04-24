@@ -6,6 +6,7 @@ interface ModalProps {
   show: boolean
   children: ReactNode
   noPadding?: boolean
+  classNames?: string
   size?: "xs" | "sm" | "md" | "lg" | "xl"
   closeOnClickMask?: boolean
 }
@@ -14,6 +15,7 @@ export default function Modal({
   onClose,
   show = false,
   children,
+  classNames,
   size = "md",
   noPadding = false,
   closeOnClickMask = false,
@@ -33,6 +35,9 @@ export default function Modal({
     panelClassNames = panelClassNames + " max-w-2xl"
   } else if (size === "xl") {
     panelClassNames = panelClassNames + " max-w-4xl"
+  }
+  if (classNames) {
+    panelClassNames = `${panelClassNames} ${classNames}`
   }
 
   return (
