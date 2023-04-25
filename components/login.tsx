@@ -272,6 +272,8 @@ export function ActivateDialog() {
     try {
       await activateUser({ userId: user.id, inviteCode })
       toast.success("激活成功")
+      const userRes = await checkUser()
+      updateUser(userRes.result)
       setActivateVisible(false)
       // 激活成功后，拿到用户设置信息
       getConversationList(user.id)
@@ -279,7 +281,7 @@ export function ActivateDialog() {
     } catch (e) {}
   }
 
-  async function tryActivate(referrer) {
+  async function tryActivate(referrer: string) {
     try {
       await activateUser({ userId: user.id, inviteCode: referrer })
       const userRes = await checkUser()
