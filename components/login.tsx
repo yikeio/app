@@ -23,33 +23,6 @@ import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 
-const useUserLogin = () => {
-  const [loginModalVisible, setLoginModalVisible] = useState(false)
-  const [getConversationList] = useChatStore((state) => [
-    state.getConversationList,
-  ])
-  const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
-  const [updateUser] = useUserStore((state) => [state.updateUser])
-
-  useEffect(() => {
-    checkUser()
-      .then((res) => {
-        updateUser(res.result)
-        if (res.result.state !== "unactivated") {
-          getConversationList(res.result.id)
-          getUserSettings(res.result.id)
-        }
-      })
-      .catch(() => {
-        setLoginModalVisible(true)
-        localStorage.removeItem("login_token")
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return { loginModalVisible, setLoginModalVisible }
-}
-
 export function PhoneLoginForm({ closeModal }: { closeModal: Function }) {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [code, setCode] = useState("")
@@ -209,21 +182,52 @@ export function OAuthLoginButtons() {
 }
 
 export function LoginDialog() {
-  const { loginModalVisible, setLoginModalVisible } = useUserLogin()
-  const [user] = useUserStore((state) => [state.user])
+  const [user, updateUser, loginModalVisible, setLoginModalVisible] =
+    useUserStore((state) => [
+      state.user,
+      state.updateUser,
+      state.loginModalVisible,
+      state.setLoginModalVisible,
+    ])
   const [getUserQuotaInfo] = useBillingStore((state) => [
     state.getUserQuotaInfo,
   ])
+  const [getConversationList] = useChatStore((state) => [
+    state.getConversationList,
+  ])
+  const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
 
   useEffect(() => {
-    if (!user.id && !localStorage.getItem("login_token"))
+    checkUser()
+      .then((res) => {
+        updateUser(res.result)
+        if (res.result.state !== "unactivated") {
+          getConversationList(res.result.id)
+          getUserSettings(res.result.id)
+        }
+      })
+      .catch(() => {
+        setLoginModalVisible(true)
+        localStorage.removeItem("login_token")
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (!user.id && !localStorage.getItem("login_token")) {
       setLoginModalVisible(true)
+    }
+
+    // 如果用户已经登录，关闭登录弹窗
+    if (user.id && localStorage.getItem("login_token") && loginModalVisible) {
+      setLoginModalVisible(false)
+    }
 
     // 获取用户的套餐信息
     if (user.id && user.state !== "unactivated") {
       getUserQuotaInfo(user.id)
     }
-  }, [user])
+  }, [user, loginModalVisible])
 
   return (
     <Modal
