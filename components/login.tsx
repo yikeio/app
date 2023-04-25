@@ -216,7 +216,8 @@ export function LoginDialog() {
   ])
 
   useEffect(() => {
-    if (!user.id) setLoginModalVisible(true)
+    if (!user.id && !localStorage.getItem("login_token"))
+      setLoginModalVisible(true)
 
     // 获取用户的套餐信息
     if (user.id && user.state !== "unactivated") {
