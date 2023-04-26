@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-import Head from "next/head"
 import {
   SubmitKey,
   useBillingStore,
@@ -11,6 +10,7 @@ import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react"
 import toast from "react-hot-toast"
 
 import { UserAvatar } from "@/components/avatar"
+import Head from "@/components/head"
 import { Layout } from "@/components/layout"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -62,12 +62,7 @@ export default function Setting() {
 
   return (
     <Layout>
-      <Head>
-        <title>设置</title>
-        <meta name="description" content="一刻AI助手" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Head title="设置" />
       <div className="flex-1">
         <section className="mx-auto max-w-5xl p-8">
           <div className="flex items-center justify-between">

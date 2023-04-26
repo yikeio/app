@@ -25,7 +25,7 @@ export default function MessageActions({ message, inputRef }) {
     <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100">
       {!isUser && !message.preview && (
         <div className="text-xs text-gray-400">
-          {formatTimeAgo(message.date)}
+          {formatTimeAgo(message.date || new Date())}
         </div>
       )}
 

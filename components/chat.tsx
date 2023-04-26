@@ -27,10 +27,12 @@ export function Chat(props: {
     autoScrollBottomRef,
   } = useLazyLoadMessage()
 
-  const { mode, selectedMessages, handleSelect } = useSelectMode()
+  const { mode, selectedMessages, toggleSelectMessage } = useSelectMode()
 
-  // TODO
-  const { xxx } = usePrompt()
+  const hasChecked = (message: any) => selectedMessages.includes(message)
+
+  // // TODO
+  // const { xxx } = usePrompt()
 
   return (
     <div className="flex max-h-screen flex-1 flex-col overflow-y-auto bg-slate-100">
@@ -41,7 +43,7 @@ export function Chat(props: {
 
       {/* 对话列表 */}
       <div
-        className={"flex flex-1 flex-col gap-2 overflow-y-auto px-10 py-6"}
+        className={"flex flex-1 flex-col overflow-y-auto py-6"}
         ref={chatBodyRef}
         onScroll={onChatBodyScroll}
         onTouchStart={() => inputRef.current?.blur()}
@@ -51,26 +53,33 @@ export function Chat(props: {
           <div
             key={message.id}
             className={classNames(
-              "flex flex-col-reverse md:flex-row items-start gap-2 md:gap-4 relative",
+              "flex flex-col-reverse md:flex-row items-start gap-2 md:gap-4 relative p-4 z-10",
               {
                 "items-end md:items-start md:justify-end":
                   message.role === "user",
                 "items-start md:flex-row-reverse md:justify-end":
                   message.role !== "user",
+                "bg-slate-200/60": hasChecked(message),
+                "pl-10": mode === "select",
               }
             )}
           >
             <MessageBody message={message} inputRef={inputRef} />
             <UserAvatar role={message.role} />
             {mode === "select" && (
-              <Checkbox
-                onCheckedChange={(v: boolean) => handleSelect(v, message)}
-                checked={selectedMessages.some((m) => m.id === message.id)}
-                className={classNames("absolute", {
-                  "top-3 -right-6": message.role === "user",
-                  "top-3 -left-6": message.role !== "user",
-                })}
-              />
+              <div
+                className={classNames(`absolute inset-0 p-4 z-50`)}
+                onClick={() => toggleSelectMessage(message)}
+              >
+                <Checkbox
+                  onCheckedChange={(v: boolean) => toggleSelectMessage(message)}
+                  checked={hasChecked(message)}
+                  className={classNames("rounded-full", {
+                    "right-0": message.role === "user",
+                    "left-0": message.role !== "user",
+                  })}
+                />
+              </div>
             )}
           </div>
         ))}

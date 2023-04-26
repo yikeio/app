@@ -1,17 +1,9 @@
-import Head from "next/head"
+import Head from "@/components/head"
 
 export default function Privacy() {
   return (
     <>
-      <Head>
-        <title>Privacy Policy</title>
-        <meta
-          name="description"
-          content="Yike is a social media platform for sharing your thoughts and ideas."
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Head title="Privacy Policy" />
       <strong>Privacy Policy</strong>
       <p>
         kyrie built the yike app as a Free app. This SERVICE is provided by

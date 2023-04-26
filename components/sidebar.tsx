@@ -12,7 +12,7 @@ export function Sidebar(props) {
   const [closed, setClosed] = useState(isMobileScreen())
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <Button
         className="absolute inset-y-1/3 -right-10 h-10 w-10 p-2 md:hidden"
         onClick={() => setClosed(!closed)}
@@ -21,7 +21,7 @@ export function Sidebar(props) {
       </Button>
       <aside
         className={classNames(
-          "flex flex-col items-center flex-shrink-0 h-screen gap-6 px-2 py-4 bg-white border-r border-r-slate-200 dark:border-b-slate-700 dark:bg-slate-900",
+          "flex flex-col items-center flex-shrink-0 h-full min-h-screen gap-6 px-2 py-4 bg-white border-r border-r-slate-200 dark:border-b-slate-700 dark:bg-slate-900",
           props.className,
           {
             hidden: closed,
