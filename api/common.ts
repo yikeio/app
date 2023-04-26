@@ -2,7 +2,7 @@ import toast from "react-hot-toast"
 
 export const API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN
 
-export function commonFetch(url: string, options: Record<string, any> = {}) {
+export function request(url: string, options: Record<string, any> = {}) {
   const token = localStorage.getItem("login_token")
 
   options.headers = {

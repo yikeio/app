@@ -4,6 +4,8 @@ import { useUserStore } from "@/store"
 
 import { formatDatetime } from "@/lib/utils"
 import EmptyState from "@/components/empty-state"
+import { Button } from "@/components/ui/button"
+import LinkButton from "@/components/ui/link-button"
 import UserLayout from "./layout"
 
 export default function UserInvitationPage() {
@@ -60,35 +62,40 @@ export default function UserInvitationPage() {
       <div className="p-8">
         <div className="mt-4 ">
           <div>
-            <div className="flex justify-between">
-              <h2>我的订单</h2>
+            <div className="flex justify-between pb-4">
+              <div className="flex items-center gap-4">
+                <h2 className="py-0">我的订单</h2>
+                <LinkButton href="/user/gift-cards" size="sm">
+                  礼品卡激活
+                </LinkButton>
+              </div>
               {payments.length && (
-                <div className="text-gray-500 text-sm">
+                <div className="text-sm text-gray-500">
                   共 {payments.length} 笔支付订单
                 </div>
               )}
             </div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="flex items-center text-sm text-gray-500 font-bold">
-              <div className="w-1/4 py-2 px-4">订单号</div>
-              <div className="w-1/4 py-2 px-4">内容</div>
-              <div className="w-1/4 py-2 px-4">注册时间</div>
-              <div className="w-1/4 py-2 px-4">状态</div>
+          <div className="rounded-lg bg-white p-6 shadow">
+            <div className="flex items-center text-sm font-bold text-gray-500">
+              <div className="w-1/4 px-4 py-2">订单号</div>
+              <div className="w-1/4 px-4 py-2">内容</div>
+              <div className="w-1/4 px-4 py-2">注册时间</div>
+              <div className="w-1/4 px-4 py-2">状态</div>
             </div>
             {payments.length <= 0 && <EmptyState className="min-h-[200px]" />}
             <div>
               {payments.map((payment) => (
                 <div
                   key={payment.id}
-                  className="flex items-center text-sm text-gray-500 border-t"
+                  className="flex items-center border-t text-sm text-gray-500"
                 >
-                  <div className="w-1/4 py-3 px-4">{payment.number}</div>
-                  <div className="w-1/4 py-3 px-4">{payment.title}</div>
-                  <div className="w-1/4 py-3 px-4">
+                  <div className="w-1/4 px-4 py-3">{payment.number}</div>
+                  <div className="w-1/4 px-4 py-3">{payment.title}</div>
+                  <div className="w-1/4 px-4 py-3">
                     {formatDatetime(payment.created_at)}
                   </div>
-                  <div className="w-1/4 py-3 px-4">{paymentState(payment)}</div>
+                  <div className="w-1/4 px-4 py-3">{paymentState(payment)}</div>
                 </div>
               ))}
             </div>

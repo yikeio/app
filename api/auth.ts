@@ -1,4 +1,4 @@
-import { API_DOMAIN, commonFetch } from "./common"
+import { API_DOMAIN, request } from "./common"
 
 /**
  * 获取跳转地址
@@ -12,7 +12,7 @@ export function getAuthRedirect(driver: string) {
  * 创建authToken
  */
 export async function createTokens(data: any) {
-  return commonFetch(`auth/tokens:via-code`, {
+  return request(`auth/tokens:via-code`, {
     method: "POST",
     body: JSON.stringify(data),
   })
