@@ -1,5 +1,6 @@
 import { Fragment, ReactNode } from "react"
 import { Dialog, Transition } from "@headlessui/react"
+import cn from "classnames"
 
 interface ModalProps {
   onClose: () => void
@@ -37,7 +38,7 @@ export default function Modal({
     panelClassNames = panelClassNames + " max-w-4xl"
   }
   if (classNames) {
-    panelClassNames = `${panelClassNames} ${classNames}`
+    panelClassNames = cn(panelClassNames, classNames)
   }
 
   return (

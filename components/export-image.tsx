@@ -55,79 +55,87 @@ export default function ExportImage() {
       show={exportImageVisible}
       key={modelId}
       closeOnClickMask
-      classNames="mt-2"
+      classNames="mt-2 p-0 bg-white/0 shadow-transparent"
       onClose={() => setExportImageVisible(false)}
     >
       <div className="flex min-h-[200px] flex-col items-center justify-center">
         {loading && <LoadingIcon fill="#000" />}
-        <canvas ref={canvasRef} height="0" className="max-w-full"></canvas>
-        {/* <Button
-          onClick={() => {
-            drawImage(chatRef.current)
-          }}
-        >
-          下载图片
-        </Button> */}
+        <canvas
+          ref={canvasRef}
+          height="0"
+          className="max-h-[80vh] max-w-full"
+        ></canvas>
+        <p className="rounded-full bg-slate-300/40 px-4 text-center text-gray-100">
+          右键复制图片或保存到本地
+        </p>
       </div>
     </Modal>,
     <div
       ref={chatRef}
       key={messagesId}
-      className="fixed -z-10 flex max-w-xl flex-col gap-6 overflow-auto bg-slate-100 p-4"
+      className="fixed -z-10 max-w-xl overflow-auto bg-slate-100"
     >
-      {[...selectedMessages]
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        .map((message) => (
-          <div
-            key={message.id}
-            className={classNames(
-              "flex flex-col-reverse md:flex-row items-start gap-2 md:gap-4 relative",
-              {
-                "items-end md:items-start md:justify-end":
-                  message.role === "user",
-                "items-start md:flex-row-reverse md:justify-end":
-                  message.role !== "user",
-              }
-            )}
-          >
-            <div className="group relative flex max-w-[90%] flex-col gap-2 overflow-hidden md:max-w-[75%]">
-              <div className="rounded-lg">
-                <div
-                  className={
-                    `px-4 py-1 rounded-xl text-gray-700 relative ` +
-                    (message.role === "user"
-                      ? "bg-blue-200 justify-self-end rounded-br-none"
-                      : "bg-white rounded-bl-none")
-                  }
-                >
-                  {/* 消息内容 */}
-                  {
-                    <div
-                      className="markdown-body before:hidden"
-                      style={{ fontSize: `${12}px` }}
-                    >
-                      <Markdown content={message.content} />
-                    </div>
-                  }
+      <div className="flex flex-col gap-6 px-4 py-6">
+        {[...selectedMessages]
+          .sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          )
+          .map((message) => (
+            <div
+              key={message.id}
+              className={classNames(
+                "flex flex-col-reverse md:flex-row items-start gap-2 md:gap-4 relative",
+                {
+                  "items-end md:items-start md:justify-end":
+                    message.role === "user",
+                  "items-start md:flex-row-reverse md:justify-end":
+                    message.role !== "user",
+                }
+              )}
+            >
+              <div className="group relative flex max-w-[90%] flex-col gap-2 overflow-hidden md:max-w-[75%]">
+                <div className="rounded-lg">
+                  <div
+                    className={
+                      `px-4 py-1 rounded-xl text-gray-700 relative ` +
+                      (message.role === "user"
+                        ? "bg-blue-200 justify-self-end rounded-br-none"
+                        : "bg-white rounded-bl-none")
+                    }
+                  >
+                    {/* 消息内容 */}
+                    {
+                      <div
+                        className="markdown-body before:hidden"
+                        style={{ fontSize: `${12}px` }}
+                      >
+                        <Markdown content={message.content} />
+                      </div>
+                    }
+                  </div>
                 </div>
               </div>
+              <UserAvatar role={message.role} className="shadow-none" />
             </div>
-            <UserAvatar role={message.role} className="shadow-none" />
-          </div>
-        ))}
-      <div className="flex items-center justify-end gap-4 border-t p-2">
-        <div className="text-right">
-          <h4 className="mb-2 font-bold">一刻 AI 助手</h4>
-          <div className="text-sm text-gray-400">扫码即可体验智能问答</div>
-        </div>
+          ))}
+      </div>
+
+      <div className="flex items-start gap-4 border-t bg-white p-4">
         {/* 二维码可以加上用户的邀请码，那这里就需要改为实时生成 */}
         <Image
           src="/qrcode.png"
           width={48}
           height={48}
           alt=""
-          className="mt-4 h-12 w-12 bg-slate-100"
+          className="mt-1 h-12 w-12 bg-slate-100"
         />
+        <div className="flex flex-col gap-2">
+          <h4 className="m-0 font-bold leading-none">一刻 AI 助手</h4>
+          <div className="m-0 text-sm text-gray-400">
+            扫码即可体验智能问答{" "}
+            <span className="underline">https://yike.io</span>
+          </div>
+        </div>
       </div>
     </div>,
   ]
