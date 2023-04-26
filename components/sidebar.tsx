@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { isMobileScreen } from "@/utils"
@@ -9,7 +9,13 @@ import { MessageSquare, Settings2, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Sidebar(props) {
-  const [closed, setClosed] = useState(isMobileScreen())
+  const [closed, setClosed] = useState(false)
+
+  useEffect(() => {
+    if (isMobileScreen()) {
+      setClosed(true)
+    }
+  }, [])
 
   return (
     <div className="relative ">
