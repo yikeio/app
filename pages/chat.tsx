@@ -24,7 +24,7 @@ export default function ChatPage() {
       <Head />
       <section className="flex min-h-screen w-full">
         <ChatList showSideBar={showSideBar} toggleSidebar={toggleSidebar} />
-        <div className="flex flex-1 flex-col overflow-hidden bg-slate-100">
+        <div className="flex h-screen  flex-1 flex-col overflow-hidden bg-slate-100">
           <Chat showSideBar={showSideBar} toggleSidebar={toggleSidebar} />
         </div>
       </section>
