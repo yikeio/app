@@ -9,6 +9,8 @@ type ActionsStore = {
   selectedMessages: Message[]
   setSelectedMessages: (selected: Message[]) => void
 
+  clearSelectedMessages: () => void
+
   exportImageVisible: boolean
   setExportImageVisible: (visible: boolean) => void
 }
@@ -22,6 +24,10 @@ export const useActionsStore = create<ActionsStore>()((set, get) => ({
   selectedMessages: [],
   setSelectedMessages: (selected: Message[]) => {
     set(() => ({ selectedMessages: selected }))
+  },
+
+  clearSelectedMessages: () => {
+    set(() => ({ selectedMessages: [] }))
   },
 
   exportImageVisible: false,

@@ -1,17 +1,9 @@
-import Head from "next/head"
+import Head from "@/components/head"
 
 export default function Terms() {
   return (
     <>
-      <Head>
-        <title>Terms &amp; Conditions</title>
-        <meta
-          name="description"
-          content="Yike is a social media platform for sharing your thoughts and ideas."
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Head title="Terms &amp; Conditions" />
       <strong>Terms &amp; Conditions</strong>
       <p>
         By downloading or using the app, these terms will automatically apply to

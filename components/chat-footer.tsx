@@ -35,13 +35,19 @@ export default function ChatFooter(props) {
     state.setBillingModalVisible,
   ])
 
-  const [mode, setMode, selectedMessages, setExportImageVisible] =
-    useActionsStore((state) => [
-      state.mode,
-      state.setMode,
-      state.selectedMessages,
-      state.setExportImageVisible,
-    ])
+  const [
+    mode,
+    setMode,
+    selectedMessages,
+    clearSelectedMessages,
+    setExportImageVisible,
+  ] = useActionsStore((state) => [
+    state.mode,
+    state.setMode,
+    state.selectedMessages,
+    state.clearSelectedMessages,
+    state.setExportImageVisible,
+  ])
 
   const shouldSubmit = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key !== "Enter") return false
@@ -83,6 +89,11 @@ export default function ChatFooter(props) {
     if (!isMobileScreen()) inputRef.current?.focus()
   }
 
+  const onCancelExport = () => {
+    setMode("normal")
+    clearSelectedMessages()
+  }
+
   // Auto focus
   useEffect(() => {
     inputRef.current.focus?.()
@@ -119,19 +130,24 @@ export default function ChatFooter(props) {
         </Button>
       </div>
       <div
-        className={classNames("flex gap-4 justify-center", {
+        className={classNames("flex flex-col gap-4 justify-center", {
           hidden: mode !== "select",
         })}
       >
-        <Button
-          disabled={!selectedMessages.length}
-          onClick={() => setExportImageVisible(true)}
-        >
-          导出图片
-        </Button>
-        <Button variant="destructive" onClick={() => setMode("normal")}>
-          取消
-        </Button>
+        <div className="text-center text-sm text-gray-400">
+          已选择 {selectedMessages.length} 条消息
+        </div>
+        <div className="flex flex-col justify-center gap-4 md:flex-row">
+          <Button
+            disabled={!selectedMessages.length}
+            onClick={() => setExportImageVisible(true)}
+          >
+            导出图片
+          </Button>
+          <Button variant="destructive" onClick={onCancelExport}>
+            取消
+          </Button>
+        </div>
       </div>
     </div>
   )
