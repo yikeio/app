@@ -35,7 +35,7 @@ export function Chat(props: {
   // const { xxx } = usePrompt()
 
   return (
-    <div className="flex max-h-screen flex-1 flex-col overflow-y-auto bg-slate-100">
+    <div className="flex flex-1 flex-col overflow-y-auto bg-slate-100">
       <ChatHeader
         toggleSidebar={props.toggleSidebar}
         autoScrollBottomRef={autoScrollBottomRef}
