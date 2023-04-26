@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { getAuthRedirect } from "@/api/auth"
+import GitHubIcon from "@/icons/github.svg"
+import GoogleIcon from "@/icons/google.svg"
 import toast from "react-hot-toast"
 
 import {
@@ -14,37 +17,13 @@ import {
   useSettingsStore,
   useUserStore,
 } from "../store"
+import Divider from "./divider"
 import Modal from "./modal"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 
-const useUserLogin = () => {
-  const [loginModalVisible, setLoginModalVisible] = useState(false)
-  const [getConversationList] = useChatStore((state) => [
-    state.getConversationList,
-  ])
-  const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
-  const [updateUser] = useUserStore((state) => [state.updateUser])
-
-  useEffect(() => {
-    checkUser()
-      .then((res) => {
-        updateUser(res.result)
-        getConversationList(res.result.id)
-        getUserSettings(res.result.id)
-      })
-      .catch(() => {
-        setLoginModalVisible(true)
-        localStorage.removeItem("login_token")
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return { loginModalVisible, setLoginModalVisible }
-}
-
-export function LoginForm({ closeModal }: { closeModal: Function }) {
+export function PhoneLoginForm({ closeModal }: { closeModal: Function }) {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [code, setCode] = useState("")
 
@@ -107,10 +86,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
   }
 
   return (
-    <div className="flex max-w-xs flex-col gap-6">
-      <div className="space-y-2 text-center">
-        <h1 className="text-2xl">欢迎回来</h1>
-      </div>
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <Label
           htmlFor="phone-number-input"
@@ -162,7 +138,7 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
           </Button>
         </div>
       </div>
-      <div className="">
+      <div>
         <Button className="w-full" onClick={handleLogin}>
           登录
         </Button>
@@ -171,38 +147,105 @@ export function LoginForm({ closeModal }: { closeModal: Function }) {
   )
 }
 
+/**
+ * OAuth 模块
+ * @returns
+ */
+export function OAuthLoginButtons() {
+  const handleRedirect = async (type) => {
+    const redirectUrl = getAuthRedirect(type)
+    window.location.href = redirectUrl
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-2 md:flex-row">
+      <Button
+        className="w-full"
+        variant="outline"
+        size="sm"
+        onClick={() => handleRedirect("github")}
+      >
+        <GitHubIcon className="mr-2 h-5 w-5" />{" "}
+        <span className="text-gray-600">使用 Github 登录</span>
+      </Button>
+      <Button
+        className="w-full"
+        variant="outline"
+        size="sm"
+        onClick={() => handleRedirect("google")}
+      >
+        <GoogleIcon className="mr-2 h-5 w-5" />{" "}
+        <span className="text-gray-600">使用 Google 登录</span>
+      </Button>
+    </div>
+  )
+}
+
 export function LoginDialog() {
-  const { loginModalVisible, setLoginModalVisible } = useUserLogin()
-  const [user] = useUserStore((state) => [state.user])
+  const [user, updateUser, loginModalVisible, setLoginModalVisible] =
+    useUserStore((state) => [
+      state.user,
+      state.updateUser,
+      state.loginModalVisible,
+      state.setLoginModalVisible,
+    ])
   const [getUserQuotaInfo] = useBillingStore((state) => [
     state.getUserQuotaInfo,
   ])
+  const [getConversationList] = useChatStore((state) => [
+    state.getConversationList,
+  ])
+  const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
+
+  useEffect(() => {
+    checkUser()
+      .then((res) => {
+        updateUser(res.result)
+        if (res.result.state !== "unactivated") {
+          getConversationList(res.result.id)
+          getUserSettings(res.result.id)
+        }
+      })
+      .catch(() => {
+        setLoginModalVisible(true)
+        localStorage.removeItem("login_token")
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!user.id && !localStorage.getItem("login_token")) {
       setLoginModalVisible(true)
     }
 
-    if (user.id && localStorage.getItem("login_token")) {
-      // 获取用户的套餐信息
+    // 如果用户已经登录，关闭登录弹窗
+    if (user.id && localStorage.getItem("login_token") && loginModalVisible) {
+      setLoginModalVisible(false)
+    }
+
+    // 获取用户的套餐信息
+    if (user.id && user.state !== "unactivated") {
       getUserQuotaInfo(user.id)
     }
-  }, [user])
+  }, [user, loginModalVisible])
 
   return (
     <Modal
-      size="xs"
+      size="sm"
       show={loginModalVisible}
       noPadding
       onClose={() => setLoginModalVisible(false)}
     >
-      <div className="space-y-4 p-6">
+      <div className="flex flex-col gap-4 p-6">
         <div className="flex items-center justify-center">
           <Image src="/logo.svg" alt="" height={80} width={80} />
         </div>
-        <div className="flex flex-1 items-center justify-center">
-          <LoginForm closeModal={setLoginModalVisible} />
+        <h1 className="text-center text-2xl">欢迎回来</h1>
+        <OAuthLoginButtons />
+        <div className="my-2">
+          <Divider label="或使用手机验证码登录" />
         </div>
+        <PhoneLoginForm closeModal={setLoginModalVisible} />
       </div>
     </Modal>
   )
@@ -219,17 +262,26 @@ export function ActivateDialog() {
     state.activateVisible,
     state.setActivateVisible,
   ])
+  const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
+  const [getConversationList] = useChatStore((state) => [
+    state.getConversationList,
+  ])
 
   async function handleActivate() {
     if (!inviteCode) return toast.error("请输入邀请码")
     try {
       await activateUser({ userId: user.id, inviteCode })
       toast.success("激活成功")
+      const userRes = await checkUser()
+      updateUser(userRes.result)
       setActivateVisible(false)
+      // 激活成功后，拿到用户设置信息
+      getConversationList(user.id)
+      getUserSettings(user.id)
     } catch (e) {}
   }
 
-  async function tryActivate(referrer) {
+  async function tryActivate(referrer: string) {
     try {
       await activateUser({ userId: user.id, inviteCode: referrer })
       const userRes = await checkUser()
@@ -255,7 +307,6 @@ export function ActivateDialog() {
       if (user.id && token && referrer) {
         tryActivate(referrer)
       } else {
-        toast.error("账号未激活，请先激活!")
         setActivateVisible(true)
       }
     }

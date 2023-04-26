@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { isMobileScreen } from "@/utils"
@@ -9,19 +9,25 @@ import { MessageSquare, Settings2, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Sidebar(props) {
-  const [closed, setClosed] = useState(isMobileScreen())
+  const [closed, setClosed] = useState(false)
+
+  useEffect(() => {
+    if (isMobileScreen()) {
+      setClosed(true)
+    }
+  }, [])
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <Button
-        className="absolute p-2 w-10 h-10 inset-y-1/3 -right-10 md:hidden"
+        className="absolute inset-y-1/3 -right-10 h-10 w-10 p-2 md:hidden"
         onClick={() => setClosed(!closed)}
       >
         <IconArrowAutofitContent />
       </Button>
       <aside
         className={classNames(
-          "flex flex-col items-center flex-shrink-0 h-screen gap-6 px-2 py-4 bg-white border-r border-r-slate-200 dark:border-b-slate-700 dark:bg-slate-900",
+          "flex flex-col items-center flex-shrink-0 h-screen gap-6 px-2 py-4 bg-white border-r border-r-slate-200 dark:border-b-slate-700 dark:bg-slate-900 ",
           props.className,
           {
             hidden: closed,

@@ -23,6 +23,7 @@ export default function UserIndexPage() {
     ])
 
   useEffect(() => {
+    if (!user.id) return
     getUserQuotaInfo(user.id)
   }, [user])
 
@@ -42,21 +43,12 @@ export default function UserIndexPage() {
 
   return (
     <UserLayout>
-      <Head>
-        <title>用户中心</title>
-        <meta
-          name="description"
-          content="Yike is a social media platform for sharing your thoughts and ideas."
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <section className="p-8">
         <h2>个人资料</h2>
-        <div className="bg-white p-6 rounded-lg max-w-5xl shadow">
+        <div className="max-w-5xl rounded-lg bg-white p-6 shadow">
           <div className="flex items-center gap-6"></div>
 
-          <div className="flex flex-col text-gray-600 divide-y">
+          <div className="flex flex-col divide-y text-gray-600">
             <div className="flex items-center justify-between py-4">
               <Label className="uppercase text-gray-500">{user.name}</Label>
               <div>

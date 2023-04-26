@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { BOT_HELLO, useChatStore } from "@/store"
 
 // 懒加载消息列表
@@ -59,7 +59,7 @@ export const useLazyLoadMessage = () => {
   }
 
   // Auto scroll to bottom
-  useLayoutEffect(() => {
+  useEffect(() => {
     const observer = new MutationObserver(() => {
       if (!autoScrollBottomRef.current) return
       chatBodyRef.current.scrollTo?.(0, chatBodyRef.current.scrollHeight)
