@@ -1,4 +1,4 @@
-import { commonFetch } from "./common"
+import { request } from "./common"
 
 /**
  * 检测用户登陆
@@ -14,7 +14,7 @@ export async function checkUser() {
       },
     })
   }
-  return commonFetch("user")
+  return request("user")
 }
 
 /**
@@ -29,7 +29,7 @@ export async function loginUser({
   phoneNumber: string
   code: string
 }) {
-  return commonFetch("auth/tokens:via-sms", {
+  return request("auth/tokens:via-sms", {
     method: "POST",
     body: JSON.stringify({
       phone_number: phoneNumber,
@@ -50,7 +50,7 @@ export async function activateUser({
   userId: number
   inviteCode: string
 }) {
-  return commonFetch(`users/${userId}:activate`, {
+  return request(`users/${userId}:activate`, {
     method: "POST",
     body: JSON.stringify({
       referral_code: inviteCode,
@@ -70,7 +70,7 @@ export async function sendVerificationCode({
   phoneNumber: string
   scene: string
 }) {
-  return commonFetch("sms/verification-codes:send", {
+  return request("sms/verification-codes:send", {
     method: "POST",
     body: JSON.stringify({ scene, phone_number: phoneNumber }),
   })
@@ -82,7 +82,7 @@ export async function sendVerificationCode({
  * @returns
  */
 export async function getUserQuotas(userId: string) {
-  return commonFetch(`users/${userId}/quotas`)
+  return request(`users/${userId}/quotas`)
 }
 
 /**
@@ -91,29 +91,29 @@ export async function getUserQuotas(userId: string) {
  * @returns
  */
 export async function getUserAvailableQuota(userId: string) {
-  return commonFetch(`users/${userId}/quota`)
+  return request(`users/${userId}/quota`)
 }
 
 /**
  * 获取用户支付订单列表（包括未支付订单）
  */
 export async function getListUserPayment(id: any) {
-  return commonFetch(`users/${id}/payments`)
+  return request(`users/${id}/payments`)
 }
 
 /**
  * 获取用户设置
  */
 export async function getListUserSettings(id: any) {
-  return commonFetch(`users/${id}/settings`)
+  return request(`users/${id}/settings`)
 }
 
 export async function getReferrals(id: any) {
-  return commonFetch(`users/${id}/referrals`)
+  return request(`users/${id}/referrals`)
 }
 
 export async function getPayments(id: any) {
-  return commonFetch(`users/${id}/payments`)
+  return request(`users/${id}/payments`)
 }
 
 /**
@@ -123,7 +123,7 @@ export async function updateListUserSettings(
   id: any,
   data: Record<string, any>
 ) {
-  return commonFetch(`users/${id}/settings/${data.key}`, {
+  return request(`users/${id}/settings/${data.key}`, {
     method: "PUT",
     body: JSON.stringify({
       value: data.value,

@@ -8,6 +8,7 @@ const menus = [
   { icon: UserCog, label: "个人资料", href: "/user" },
   { icon: Gift, label: "我的邀请", href: "/user/invitations" },
   { icon: CreditCard, label: "我的订单", href: "/user/payments" },
+  { icon: Gift, label: "礼品卡", href: "/user/gift-cards" },
 ]
 
 export default function Sidebar({ className = "" }) {
