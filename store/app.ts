@@ -38,6 +38,13 @@ export const BOT_HELLO: Message = {
   date: "",
 }
 
+export const BOT_HELLO_LOGIN: Message = {
+  id: "hello",
+  role: "assistant",
+  content: Locale.Store.LoginHello,
+  date: "",
+}
+
 function createEmptySession(): ChatSession {
   const createDate = getCurrentDate().toDateString()
 

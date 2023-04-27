@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { use, useRef, useState } from "react"
 import { getConversationList } from "@/api/conversations"
 import {
   ChatSession,
@@ -79,12 +79,19 @@ export function ChatList({
     state.currentCombo,
     state.setBillingModalVisible,
   ])
-  const [user] = useUserStore((state) => [state.user])
+  const [user, setLoginModalVisible] = useUserStore((state) => [
+    state.user,
+    state.setLoginModalVisible,
+  ])
 
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const chatListRef = useRef<HTMLDivElement>(null)
 
   const handleCreateConversation = () => {
+    if (!user.id) {
+      setLoginModalVisible(true)
+      return
+    }
     if (!currentCombo.is_available) {
       toast.error("当前无可用套餐，请购买套餐!")
       setBillingModalVisible(true)

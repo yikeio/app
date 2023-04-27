@@ -1,7 +1,7 @@
 import { updateConversation } from "@/api/conversations"
 import Locale from "@/locales"
-import { useActionsStore, useChatStore } from "@/store"
-import { Edit2, FileDown, MessageSquare, Share, Trash2 } from "lucide-react"
+import { useActionsStore, useChatStore, useUserStore } from "@/store"
+import { Edit2, MessageSquare, Share, Trash2 } from "lucide-react"
 
 import { Icons } from "@/components/icons"
 import { Button } from "./ui/button"
@@ -16,11 +16,9 @@ export default function ChatHeader(props) {
       state.updateCurrentSession,
       state.removeSession,
     ])
+  const [user] = useUserStore((state) => [state.user])
 
-  const [mode, setMode] = useActionsStore((state) => [
-    state.mode,
-    state.setMode,
-  ])
+  const [setMode] = useActionsStore((state) => [state.setMode])
 
   const switchMode = () => {
     autoScrollBottomRef.current = false
@@ -68,32 +66,35 @@ export default function ChatHeader(props) {
           </button>
         </div>
 
-        <Button
-          variant="outline"
-          className="flex h-8 w-8 items-center justify-center p-1"
-          title="重命名"
-          onClick={handleUpdate}
-        >
-          <Edit2 className="h-4 w-4" />
-        </Button>
+        {user.id && (
+          <>
+            <Button
+              variant="outline"
+              className="flex h-8 w-8 items-center justify-center p-1"
+              title="重命名"
+              onClick={handleUpdate}
+            >
+              <Edit2 className="h-4 w-4" />
+            </Button>
 
-        {/* 导出聊天内容 */}
-        <Button
-          variant="outline"
-          className="flex h-8 w-8 items-center justify-center p-1"
-          onClick={switchMode}
-        >
-          <Share className="h-4 w-4" />
-        </Button>
+            <Button
+              variant="outline"
+              className="flex h-8 w-8 items-center justify-center p-1"
+              onClick={switchMode}
+            >
+              <Share className="h-4 w-4" />
+            </Button>
 
-        <Button
-          variant="outline"
-          className="flex h-8 w-8 items-center justify-center p-1"
-          title="删除对话"
-          onClick={handleDelete}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+            <Button
+              variant="outline"
+              className="flex h-8 w-8 items-center justify-center p-1"
+              title="删除对话"
+              onClick={handleDelete}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </>
+        )}
       </div>
     </div>
   )

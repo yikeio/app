@@ -1,14 +1,12 @@
 import { Message, useChatStore } from "@/store"
-import { copyToClipboard, parseTime } from "@/utils"
-import { ControllerPool } from "@/utils/requests"
+import { copyToClipboard } from "@/utils"
 
 import { formatTimeAgo } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 
 export default function MessageActions({ message, inputRef }) {
   const isUser = message.role === "user"
-  const [session, onUserInput, setIsLoadingAnswer] = useChatStore((state) => [
-    state.currentSession(),
+  const [onUserInput, setIsLoadingAnswer] = useChatStore((state) => [
     state.onUserInput,
     state.setIsLoadingAnswer,
   ])

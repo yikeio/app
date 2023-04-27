@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { BOT_HELLO, useChatStore } from "@/store"
+import { BOT_HELLO, BOT_HELLO_LOGIN, useChatStore, useUserStore } from "@/store"
 
 // 懒加载消息列表
 export const useLazyLoadMessage = () => {
@@ -19,6 +19,8 @@ export const useLazyLoadMessage = () => {
     state.updateCurrentSession,
   ])
 
+  const [user] = useUserStore((state) => [state.user])
+
   const pager = messageHistoryPagerMap.get(session.id)
 
   // 首次进入聊天界面，如果没有历史消息，发送欢迎语
@@ -27,7 +29,11 @@ export const useLazyLoadMessage = () => {
     session.messages.at(0)?.content !== BOT_HELLO.content &&
     pager?.currentPage === pager?.lastPage
   ) {
-    session.messages.push(BOT_HELLO)
+    if (!user.id) {
+      session.messages.push(BOT_HELLO_LOGIN)
+    } else {
+      session.messages.push(BOT_HELLO)
+    }
   }
 
   // 懒加载聊天内容

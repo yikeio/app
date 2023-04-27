@@ -1,22 +1,22 @@
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { getAuthRedirect } from "@/api/auth"
-import GitHubIcon from "@/icons/github.svg"
-import GoogleIcon from "@/icons/google.svg"
-import toast from "react-hot-toast"
-
 import {
   activateUser,
   checkUser,
   loginUser,
   sendVerificationCode,
-} from "../api/user"
+} from "@/api/user"
+import GitHubIcon from "@/icons/github.svg"
+import GoogleIcon from "@/icons/google.svg"
 import {
   useBillingStore,
   useChatStore,
   useSettingsStore,
   useUserStore,
-} from "../store"
+} from "@/store"
+import toast from "react-hot-toast"
+
 import Divider from "./divider"
 import Modal from "./modal"
 import { Button } from "./ui/button"
@@ -207,7 +207,9 @@ export function LoginDialog() {
         }
       })
       .catch(() => {
-        setLoginModalVisible(true)
+        if (location.pathname !== "/") {
+          location.href = "/"
+        }
         localStorage.removeItem("login_token")
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -215,7 +217,9 @@ export function LoginDialog() {
 
   useEffect(() => {
     if (!user.id && !localStorage.getItem("login_token")) {
-      setLoginModalVisible(true)
+      if (location.pathname !== "/") {
+        location.href = "/"
+      }
     }
 
     // 如果用户已经登录，关闭登录弹窗
