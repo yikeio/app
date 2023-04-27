@@ -207,6 +207,9 @@ export function LoginDialog() {
         }
       })
       .catch(() => {
+        if (location.pathname !== "/") {
+          location.href = "/"
+        }
         localStorage.removeItem("login_token")
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -214,6 +217,9 @@ export function LoginDialog() {
 
   useEffect(() => {
     if (!user.id && !localStorage.getItem("login_token")) {
+      if (location.pathname !== "/") {
+        location.href = "/"
+      }
     }
 
     // 如果用户已经登录，关闭登录弹窗

@@ -78,7 +78,7 @@ export function Sidebar(props) {
           variant="ghost"
           size="sm"
           className="text-slate-700 dark:text-slate-400"
-          onClick={handleClickNav("./setting")}
+          onClick={handleClickNav("./settings")}
         >
           <Settings2></Settings2>
           <span className="sr-only">设置</span>
