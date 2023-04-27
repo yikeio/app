@@ -1,7 +1,7 @@
 import { updateConversation } from "@/api/conversations"
 import Locale from "@/locales"
 import { useActionsStore, useChatStore } from "@/store"
-import { Edit2, FileDown, MessageSquare, Share2, Trash2 } from "lucide-react"
+import { Edit2, FileDown, MessageSquare, Share, Trash2 } from "lucide-react"
 
 import { Icons } from "@/components/icons"
 import { Button } from "./ui/button"
@@ -61,7 +61,7 @@ export default function ChatHeader(props) {
         <div className="md:hidden">
           <button
             className="flex items-center gap-1 p-2"
-            title={Locale.Chat.Actions.ChatList}
+            title="对话历史"
             onClick={() => toggleSidebar?.()}
           >
             <Icons.menu size={22} />
@@ -83,21 +83,13 @@ export default function ChatHeader(props) {
           className="flex h-8 w-8 items-center justify-center p-1"
           onClick={switchMode}
         >
-          <FileDown className="h-4 w-4" />
+          <Share className="h-4 w-4" />
         </Button>
 
         <Button
           variant="outline"
           className="flex h-8 w-8 items-center justify-center p-1"
-          onClick={() => null} // 分享图片？
-        >
-          <Share2 className="h-4 w-4" />
-        </Button>
-
-        <Button
-          variant="outline"
-          className="flex h-8 w-8 items-center justify-center p-1"
-          title="重命名"
+          title="删除对话"
           onClick={handleDelete}
         >
           <Trash2 className="h-4 w-4" />

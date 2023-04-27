@@ -43,17 +43,31 @@ const Emoji = dynamic(async () => (await import("emoji-picker-react")).Emoji, {
   loading: () => <Icons.loading />,
 })
 
-export function UserAvatar(props: { role: Message["role"] }) {
+export function UserAvatar(props: {
+  role: Message["role"]
+  className?: string
+}) {
   const config = useSettingsStore((state) => state.config)
 
   if (props.role !== "user") {
     return (
-      <Avatar src="/logo.svg" className="h-10 w-10 shrink-0 rounded-full" />
+      <Avatar
+        src="/logo.svg"
+        className={classNames(
+          "h-10 w-10 shrink-0 rounded-full",
+          props.className
+        )}
+      />
     )
   }
 
   return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-inner shadow-gray-300">
+    <div
+      className={classNames(
+        "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-inner shadow-gray-300",
+        props.className
+      )}
+    >
       <Emoji unified={config.avatar} size={32} />
     </div>
   )
