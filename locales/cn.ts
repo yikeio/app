@@ -126,6 +126,8 @@ const cn = {
   Store: {
     DefaultTopic: "新的聊天",
     BotHello: "有什么可以帮你的吗",
+    LoginHello:
+      "欢迎使用一刻助手，我是一位AI语言助手，可以帮助您回答各种问题，提供各种方面的建议和帮助。不论您有任何困惑或问题，只要发送给我，我就会尽力为您提供最准确、最有用的回复。期待能够为您效劳！",
     Error: "出错了，稍后重试吧",
     Prompt: {
       History: (content: string) =>

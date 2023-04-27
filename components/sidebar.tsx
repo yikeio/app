@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
+import { useUserStore } from "@/store"
 import { isMobileScreen } from "@/utils"
 import { IconArrowAutofitContent } from "@tabler/icons-react"
 import classNames from "classnames"
@@ -16,6 +16,19 @@ export function Sidebar(props) {
       setClosed(true)
     }
   }, [])
+
+  const [user, setLoginModalVisible] = useUserStore((state) => [
+    state.user,
+    state.setLoginModalVisible,
+  ])
+
+  const handleClickNav = (url: string) => () => {
+    if (!user.id) {
+      setLoginModalVisible(true)
+      return
+    }
+    location.href = url
+  }
 
   return (
     <div className="relative ">
@@ -34,46 +47,42 @@ export function Sidebar(props) {
           }
         )}
       >
-        <Link href="/" rel="noreferrer">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-slate-700 dark:text-slate-400"
-          >
-            <Image src="/logo.svg" height={24} width={24} alt="logo" />
-            <span className="sr-only">首页</span>
-          </Button>
-        </Link>
-        <Link href="/chat" rel="noreferrer">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-slate-700 dark:text-slate-400"
-          >
-            <MessageSquare></MessageSquare>
-            <span className="sr-only">会话</span>
-          </Button>
-        </Link>
-        <Link href="/user" rel="noreferrer">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-slate-700 dark:text-slate-400"
-          >
-            <User></User>
-            <span className="sr-only">我的</span>
-          </Button>
-        </Link>
-        <Link href="/settings" rel="noreferrer">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-slate-700 dark:text-slate-400"
-          >
-            <Settings2></Settings2>
-            <span className="sr-only">设置</span>
-          </Button>
-        </Link>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-slate-700 dark:text-slate-400"
+          onClick={handleClickNav("./")}
+        >
+          <Image src="/logo.svg" height={24} width={24} alt="logo" />
+          <span className="sr-only">首页</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-slate-700 dark:text-slate-400"
+          onClick={handleClickNav("./chat")}
+        >
+          <MessageSquare></MessageSquare>
+          <span className="sr-only">会话</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-slate-700 dark:text-slate-400"
+          onClick={handleClickNav("./user")}
+        >
+          <User></User>
+          <span className="sr-only">我的</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-slate-700 dark:text-slate-400"
+          onClick={handleClickNav("./setting")}
+        >
+          <Settings2></Settings2>
+          <span className="sr-only">设置</span>
+        </Button>
         {/* 待页面支持暗黑模式后开启 */}
         {/* <ThemeToggle /> */}
       </aside>

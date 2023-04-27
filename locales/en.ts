@@ -129,6 +129,8 @@ const en = {
   Store: {
     DefaultTopic: "New Conversation",
     BotHello: "Hello! How can I assist you today?",
+    LoginHello:
+      "Welcome to YIKE assistant! I am an AI language assistant who can help you answer various questions and provide advice and assistance in various areas. Just send your queries to me and I will do my best to provide you with the most accurate and useful answers. I look forward to serving you!",
     Error: "Something went wrong, please try again later.",
     Prompt: {
       History: (content: string) =>

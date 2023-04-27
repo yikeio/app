@@ -22,7 +22,10 @@ export default function ChatFooter(props) {
   const [userInput, setUserInput] = useState("")
 
   const [config] = useSettingsStore((state) => [state.config])
-  const [user] = useUserStore((state) => [state.user])
+  const [user, setLoginModalVisible] = useUserStore((state) => [
+    state.user,
+    state.setLoginModalVisible,
+  ])
 
   const [session, onUserInput, setIsLoadingAnswer] = useChatStore((state) => [
     state.currentSession(),
@@ -96,14 +99,14 @@ export default function ChatFooter(props) {
 
   // Auto focus
   useEffect(() => {
-    inputRef.current.focus?.()
+    inputRef.current?.focus?.()
   }, [])
 
   return (
     <div className="sticky bottom-0 px-10 pb-10 pt-4">
       <div
         className={classNames(
-          "relative flex flex-col items-start gap-2 md:flex-row",
+          "relative flex flex-col items-start gap-2 md:flex-row justify-center",
           {
             hidden: mode !== "normal",
           }
@@ -118,16 +121,23 @@ export default function ChatFooter(props) {
           onBlur={() => (autoScrollBottomRef.current = true)}
           value={userInput}
           rows={1}
+          disabled={!user.id}
           onKeyDown={onInputKeyDown}
           autoFocus={!props.showSideBar}
         />
-        <Button
-          className="flex w-full items-center gap-2 md:w-auto"
-          onClick={onUserSubmit}
-        >
-          <Icons.telegram size={12} />
-          <span>发送</span>
-        </Button>
+        {!user.id ? (
+          <Button onClick={() => setLoginModalVisible(true)}>
+            登录后开始对话
+          </Button>
+        ) : (
+          <Button
+            className="flex w-full items-center gap-2 md:w-auto"
+            onClick={onUserSubmit}
+          >
+            <Icons.telegram size={12} />
+            <span>发送</span>
+          </Button>
+        )}
       </div>
       <div
         className={classNames("flex flex-col gap-4 justify-center", {

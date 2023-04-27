@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import dynamic from "next/dynamic"
-import { useChatStore, useSettingsStore } from "@/store"
+import { useChatStore, useUserStore } from "@/store"
 import classNames from "classnames"
 
 import { Icons } from "@/components/icons"
@@ -30,7 +30,7 @@ export default function MessageBody({
     state.currentSession(),
     state.isLoadingAnswer,
   ])
-  const [config] = useSettingsStore((state) => [state.config])
+  const [user] = useUserStore((state) => [state.user])
 
   // 请求消息时打字 loading
   useEffect(() => {
@@ -64,7 +64,9 @@ export default function MessageBody({
           )}
         </div>
       </div>
-      {inputRef && <MessageActions message={message} inputRef={inputRef} />}
+      {user.id && inputRef && (
+        <MessageActions message={message} inputRef={inputRef} />
+      )}
     </div>
   )
 }
