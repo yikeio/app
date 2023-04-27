@@ -123,7 +123,7 @@ export function PhoneLoginForm({ closeModal }: { closeModal: Function }) {
             id="verify-code-input"
             className="w-full rounded-md pr-24"
             placeholder="请输入验证码"
-            maxLength={4}
+            maxLength={6}
             value={code}
             autoComplete="off"
             onChange={(e) => setCode(e.target.value)}
