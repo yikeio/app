@@ -127,12 +127,12 @@ export default function ExportImage() {
           width={48}
           height={48}
           alt=""
-          className="mt-1 h-12 w-12 bg-slate-100"
+          className="mt-[6px] h-12 w-12 bg-slate-100"
         />
         <div className="flex flex-col gap-2">
           <h4 className="m-0 font-bold leading-none">一刻 AI 助手</h4>
           <div className="m-0 text-sm text-gray-400">
-            扫码即可体验智能问答{" "}
+            <span>扫码即可体验智能问答</span>
             <span className="underline">https://yike.io</span>
           </div>
         </div>
