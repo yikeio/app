@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import dynamic from "next/dynamic"
 import { useChatStore, useSettingsStore } from "@/store"
+import classNames from "classnames"
 
 import { Icons } from "@/components/icons"
 import LoadingIcon from "../icons/loading.svg"
@@ -18,7 +19,11 @@ const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <Icons.loading width={24} height={24} />,
 })
 
-export default function MessageBody({ message, inputRef }) {
+export default function MessageBody({
+  message,
+  inputRef = null,
+  className = "",
+}) {
   const isUser = message.role === "user"
 
   const [session, isLoadingAnswer] = useChatStore((state) => [
@@ -34,11 +39,16 @@ export default function MessageBody({ message, inputRef }) {
   }, [isLoadingAnswer, session.messages])
 
   return (
-    <div className="group relative flex max-w-[90%] flex-col gap-2 overflow-hidden md:max-w-[75%]">
+    <div
+      className={classNames(
+        "export-container group relative flex max-w-[90%] flex-col gap-2 overflow-hidden md:max-w-[75%]",
+        className
+      )}
+    >
       <div className="rounded-lg">
         <div
           className={
-            `p-3 md:p-4 lg:p-5 rounded-xl border text-gray-700 relative ` +
+            `p-3 md:p-4 rounded-xl border text-gray-700 relative ` +
             (isUser
               ? "bg-blue-200 border-blue-300 justify-self-end rounded-br-none"
               : "bg-white rounded-bl-none")
@@ -48,16 +58,13 @@ export default function MessageBody({ message, inputRef }) {
           {(message.preview || message.content.length === 0) && !isUser ? (
             <LoadingIcon />
           ) : (
-            <div
-              className="markdown-body "
-              style={{ fontSize: `${config.chat_font_size}px` }}
-            >
+            <div className="markdown-body before:hidden after:hidden">
               <Markdown content={message.content} />
             </div>
           )}
         </div>
       </div>
-      <MessageActions message={message} inputRef={inputRef} />
+      {inputRef && <MessageActions message={message} inputRef={inputRef} />}
     </div>
   )
 }
