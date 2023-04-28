@@ -1,4 +1,5 @@
-import Link from "next/link"
+"use client"
+
 import { CreditCard, Gift, UserCog } from "lucide-react"
 
 import { cn } from "@/lib/utils"

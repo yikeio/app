@@ -1,5 +1,6 @@
+"use client"
+
 import { useEffect } from "react"
-import Head from "next/head"
 import { useBillingStore, useUserStore } from "@/store"
 import { copyToClipboard } from "@/utils"
 import toast from "react-hot-toast"
@@ -14,6 +15,7 @@ export default function UserIndexPage() {
     state.user,
     state.updateUser,
   ])
+
   const [currentCombo, totalUsage, setBillingModalVisible, getUserQuotaInfo] =
     useBillingStore((state) => [
       state.currentCombo,
@@ -25,7 +27,7 @@ export default function UserIndexPage() {
   useEffect(() => {
     if (!user.id) return
     getUserQuotaInfo(user.id)
-  }, [user])
+  }, [user, currentCombo, getUserQuotaInfo])
 
   function handleLogout() {
     localStorage.removeItem("login_token")

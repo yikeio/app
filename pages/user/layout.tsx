@@ -1,3 +1,5 @@
+"use client"
+
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
 import SecondMenubar from "@/components/second-menubar"

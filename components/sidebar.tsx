@@ -51,7 +51,7 @@ export function Sidebar(props) {
           variant="ghost"
           size="sm"
           className="text-slate-700 dark:text-slate-400"
-          onClick={handleClickNav("./")}
+          onClick={handleClickNav("/")}
         >
           <Image src="/logo.svg" height={24} width={24} alt="logo" />
           <span className="sr-only">首页</span>
@@ -60,7 +60,7 @@ export function Sidebar(props) {
           variant="ghost"
           size="sm"
           className="text-slate-700 dark:text-slate-400"
-          onClick={handleClickNav("./chat")}
+          onClick={handleClickNav("/chat")}
         >
           <MessageSquare></MessageSquare>
           <span className="sr-only">会话</span>
@@ -69,7 +69,7 @@ export function Sidebar(props) {
           variant="ghost"
           size="sm"
           className="text-slate-700 dark:text-slate-400"
-          onClick={handleClickNav("./user")}
+          onClick={handleClickNav("/user")}
         >
           <User></User>
           <span className="sr-only">我的</span>
@@ -78,7 +78,7 @@ export function Sidebar(props) {
           variant="ghost"
           size="sm"
           className="text-slate-700 dark:text-slate-400"
-          onClick={handleClickNav("./settings")}
+          onClick={handleClickNav("/settings")}
         >
           <Settings2></Settings2>
           <span className="sr-only">设置</span>

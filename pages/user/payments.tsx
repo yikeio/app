@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react"
 import { getPayments } from "@/api/user"
 import { useUserStore } from "@/store"
