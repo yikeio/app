@@ -104,13 +104,16 @@ export default function ChatFooter(props) {
 
   return (
     <div className="sticky bottom-0 p-6">
-      <Button
-        variant="link"
-        className="absolute inset-0 z-10 flex h-full items-center justify-center bg-gray-100/70 text-gray-700 shadow"
-        onClick={() => setLoginModalVisible(true)}
-      >
-        立即登录开始对话
-      </Button>
+      {!user.id && (
+        <Button
+          variant="link"
+          className="absolute inset-0 z-10 flex h-full items-center justify-center bg-gray-100/70 text-gray-700 shadow"
+          onClick={() => setLoginModalVisible(true)}
+        >
+          立即登录开始对话
+        </Button>
+      )}
+
       <div
         className={classNames(
           "relative flex flex-col items-start gap-2 md:flex-row justify-center",
