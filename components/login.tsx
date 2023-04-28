@@ -207,7 +207,7 @@ export function LoginDialog() {
         }
       })
       .catch(() => {
-        if (location.pathname !== "/") {
+        if (!["/", "/oauth/callback"].includes(location.pathname)) {
           location.href = "/"
         }
         localStorage.removeItem("login_token")
@@ -217,7 +217,7 @@ export function LoginDialog() {
 
   useEffect(() => {
     if (!user.id && !localStorage.getItem("login_token")) {
-      if (location.pathname !== "/") {
+      if (!["/", "/oauth/callback"].includes(location.pathname)) {
         location.href = "/"
       }
     }
