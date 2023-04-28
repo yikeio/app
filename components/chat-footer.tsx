@@ -103,7 +103,14 @@ export default function ChatFooter(props) {
   }, [])
 
   return (
-    <div className="sticky bottom-0 px-10 pb-10 pt-4">
+    <div className="sticky bottom-0 p-6">
+      <Button
+        variant="link"
+        className="absolute inset-0 z-10 flex h-full items-center justify-center bg-gray-100/70 text-gray-700 shadow"
+        onClick={() => setLoginModalVisible(true)}
+      >
+        立即登录开始对话
+      </Button>
       <div
         className={classNames(
           "relative flex flex-col items-start gap-2 md:flex-row justify-center",
@@ -125,19 +132,15 @@ export default function ChatFooter(props) {
           onKeyDown={onInputKeyDown}
           autoFocus={!props.showSideBar}
         />
-        {!user.id ? (
-          <Button onClick={() => setLoginModalVisible(true)}>
-            登录后开始对话
-          </Button>
-        ) : (
-          <Button
-            className="flex w-full items-center gap-2 md:w-auto"
-            onClick={onUserSubmit}
-          >
-            <Icons.telegram size={12} />
-            <span>发送</span>
-          </Button>
-        )}
+
+        <Button
+          className="flex w-full items-center gap-2 md:w-auto"
+          onClick={onUserSubmit}
+          disabled={!user.id || userInput.length <= 0}
+        >
+          <Icons.telegram size={12} />
+          <span>发送</span>
+        </Button>
       </div>
       <div
         className={classNames("flex flex-col gap-4 justify-center", {

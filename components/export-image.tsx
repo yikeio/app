@@ -1,13 +1,7 @@
 "use client"
 
-import { useEffect, useId, useLayoutEffect, useRef, useState } from "react"
-import Image from "next/image"
-import {
-  useActionsStore,
-  useChatStore,
-  useSettingsStore,
-  useUserStore,
-} from "@/store"
+import { useId, useLayoutEffect, useRef, useState } from "react"
+import { useActionsStore, useUserStore } from "@/store"
 import classNames from "classnames"
 import html2canvas from "html2canvas"
 import QRCode from "react-qr-code"
