@@ -101,6 +101,10 @@ export async function getListUserPayment(id: any) {
   return request(`users/${id}/payments`)
 }
 
+export async function getLeaderboards() {
+  return request(`leaderboards`)
+}
+
 /**
  * 获取用户设置
  */

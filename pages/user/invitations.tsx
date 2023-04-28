@@ -1,22 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react"
-import { getReferrals } from "@/api/user"
+import { getLeaderboards, getReferrals } from "@/api/user"
 import { useUserStore } from "@/store"
 import { copyToClipboard } from "@/utils"
 import { Gift } from "lucide-react"
 
-import { formatDatetime, formatTimeAgo } from "@/lib/utils"
+import { formatDatetime } from "@/lib/utils"
 import EmptyState from "@/components/empty-state"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserLayout from "./layout"
 
 function FeatureHero({ code }) {
   const referUrl = `https://yike.io/?referrer=${code}`
 
   return (
-    <div className="relative overflow-hidden rounded-lg bg-gray-50 shadow">
+    <div className="relative overflow-hidden rounded-lg bg-white shadow">
       <img
         src="/background/beams.jpg"
         alt=""
@@ -86,6 +86,7 @@ function FeatureHero({ code }) {
 
 export default function UserInvitationPage() {
   const [referrals, setReferrals] = useState([])
+  const [leaderboards, setLeaderboards] = useState([])
   const [user] = useUserStore((state) => [state.user])
 
   useEffect(() => {
@@ -93,40 +94,88 @@ export default function UserInvitationPage() {
     getReferrals(user.id).then((res) => {
       setReferrals(res.result || [])
     })
+
+    getLeaderboards().then((res) => {
+      setLeaderboards(res.result || [])
+    })
   }, [user])
 
   return (
     <UserLayout>
-      <div className="p-8">
+      <div className="h-full bg-slate-50 p-8">
         <FeatureHero code={user.referral_code} />
         <div className="mt-4">
-          <div>
-            <Label>我的邀请记录（{referrals.length}）</Label>
-          </div>
-          <div className="mt-2 rounded-lg bg-white p-6 shadow">
-            <div className="flex items-center text-sm font-bold text-gray-500">
-              <div className="w-1/3 px-4 py-2">用户</div>
-              <div className="w-1/3 px-4 py-2">注册时间</div>
-              <div className="w-1/3 px-4 py-2">获得奖励</div>
-            </div>
-            {referrals.length <= 0 && <EmptyState className="min-h-[200px]" />}
-            <div>
-              {referrals.map((referral) => (
-                <div
-                  key={referral.id}
-                  className="flex items-center border-t text-sm text-gray-500"
-                >
-                  <div className="w-1/3 px-4 py-3">{referral.name}</div>
-                  <div className="w-1/3 px-4 py-3">
-                    {formatDatetime(referral.created_at)}
-                  </div>
-                  <div className="w-1/3 px-4 py-3">
-                    {referral.has_paid ? referral.referrals_count : "未支付"}
-                  </div>
+          <Tabs defaultValue="leaderboard">
+            <TabsList className="inline-grid grid-cols-2">
+              <TabsTrigger value="invitations">
+                我的邀请记录（{referrals.length}）
+              </TabsTrigger>
+              <TabsTrigger value="leaderboard">排行榜</TabsTrigger>
+            </TabsList>
+            <TabsContent value="invitations" className="bg-white p-6">
+              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
+                  <td className="border-none">用户</td>
+                  <td className="border-none">注册时间</td>
+                  {/* <td className="border-none">获得奖励</td> */}
+                </thead>
+                <tbody>
+                  {referrals.map((referral) => (
+                    <tr
+                      key={referral.id}
+                      className="flex items-center border-t text-sm text-gray-500"
+                    >
+                      <td className="border-none px-4 py-3">{referral.name}</td>
+                      <td className="border-none px-4 py-3">
+                        {formatDatetime(referral.created_at)}
+                      </td>
+                      {/* <td className="border-none px-4 py-3">
+                      {referral.has_paid ? referral.referrals_count : "未支付"}
+                    </td> */}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {referrals.length <= 0 && (
+                <EmptyState className="min-h-[100px]" />
+              )}
+            </TabsContent>
+            <TabsContent value="leaderboard" className="bg-white p-6">
+              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
+                  <td className="border-none">排名</td>
+                  <td className="border-none">用户</td>
+                  <td className="border-none">注册时间</td>
+                  <td className="border-none">已邀请用户数</td>
+                </thead>
+                <tbody>
+                  {leaderboards.map((user, i) => (
+                    <tr
+                      key={user.id}
+                      className="border-t text-sm text-gray-500"
+                    >
+                      <td className="border-none">{i + 1}</td>
+                      <td className="border-none px-4 py-3">{user.name}</td>
+                      <td className="border-none px-4 py-3">
+                        {formatDatetime(user.created_at)}
+                      </td>
+                      <td className="border-none px-4 py-3">
+                        {user.referrals_count}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {leaderboards.length <= 0 && (
+                <EmptyState className="min-h-[100px]" />
+              )}
+              {leaderboards.length >= 100 && (
+                <div className="text-sm text-gray-400">
+                  * 仅显示榜单前 100 名用户
                 </div>
-              ))}
-            </div>
-          </div>
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </UserLayout>
