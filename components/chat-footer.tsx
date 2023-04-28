@@ -100,7 +100,7 @@ export default function ChatFooter(props) {
   // Auto focus
   useEffect(() => {
     inputRef.current?.focus?.()
-  }, [])
+  }, [inputRef, user])
 
   return (
     <div className="sticky bottom-0 p-6">
