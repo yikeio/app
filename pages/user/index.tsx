@@ -24,11 +24,6 @@ export default function UserIndexPage() {
       state.getUserQuotaInfo,
     ])
 
-  useEffect(() => {
-    if (!user.id) return
-    getUserQuotaInfo(user.id)
-  }, [user, currentCombo, getUserQuotaInfo])
-
   function handleLogout() {
     localStorage.removeItem("login_token")
     updateUser({})
@@ -36,7 +31,7 @@ export default function UserIndexPage() {
   }
 
   const handleBuy = () => {
-    if (currentCombo) {
+    if (currentCombo && currentCombo.is_available) {
       toast.error("您还有未用尽的套餐")
       return
     }
@@ -83,7 +78,9 @@ export default function UserIndexPage() {
               <div>
                 累计已使用 {totalUsage || 0}，剩余可用
                 <span className="ml-2">
-                  {currentCombo?.available_tokens_count || 0}
+                  {(currentCombo.is_available &&
+                    currentCombo?.available_tokens_count) ||
+                    0}
                 </span>
               </div>
             </div>
@@ -98,7 +95,9 @@ export default function UserIndexPage() {
                   : "暂无可用套餐"}
 
                 {!currentCombo.is_available && (
-                  <Button onClick={() => handleBuy()}>购买套餐</Button>
+                  <Button className="ml-2" onClick={() => handleBuy()}>
+                    购买套餐
+                  </Button>
                 )}
               </div>
             </div>
