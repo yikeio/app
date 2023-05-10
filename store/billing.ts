@@ -8,10 +8,6 @@ interface BillingStore {
   activateVisible: boolean
   setActivateVisible: (visible: boolean) => void
 
-  // 套餐弹窗
-  billingModalVisible: boolean
-  setBillingModalVisible: (visible: boolean) => void
-
   // 当前套餐
   currentCombo: any
   // 所有购买过的套餐
@@ -30,11 +26,6 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
   activateVisible: false,
   setActivateVisible: (visible: boolean) => {
     set(() => ({ activateVisible: visible }))
-  },
-
-  billingModalVisible: false,
-  setBillingModalVisible: (visible: boolean) => {
-    set(() => ({ billingModalVisible: visible }))
   },
 
   currentCombo: { is_available: false },

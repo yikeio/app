@@ -33,10 +33,7 @@ export default function ChatFooter(props) {
     state.setIsLoadingAnswer,
   ])
 
-  const [currentCombo, setBillingModalVisible] = useBillingStore((state) => [
-    state.currentCombo,
-    state.setBillingModalVisible,
-  ])
+  const [currentCombo] = useBillingStore((state) => [state.currentCombo])
 
   const [
     mode,
@@ -82,7 +79,7 @@ export default function ChatFooter(props) {
 
     if (!currentCombo.is_available) {
       toast.error("当前无可用套餐，请购买套餐!")
-      setBillingModalVisible(true)
+      location.href = "/pricing"
       return
     }
     setIsLoadingAnswer(true)

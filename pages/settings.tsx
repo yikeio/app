@@ -1,18 +1,10 @@
 import { useEffect } from "react"
-import {
-  SubmitKey,
-  useBillingStore,
-  useSettingsStore,
-  useUserStore,
-} from "@/store"
-import dayjs from "dayjs"
+import { SubmitKey, useSettingsStore, useUserStore } from "@/store"
 import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react"
-import toast from "react-hot-toast"
 
 import { UserAvatar } from "@/components/avatar"
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
-import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import {
   Popover,

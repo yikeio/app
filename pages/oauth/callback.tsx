@@ -14,11 +14,11 @@ export default function OAuthCallback() {
       createTokens({ code, state }).then((loginRes) => {
         localStorage.setItem("login_token", loginRes.result.value)
         toast.success("登录成功")
-        window.location.href = "/chat"
+        location.href = "/chat"
       })
       return
     } else {
-      window.location.href = "/"
+      location.href = "/"
     }
   }, [])
   return (

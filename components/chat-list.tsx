@@ -75,10 +75,7 @@ export function ChatList({
     state.removeSession,
   ])
 
-  const [currentCombo, setBillingModalVisible] = useBillingStore((state) => [
-    state.currentCombo,
-    state.setBillingModalVisible,
-  ])
+  const [currentCombo] = useBillingStore((state) => [state.currentCombo])
   const [user, setLoginModalVisible] = useUserStore((state) => [
     state.user,
     state.setLoginModalVisible,
@@ -94,7 +91,7 @@ export function ChatList({
     }
     if (!currentCombo.is_available) {
       toast.error("当前无可用套餐，请购买套餐!")
-      setBillingModalVisible(true)
+      location.href = "/pricing"
       return
     }
     createConversation()
