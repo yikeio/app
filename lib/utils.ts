@@ -18,7 +18,7 @@ export function formatTimeAgo(dateStr) {
   return date.fromNow()
 }
 
-export function formatDatetime(dateStr, format = "YYYY-MM-DD HH:mm:ss") {
+export function formatDatetime(dateStr, format = "YYYY-MM-DD HH:mm") {
   const date = dayjs(dateStr)
   return date.format(format)
 }

@@ -2,6 +2,8 @@ import { useEffect } from "react"
 import { createTokens } from "@/api/auth"
 import toast from "react-hot-toast"
 
+import AuthLoading from "../../icons/auth-loading.svg"
+
 export default function OAuthCallback() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -19,5 +21,9 @@ export default function OAuthCallback() {
       window.location.href = "/"
     }
   }, [])
-  return <p>redirecting...</p>
+  return (
+    <div className="flex h-screen">
+      <AuthLoading></AuthLoading>
+    </div>
+  )
 }
