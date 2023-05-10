@@ -23,7 +23,7 @@ export default function OAuthCallback() {
   }, [])
   return (
     <div className="flex h-screen">
-      <AuthLoading></AuthLoading>
+      <AuthLoading />
     </div>
   )
 }
