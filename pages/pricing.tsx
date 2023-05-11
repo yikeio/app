@@ -1,6 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import * as React from "react"
+import classNames from "classnames"
+import { ArrowRight, CheckCircle2 } from "lucide-react"
 
+import { formatNumber } from "@/lib/utils"
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
 import { PaymentDialog } from "@/components/payment-dialog"
@@ -64,80 +67,72 @@ export default function PricingPage() {
   return (
     <Layout>
       <Head title="购买套餐" />
-      <div className="flex-1">
-        <section className="mx-auto max-w-5xl p-8">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold">购买套餐</div>
-          </div>
-          <div className="mt-4 flex-1 space-y-6 rounded-lg bg-white p-3 shadow md:p-6">
-            <div className="-m-4 flex flex-wrap">
-              {payableQuotas.map((item: any, index: number) => (
-                <div className="p-4 md:w-1/2 xl:w-1/3">
-                  <div className="relative flex h-full flex-col overflow-hidden rounded-lg border-2 border-blue-500 p-6">
-                    <h1 className="mb-4 flex items-center border-b border-gray-200 pb-4 text-5xl leading-none text-gray-900">
-                      ￥ {item.price}
-                    </h1>
-                    <p className="mb-2 flex items-center text-gray-600">
-                      <span className="mr-2 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green-400 text-white">
-                        <svg
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2.5"
-                          className="h-3 w-3"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M20 6L9 17l-5-5"></path>
-                        </svg>
-                      </span>
-                      {item.title}
-                    </p>
-                    <p className="mb-6 flex items-center text-gray-600">
-                      <span className="mr-2 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green-400 text-white">
-                        <svg
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2.5"
-                          className="h-3 w-3"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M20 6L9 17l-5-5"></path>
-                        </svg>
-                      </span>
-                      <span className="mr-2 font-bold">
-                        {String(item.tokens_count).replace(
-                          /\B(?=(\d{3})+(?!\d))/g,
-                          ","
-                        )}
-                      </span>
-                      <span>Token</span>
-                    </p>
-                    <Button onClick={() => handlePay(item)}>
-                      购买
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        className="ml-auto h-4 w-4"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M5 12h14M12 5l7 7-7 7"></path>
-                      </svg>
-                    </Button>
-                    {/* <p className="mt-3 text-xs text-gray-500">
-                    使用时间
-                  </p> */}
-                  </div>
+      <div className="container mx-auto px-5 py-24">
+        <div className="mb-20 flex w-full flex-col text-center">
+          <h1 className="title-font mb-2 text-3xl font-medium text-gray-900 sm:text-4xl">
+            购买
+          </h1>
+          <p className="mx-auto text-base leading-relaxed text-gray-500 lg:w-2/3">
+            按照您的使用习惯，选择合适您的付费套餐
+          </p>
+        </div>
+        <div className="-m-4 flex flex-wrap justify-center">
+          {payableQuotas.map((item: any, index: number) => (
+            <div className="w-full p-4 md:w-1/2 xl:w-1/4">
+              <div
+                className={classNames(
+                  `relative flex h-full flex-col overflow-hidden rounded-lg border-2 bg-white p-6`,
+                  {
+                    "border-indigo-500": item.is_popular,
+                  }
+                )}
+              >
+                {item.is_popular && (
+                  <span className="absolute right-0 top-0 rounded-bl bg-indigo-500 px-3 py-1 text-xs tracking-widest text-white">
+                    POPULAR
+                  </span>
+                )}
+                <div className="title-font mb-1 text-sm font-medium tracking-widest text-gray-500">
+                  {item.title}
                 </div>
-              ))}
+                <h1 className="mb-4 flex items-end border-b border-gray-200 pb-4 text-4xl font-normal leading-none text-gray-900">
+                  <span>￥{item.price}</span>
+                  <span className="ml-1 text-lg font-normal text-gray-400">
+                    {" "}
+                    / {item.days}天
+                  </span>
+                </h1>
+                <div className="mb-2 flex items-center gap-3 text-gray-600">
+                  <CheckCircle2 className="text-green-500" size={16} />
+                  <span>{item.days} 天使用期限</span>
+                </div>
+                <div className="mb-2 flex items-center gap-3 text-gray-600">
+                  <CheckCircle2 className="text-green-500" size={16} />
+                  <span>{formatNumber(item.tokens_count)} tokens</span>
+                </div>
+                <div className="mb-2 flex items-center gap-3 text-gray-600">
+                  <CheckCircle2 className="text-green-500" size={16} />
+                  <span>无限制预设角色使用</span>
+                </div>
+                <div className="mb-2 flex items-center gap-3 text-gray-600">
+                  <CheckCircle2 className="text-green-500" size={16} />
+                  <span>API 访问能力</span>
+                </div>
+                <div className="mb-2 flex items-center gap-3 text-gray-600">
+                  <CheckCircle2 className="text-green-500" size={16} />
+                  <span>24 小时客户服务</span>
+                </div>
+                <Button
+                  className="mt-6 justify-between"
+                  onClick={() => handlePay(item)}
+                >
+                  购买
+                  <ArrowRight size={16} />
+                </Button>
+              </div>
             </div>
-          </div>
-        </section>
+          ))}
+        </div>
       </div>
       {/* 支付过程弹窗 */}
       <PaymentDialog

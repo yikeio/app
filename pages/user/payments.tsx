@@ -78,9 +78,7 @@ export default function UserInvitationPage() {
             <div className="flex justify-between pb-4">
               <div className="flex items-center gap-4">
                 <h2 className="py-0">我的订单</h2>
-                <LinkButton href="/user/gift-cards" size="sm">
-                  礼品卡激活
-                </LinkButton>
+                <LinkButton href="/pricing">购买额度</LinkButton>
               </div>
               {payments.length && (
                 <div className="text-sm text-gray-500">
