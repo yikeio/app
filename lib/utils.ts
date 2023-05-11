@@ -22,3 +22,7 @@ export function formatDatetime(dateStr, format = "YYYY-MM-DD HH:mm") {
   const date = dayjs(dateStr)
   return date.format(format)
 }
+
+export function formatNumber(number: string | number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}

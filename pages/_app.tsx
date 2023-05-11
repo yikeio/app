@@ -4,7 +4,6 @@ import { ThemeProvider } from "next-themes"
 import NextNProgress from "nextjs-progressbar"
 import { Toaster } from "react-hot-toast"
 
-import { BillingDialog } from "@/components/billing"
 import { ActivateDialog, LoginDialog } from "@/components/login"
 import Transition from "@/components/transition"
 import "@/styles/globals.scss"
@@ -25,7 +24,6 @@ export default function App({ Component, pageProps }: AppProps) {
       {!isStaticPage && (
         <>
           <LoginDialog />
-          <BillingDialog />
           <ActivateDialog />
           <Toaster />
         </>

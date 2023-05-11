@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import { useBillingStore, useUserStore } from "@/store"
 import { copyToClipboard } from "@/utils"
 import toast from "react-hot-toast"
@@ -16,13 +15,10 @@ export default function UserIndexPage() {
     state.updateUser,
   ])
 
-  const [currentCombo, totalUsage, setBillingModalVisible, getUserQuotaInfo] =
-    useBillingStore((state) => [
-      state.currentCombo,
-      state.totalUsage(),
-      state.setBillingModalVisible,
-      state.getUserQuotaInfo,
-    ])
+  const [currentCombo, totalUsage] = useBillingStore((state) => [
+    state.currentCombo,
+    state.totalUsage(),
+  ])
 
   function handleLogout() {
     localStorage.removeItem("login_token")
@@ -31,11 +27,7 @@ export default function UserIndexPage() {
   }
 
   const handleBuy = () => {
-    if (currentCombo && currentCombo.is_available) {
-      toast.error("您还有未用尽的套餐")
-      return
-    }
-    setBillingModalVisible(true)
+    location.href = "/pricing"
   }
 
   return (
@@ -93,12 +85,9 @@ export default function UserIndexPage() {
                       currentCombo?.expired_at
                     )} 过期 (${formatTimeAgo(currentCombo?.expired_at)})`
                   : "暂无可用套餐"}
-
-                {!currentCombo.is_available && (
-                  <Button className="ml-2" onClick={() => handleBuy()}>
-                    购买套餐
-                  </Button>
-                )}
+                <Button className="ml-2" onClick={() => handleBuy()}>
+                  购买套餐
+                </Button>
               </div>
             </div>
 

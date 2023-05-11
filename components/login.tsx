@@ -154,7 +154,7 @@ export function PhoneLoginForm({ closeModal }: { closeModal: Function }) {
 export function OAuthLoginButtons() {
   const handleRedirect = async (type) => {
     const redirectUrl = getAuthRedirect(type)
-    window.location.href = redirectUrl
+    location.href = redirectUrl
   }
 
   return (

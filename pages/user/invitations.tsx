@@ -22,8 +22,7 @@ function FeatureHero({ code }) {
       <img
         src="/background/beams.jpg"
         alt=""
-        className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2"
-        width="1308"
+        className="absolute inset-0 max-w-none"
       />
       <div className="absolute inset-0 bg-[url(/background/grid.svg)] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
 
@@ -115,11 +114,11 @@ export default function UserInvitationPage() {
               <TabsTrigger value="leaderboard">排行榜</TabsTrigger>
             </TabsList>
             <TabsContent value="invitations" className="bg-white p-6">
-              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+              <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
                   <td className="border-none">用户</td>
                   <td className="border-none">注册时间</td>
-                  {/* <td className="border-none">获得奖励</td> */}
+                  <td className="border-none"></td>
                 </thead>
                 <tbody>
                   {referrals.map((referral) => (
@@ -131,9 +130,9 @@ export default function UserInvitationPage() {
                       <td className="border-none px-4 py-3">
                         {formatDatetime(referral.created_at)}
                       </td>
-                      {/* <td className="border-none px-4 py-3">
-                      {referral.has_paid ? referral.referrals_count : "未支付"}
-                    </td> */}
+                      <td className="border-none px-4 py-3">
+                        {/* {referral.has_paid ? referral.referrals_count : "未支付"} */}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -143,7 +142,7 @@ export default function UserInvitationPage() {
               )}
             </TabsContent>
             <TabsContent value="leaderboard" className="bg-white p-6">
-              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+              <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
                   <td className="border-none">排名</td>
                   <td className="border-none">用户</td>

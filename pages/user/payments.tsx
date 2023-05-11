@@ -6,13 +6,14 @@ import { useUserStore } from "@/store"
 
 import { formatDatetime } from "@/lib/utils"
 import EmptyState from "@/components/empty-state"
-import { Button } from "@/components/ui/button"
+import { PaymentDialog } from "@/components/payment-dialog"
 import LinkButton from "@/components/ui/link-button"
 import UserLayout from "./layout"
 
 export default function UserInvitationPage() {
   const [payments, setPayments] = useState([])
   const [user] = useUserStore((state) => [state.user])
+  const [paymentDetail, setPaymentDetail] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (!user.id) return
@@ -26,13 +27,23 @@ export default function UserInvitationPage() {
     switch (payment.state) {
       case "pending":
         return (
-          <span
-            className={
-              className + "text-orange-500 bg-orange-100 border-orange-200"
-            }
-          >
-            待支付
-          </span>
+          <>
+            <span
+              className={
+                className + "text-orange-500 bg-orange-100 border-orange-200"
+              }
+            >
+              待支付
+            </span>
+            <button
+              className="ml-6 inline-block rounded bg-slate-900 p-1 text-xs text-white hover:bg-slate-700 dark:bg-slate-50"
+              onClick={() => {
+                setPaymentDetail(payment)
+              }}
+            >
+              立即支付
+            </button>
+          </>
         )
         break
       case "expired":
@@ -67,9 +78,7 @@ export default function UserInvitationPage() {
             <div className="flex justify-between pb-4">
               <div className="flex items-center gap-4">
                 <h2 className="py-0">我的订单</h2>
-                <LinkButton href="/user/gift-cards" size="sm">
-                  礼品卡激活
-                </LinkButton>
+                <LinkButton href="/pricing">购买额度</LinkButton>
               </div>
               {payments.length && (
                 <div className="text-sm text-gray-500">
@@ -82,7 +91,7 @@ export default function UserInvitationPage() {
             <div className="flex items-center text-sm font-bold text-gray-500">
               <div className="w-1/4 px-4 py-2">订单号</div>
               <div className="w-1/4 px-4 py-2">内容</div>
-              <div className="w-1/4 px-4 py-2">注册时间</div>
+              <div className="w-1/4 px-4 py-2">创建时间</div>
               <div className="w-1/4 px-4 py-2">状态</div>
             </div>
             {payments.length <= 0 && <EmptyState className="min-h-[200px]" />}
@@ -104,6 +113,11 @@ export default function UserInvitationPage() {
           </div>
         </div>
       </div>
+      {/* 支付过程弹窗 */}
+      <PaymentDialog
+        paymentDetail={paymentDetail}
+        onClose={() => setPaymentDetail({})}
+      ></PaymentDialog>
     </UserLayout>
   )
 }

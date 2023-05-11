@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { useActionsStore, useUserStore } from "@/store"
 import classNames from "classnames"
 import html2canvas from "html2canvas"
@@ -45,7 +45,7 @@ export default function ExportImage() {
     ctx.drawImage(canvas, 0, 0)
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (exportImageVisible) {
       setLoading(true)
 
