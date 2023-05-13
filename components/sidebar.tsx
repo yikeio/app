@@ -31,7 +31,7 @@ export function Sidebar(props) {
   }
 
   return (
-    <div className="relative ">
+    <div className="hidden relative md:block">
       <Button
         className="absolute inset-y-1/3 -right-10 h-10 w-10 p-2 md:hidden"
         onClick={() => setClosed(!closed)}
