@@ -118,7 +118,6 @@ export default function UserInvitationPage() {
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
                   <td className="border-none">用户</td>
                   <td className="border-none">注册时间</td>
-                  <td className="border-none"></td>
                 </thead>
                 <tbody>
                   {referrals.map((referral) => (
@@ -129,9 +128,6 @@ export default function UserInvitationPage() {
                       <td className="border-none px-4 py-3">{referral.name}</td>
                       <td className="border-none px-4 py-3">
                         {formatDatetime(referral.created_at)}
-                      </td>
-                      <td className="border-none px-4 py-3">
-                        {/* {referral.has_paid ? referral.referrals_count : "未支付"} */}
                       </td>
                     </tr>
                   ))}
@@ -146,7 +142,6 @@ export default function UserInvitationPage() {
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
                   <td className="border-none">排名</td>
                   <td className="border-none">用户</td>
-                  <td className="border-none">注册时间</td>
                   <td className="border-none">已邀请用户数</td>
                 </thead>
                 <tbody>
@@ -157,9 +152,6 @@ export default function UserInvitationPage() {
                     >
                       <td className="border-none">{i + 1}</td>
                       <td className="border-none px-4 py-3">{user.name}</td>
-                      <td className="border-none px-4 py-3">
-                        {formatDatetime(user.created_at)}
-                      </td>
                       <td className="border-none px-4 py-3">
                         {user.referrals_count}
                       </td>
