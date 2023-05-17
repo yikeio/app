@@ -49,7 +49,7 @@ export function Chat(props: {
         onTouchStart={() => inputRef.current?.blur()}
       >
         {isLoadingMessage && <div className="block animate-spin" />}
-        {session.messages.map((message) => (
+        {session.messages.map((message, index) => (
           <div
             key={message.id}
             className={classNames(
@@ -64,7 +64,11 @@ export function Chat(props: {
               }
             )}
           >
-            <MessageBody message={message} inputRef={inputRef} />
+            <MessageBody
+              message={message}
+              preMessage={session.messages[index - 1]}
+              inputRef={inputRef}
+            />
             <UserAvatar role={message.role} />
             {mode === "select" && (
               <div
