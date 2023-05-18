@@ -103,7 +103,7 @@ export function ChatList({
     if (!chatListRef.current || !conversationPager) return
 
     const { scrollTop, clientHeight, scrollHeight } = chatListRef.current
-    if (scrollHeight - clientHeight >= scrollTop) {
+    if (scrollHeight - clientHeight === scrollTop) {
       if (conversationPager.currentPage < conversationPager.lastPage) {
         try {
           setIsLoadingMore(true)
