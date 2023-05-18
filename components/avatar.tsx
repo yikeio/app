@@ -1,9 +1,8 @@
 import React from "react"
-import dynamic from "next/dynamic"
 import Image from "next/image"
 import classNames from "classnames"
+import { Emoji } from "emoji-picker-react"
 
-import { Icons } from "@/components/icons"
 import { Message, useSettingsStore } from "../store"
 
 interface AvatarProps {
@@ -38,10 +37,6 @@ const Avatar: React.FC<AvatarProps> = ({
     />
   )
 }
-
-const Emoji = dynamic(async () => (await import("emoji-picker-react")).Emoji, {
-  loading: () => <Icons.loading />,
-})
 
 export function UserAvatar(props: {
   role: Message["role"]

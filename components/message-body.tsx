@@ -21,6 +21,7 @@ const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
 
 export default function MessageBody({
   message,
+  preMessage,
   inputRef = null,
   className = "",
 }) {
@@ -65,7 +66,11 @@ export default function MessageBody({
         </div>
       </div>
       {user.id && inputRef && (
-        <MessageActions message={message} inputRef={inputRef} />
+        <MessageActions
+          message={message}
+          preMessage={preMessage}
+          inputRef={inputRef}
+        />
       )}
     </div>
   )

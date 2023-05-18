@@ -4,11 +4,12 @@ import { copyToClipboard } from "@/utils"
 import { formatTimeAgo } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 
-export default function MessageActions({ message, inputRef }) {
+export default function MessageActions({ message, inputRef, preMessage }) {
   const isUser = message.role === "user"
   const [onUserInput, setIsLoadingAnswer] = useChatStore((state) => [
     state.onUserInput,
     state.setIsLoadingAnswer,
+    state.getConversationHistory,
   ])
 
   const onResend = (message: Message) => {
@@ -28,10 +29,10 @@ export default function MessageActions({ message, inputRef }) {
       {!isUser && !(message.preview || message.content.length === 0) && (
         // 工具栏
         <div className="flex items-center gap-4 text-xs text-gray-400">
-          {!message.streaming && (
+          {!message.streaming && preMessage && (
             <div
               className="flex cursor-pointer items-center gap-1 hover:text-blue-500"
-              onClick={() => onResend(message)}
+              onClick={() => onResend(preMessage)}
             >
               <Icons.reload size={12} /> 重新生成
             </div>
