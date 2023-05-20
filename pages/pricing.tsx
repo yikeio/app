@@ -78,12 +78,13 @@ export default function PricingPage() {
         </div>
         <div className="-m-4 flex flex-wrap justify-center">
           {payableQuotas.map((item: any, index: number) => (
-            <div className="w-full p-4 md:w-1/2 xl:w-1/4">
+            <div className="w-full p-4 md:w-1/2 xl:w-1/4" key={index}>
               <div
                 className={classNames(
-                  `relative flex h-full flex-col overflow-hidden rounded-lg border shadow-sm hover:shadow hover:border-gray-300 bg-white p-6`,
+                  `relative flex h-full flex-col overflow-hidden rounded-lg border shadow-sm hover:shadow-lg hover:border-gray-300 bg-white p-6`,
                   {
-                    "border-indigo-500": item.is_popular,
+                    "border-indigo-500  hover:border-indigo-500":
+                      item.is_popular,
                   }
                 )}
               >

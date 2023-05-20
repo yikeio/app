@@ -166,7 +166,7 @@ export function OAuthLoginButtons() {
         onClick={() => handleRedirect("github")}
       >
         <GitHubIcon className="mr-2 h-5 w-5" />{" "}
-        <span className="text-gray-600">使用 GitHub 登录</span>
+        <span className="text-gray-600">GitHub</span>
       </Button>
       <Button
         className="w-full"
@@ -175,7 +175,7 @@ export function OAuthLoginButtons() {
         onClick={() => handleRedirect("google")}
       >
         <GoogleIcon className="mr-2 h-5 w-5" />{" "}
-        <span className="text-gray-600">使用 Google 登录</span>
+        <span className="text-gray-600">Google</span>
       </Button>
     </div>
   )
