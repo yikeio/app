@@ -26,7 +26,7 @@ export function ChatItem(props: {
 }) {
   return (
     <div
-      className={` group relative rounded-lg border p-2 px-4 ${
+      className={` group relative rounded-lg border p-2 px-4 shadow-sm ${
         props.selected ? "border-blue-500" : "border-slate-200"
       }`}
       onClick={props.onClick}

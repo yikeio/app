@@ -49,7 +49,7 @@ export default function MessageBody({
       <div className="rounded-lg">
         <div
           className={
-            `p-3 md:p-4 rounded-xl border text-gray-700 relative ` +
+            `p-3 md:p-4 rounded-xl border text-gray-700 relative shadow-sm ` +
             (isUser
               ? "bg-blue-200 border-blue-300 justify-self-end rounded-br-none"
               : "bg-white rounded-bl-none")

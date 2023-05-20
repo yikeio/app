@@ -12,7 +12,7 @@ export default function UserLayout(props) {
       <SecondMenubar className="hidden lg:block">
         <Sidebar />
       </SecondMenubar>
-      <main className="flex-1">{props.children}</main>
+      <main className="h-screen flex-1 overflow-auto">{props.children}</main>
     </Layout>
   )
 }

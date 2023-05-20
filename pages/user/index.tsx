@@ -34,7 +34,7 @@ export default function UserIndexPage() {
     <UserLayout>
       <section className="p-8">
         <h2>个人资料</h2>
-        <div className="max-w-5xl rounded-lg bg-white p-6 shadow">
+        <div className="max-w-5xl rounded-lg border bg-white p-6 shadow-sm">
           <div className="flex items-center gap-6"></div>
 
           <div className="flex flex-col divide-y text-gray-600">

@@ -70,7 +70,7 @@ export default function ChatHeader(props) {
           <>
             <Button
               variant="outline"
-              className="flex h-8 w-8 items-center justify-center p-1"
+              className="flex h-8 w-8 items-center justify-center p-1 shadow-sm"
               title="重命名"
               onClick={handleUpdate}
             >
@@ -79,7 +79,7 @@ export default function ChatHeader(props) {
 
             <Button
               variant="outline"
-              className="flex h-8 w-8 items-center justify-center p-1"
+              className="flex h-8 w-8 items-center justify-center p-1 shadow-sm"
               onClick={switchMode}
             >
               <Share className="h-4 w-4" />
@@ -87,7 +87,7 @@ export default function ChatHeader(props) {
 
             <Button
               variant="outline"
-              className="flex h-8 w-8 items-center justify-center p-1"
+              className="flex h-8 w-8 items-center justify-center p-1 shadow-sm"
               title="删除对话"
               onClick={handleDelete}
             >

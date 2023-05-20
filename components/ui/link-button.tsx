@@ -12,7 +12,7 @@ interface LinkButtonProps
 const LinkButton = ({
   className,
   variant,
-  size,
+  size = "default",
   ...props
 }: LinkButtonProps) => {
   return (

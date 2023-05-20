@@ -74,20 +74,22 @@ export default function UserInvitationPage() {
     <UserLayout>
       <div className="p-8">
         <div className="mt-4 ">
-          <div>
-            <div className="flex justify-between pb-4">
-              <div className="flex items-center gap-4">
-                <h2 className="py-0">我的订单</h2>
-                <LinkButton href="/pricing">购买额度</LinkButton>
-              </div>
+          <div className="flex justify-between pb-4">
+            <div className="flex items-center gap-4">
+              <h2 className="py-0">我的订单</h2>
               {payments.length && (
                 <div className="text-sm text-gray-500">
                   共 {payments.length} 笔支付订单
                 </div>
               )}
             </div>
+            <div>
+              <a href="/pricing" className="text-blue-500">
+                购买额度
+              </a>
+            </div>
           </div>
-          <div className="rounded-lg bg-white p-6 shadow">
+          <div className="rounded-lg border bg-white p-6 shadow-sm">
             <div className="flex items-center text-sm font-bold text-gray-500">
               <div className="w-1/4 px-4 py-2">订单号</div>
               <div className="w-1/4 px-4 py-2">内容</div>

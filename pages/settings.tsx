@@ -60,7 +60,7 @@ export default function Setting() {
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold">设置</div>
           </div>
-          <div className="mt-4 flex-1 space-y-6 rounded-lg bg-white p-3 shadow md:p-6">
+          <div className="mt-4 flex-1 space-y-6 rounded-lg border bg-white p-3 shadow-sm md:p-6">
             <div className="flex flex-col divide-y rounded-lg">
               <SettingItem title="头像">
                 <Popover>

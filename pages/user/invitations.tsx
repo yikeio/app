@@ -18,7 +18,7 @@ function FeatureHero({ code }) {
   const referUrl = `https://yike.io/?referrer=${code}`
 
   return (
-    <div className="relative overflow-hidden rounded-lg bg-white shadow">
+    <div className="relative overflow-hidden rounded-lg border bg-white p-6 shadow-sm">
       <img
         src="/background/beams.jpg"
         alt=""
@@ -103,7 +103,7 @@ export default function UserInvitationPage() {
 
   return (
     <UserLayout>
-      <div className="h-full bg-slate-50 p-8">
+      <div className="h-full overflow-auto bg-slate-50 p-8">
         <FeatureHero code={user.referral_code} />
         <div className="mt-4">
           <Tabs defaultValue="leaderboard">
@@ -113,7 +113,10 @@ export default function UserInvitationPage() {
               </TabsTrigger>
               <TabsTrigger value="leaderboard">排行榜</TabsTrigger>
             </TabsList>
-            <TabsContent value="invitations" className="bg-white p-6">
+            <TabsContent
+              value="invitations"
+              className="rounded-lg border bg-white p-6 shadow-sm"
+            >
               <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
                   <tr>
@@ -125,7 +128,7 @@ export default function UserInvitationPage() {
                   {referrals.map((referral) => (
                     <tr
                       key={referral.id}
-                      className="flex items-center border-t text-sm text-gray-500"
+                      className="border-t text-sm text-gray-500"
                     >
                       <td className="border-none px-4 py-3">{referral.name}</td>
                       <td className="border-none px-4 py-3">
@@ -139,7 +142,10 @@ export default function UserInvitationPage() {
                 <EmptyState className="min-h-[100px]" />
               )}
             </TabsContent>
-            <TabsContent value="leaderboard" className="bg-white p-6">
+            <TabsContent
+              value="leaderboard"
+              className="rounded-lg border bg-white p-6 shadow-sm"
+            >
               <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
                   <tr>

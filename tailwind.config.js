@@ -7,9 +7,9 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: "1.5rem",
+      padding: "2rem",
       screens: {
-        "2xl": "1440px",
+        "2xl": "1400px",
       },
     },
     extend: {
@@ -55,21 +55,6 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
-        serif: [
-          "STZhongsong",
-          "STSong",
-          "Noto Serif CJK",
-          "Noto Serif SC",
-          "PMingLiu",
-          "SimSun",
-          "WenQuanYi Bitmap Song",
-          "Times New Roman",
-          "Times",
-          "serif",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "Segoe UI Symbol",
-        ],
       },
       keyframes: {
         "accordion-down": {
@@ -87,5 +72,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate")],
 }

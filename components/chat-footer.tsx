@@ -121,7 +121,7 @@ export default function ChatFooter(props) {
       >
         <Textarea
           ref={inputRef}
-          className="h-auto w-full flex-1 bg-white"
+          className="h-10 min-h-[40px] w-full flex-1 bg-white"
           placeholder={Locale.Chat.Input(config.chat_submit_key)}
           onChange={(e) => setUserInput(e.currentTarget.value)}
           onFocus={() => (autoScrollBottomRef.current = true)}

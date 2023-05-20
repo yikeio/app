@@ -17,7 +17,7 @@ export default function MenuItem({ menu: { icon, label, href } }) {
         baseClassNames,
         currentPath === href
           ? "text-primray bg-secondary text-secondary-foreground"
-          : "text-gray-600 hover:text-white"
+          : "text-gray-600"
       )}
     >
       <Icon className="mr-2 h-4 w-4" />

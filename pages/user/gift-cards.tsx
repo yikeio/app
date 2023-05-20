@@ -25,7 +25,7 @@ export default function UserGiftCardsPage() {
         <div className="mt-4">
           <h2>礼品卡</h2>
         </div>
-        <div className="max-w-xl space-y-4 rounded-lg bg-white p-6 text-gray-600 shadow">
+        <div className="max-w-xl space-y-4 rounded-lg border bg-white p-6 text-gray-600 shadow-sm">
           <div>
             请输入礼品卡卡密以激活对应的额度，
             <br />

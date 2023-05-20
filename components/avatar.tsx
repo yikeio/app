@@ -30,10 +30,7 @@ const Avatar: React.FC<AvatarProps> = ({
       alt={alt}
       height={sizes[size]}
       width={sizes[size]}
-      className={classNames(
-        "rounded-full bg-white shadow-inner shadow-gray-300",
-        className
-      )}
+      className={classNames("rounded-full bg-white shadow-sm ", className)}
     />
   )
 }
@@ -59,7 +56,7 @@ export function UserAvatar(props: {
   return (
     <div
       className={classNames(
-        "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-inner shadow-gray-300",
+        "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-sm",
         props.className
       )}
     >
