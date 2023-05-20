@@ -18,8 +18,6 @@ export default function MessageActions({ message, inputRef, preMessage }) {
     inputRef.current?.focus()
   }
 
-  const onCopy = (message: Message) => {}
-
   return (
     <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100">
       {!isUser && !message.preview && (
@@ -31,22 +29,13 @@ export default function MessageActions({ message, inputRef, preMessage }) {
       {!isUser && !(message.preview || message.content.length === 0) && (
         // 工具栏
         <div className="flex items-center gap-4 text-xs text-gray-400">
-          {message.streaming ? (
+          {!message.streaming && preMessage && (
             <div
               className="flex cursor-pointer items-center gap-1 hover:text-blue-500"
-              onClick={() => onCopy(message)}
+              onClick={() => onResend(preMessage)}
             >
-              <Icons.copy size={12} /> 复制
+              <Icons.reload size={12} /> 重新生成
             </div>
-          ) : (
-            preMessage && (
-              <div
-                className="flex cursor-pointer items-center gap-1 hover:text-blue-500"
-                onClick={() => onResend(preMessage)}
-              >
-                <Icons.reload size={12} /> 重新生成
-              </div>
-            )
           )}
 
           <div
