@@ -27,11 +27,13 @@ export default function ChatFooter(props) {
     state.setLoginModalVisible,
   ])
 
-  const [session, onUserInput, setIsLoadingAnswer] = useChatStore((state) => [
-    state.currentSession(),
-    state.onUserInput,
-    state.setIsLoadingAnswer,
-  ])
+  const [isStreaming, onUserInput, onUserInputStop, setIsLoadingAnswer] =
+    useChatStore((state) => [
+      state.isStreaming,
+      state.onUserInput,
+      state.onUserInputStop,
+      state.setIsLoadingAnswer,
+    ])
 
   const [currentCombo] = useBillingStore((state) => [state.currentCombo])
 
@@ -71,10 +73,14 @@ export default function ChatFooter(props) {
     e.preventDefault()
   }
 
+  const handleStop = () => {
+    onUserInputStop()
+  }
+
   // submit user input
   const onUserSubmit = () => {
-    // 输入中不允许发送
-    if (ControllerPool.isStreaming) return
+    // 输出中不允许发送
+    if (isStreaming) return
     if (userInput.length <= 0) return
 
     if (!currentCombo.is_available) {
@@ -128,19 +134,29 @@ export default function ChatFooter(props) {
           onBlur={() => (autoScrollBottomRef.current = true)}
           value={userInput}
           rows={1}
-          disabled={!user.id}
+          disabled={!user.id || isStreaming}
           onKeyDown={onInputKeyDown}
           autoFocus={!props.showSideBar}
         />
 
-        <Button
-          className="flex w-full items-center gap-2 md:w-auto"
-          onClick={onUserSubmit}
-          disabled={!user.id || userInput.length <= 0}
-        >
-          <Icons.telegram size={12} />
-          <span>发送</span>
-        </Button>
+        {isStreaming ? (
+          <Button
+            className="flex w-full items-center gap-2 md:w-auto"
+            onClick={handleStop}
+          >
+            <Icons.playStop size={12} />
+            <span>停止生成</span>
+          </Button>
+        ) : (
+          <Button
+            className="flex w-full items-center gap-2 md:w-auto"
+            onClick={onUserSubmit}
+            disabled={!user.id || userInput.length <= 0}
+          >
+            <Icons.telegram size={12} />
+            <span>发送</span>
+          </Button>
+        )}
       </div>
       <div
         className={classNames("flex flex-col gap-4 justify-center", {
