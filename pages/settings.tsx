@@ -26,7 +26,7 @@ function SettingItem(props: {
   children: JSX.Element
 }) {
   return (
-    <div className="flex flex-col justify-between gap-4 py-6 md:flex-row md:items-center">
+    <div className="flex flex-wrap justify-between gap-4 py-6 md:items-center">
       <div>
         <Label className="text-gray-700">{props.title}</Label>
         {props.subTitle && (
@@ -56,7 +56,7 @@ export default function Setting() {
     <Layout>
       <Head title="设置" />
       <div className="flex-1">
-        <section className="mx-auto max-w-5xl p-8">
+        <section className="mx-auto max-w-5xl p-4 md:p-8">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold">设置</div>
           </div>

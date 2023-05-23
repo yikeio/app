@@ -3,12 +3,11 @@ import dynamic from "next/dynamic"
 import { useChatStore, useUserStore } from "@/store"
 import classNames from "classnames"
 
-import { Icons } from "@/components/icons"
 import LoadingIcon from "../icons/loading.svg"
 import MessageActions from "./message-actions"
 
 const LOADING_MESSAGE = {
-  id: "loading",
+  id: -3,
   role: "assistant",
   content: "……",
   date: new Date().toLocaleString(),
@@ -16,7 +15,7 @@ const LOADING_MESSAGE = {
 }
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
-  loading: () => <Icons.loading width={24} height={24} />,
+  loading: () => <LoadingIcon width={24} height={24} />,
 })
 
 export default function MessageBody({

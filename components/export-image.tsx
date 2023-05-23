@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react"
 import { useActionsStore, useUserStore } from "@/store"
+import { isMobileScreen } from "@/utils"
 import classNames from "classnames"
 import html2canvas from "html2canvas"
 import QRCode from "react-qr-code"
@@ -72,7 +73,9 @@ export default function ExportImage() {
             className="max-h-[80vh] max-w-full"
           ></canvas>
           <p className="rounded-full bg-slate-300/40 px-4 text-center text-gray-100">
-            右键复制图片或保存到本地
+            {isMobileScreen()
+              ? "长按图片分享或保存到本地"
+              : "右键复制图片或保存到本地"}
           </p>
         </div>
       </Modal>

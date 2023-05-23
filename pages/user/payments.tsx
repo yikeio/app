@@ -72,7 +72,7 @@ export default function UserInvitationPage() {
 
   return (
     <UserLayout>
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <div className="mt-4 ">
           <div className="flex justify-between pb-4">
             <div className="flex items-center gap-4">

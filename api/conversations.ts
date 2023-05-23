@@ -5,12 +5,12 @@ import { API_DOMAIN, request } from "./common"
  * @returns
  */
 export async function getConversationList(
-  user: string,
+  userId: string,
   options?: { page?: number; pageSize?: number; sorts?: string }
 ) {
   const { page = 1, pageSize = 15, sorts = "last_active_at" } = options || {}
   return request(
-    `users/${user}/chat/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`
+    `users/${userId}/chat/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`
   )
 }
 
@@ -30,10 +30,10 @@ export async function createConversation(title: string) {
  * @returns
  */
 export async function updateConversation(
-  id: string,
+  conversationId: number,
   data: Record<string, any>
 ) {
-  return request(`chat/conversations/${id}`, {
+  return request(`chat/conversations/${conversationId}`, {
     method: "PUT",
     body: JSON.stringify(data),
   })
@@ -43,8 +43,8 @@ export async function updateConversation(
  * 删除对话
  * @returns
  */
-export async function deleteConversation(id: string) {
-  return request(`chat/conversations/${id}`, {
+export async function deleteConversation(conversationId: number) {
+  return request(`chat/conversations/${conversationId}`, {
     method: "DELETE",
   })
 }
@@ -53,8 +53,8 @@ export async function deleteConversation(id: string) {
  * 用户创建会话对话
  * @returns
  */
-export async function createMessage(conversation: string, content: string) {
-  return request(`chat/conversations/${conversation}/messages`, {
+export async function createMessage(conversationId: number, content: string) {
+  return request(`chat/conversations/${conversationId}/messages`, {
     method: "POST",
     body: JSON.stringify({ content }),
   })
@@ -64,7 +64,7 @@ export async function createMessage(conversation: string, content: string) {
  * 创建智能对话
  * @returns
  */
-export async function createSmartMessage(conversationId: string) {
+export async function createSmartMessage(conversationId: number) {
   const token = localStorage.getItem("login_token")
 
   return fetch(
@@ -84,11 +84,11 @@ export async function createSmartMessage(conversationId: string) {
  * @returns
  */
 export async function getConversationMessageList(
-  conversation: string,
+  conversationId: number,
   options?: { page?: number; pageSize?: number; sorts?: string }
 ) {
   const { page = 1, pageSize = 15, sorts = "id:desc" } = options || {}
   return request(
-    `chat/conversations/${conversation}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`
+    `chat/conversations/${conversationId}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`
   )
 }

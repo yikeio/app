@@ -11,9 +11,9 @@ import {
 import { isMobileScreen } from "@/utils"
 import { ControllerPool } from "@/utils/requests"
 import classNames from "classnames"
+import { SendIcon, StopCircleIcon } from "lucide-react"
 import toast from "react-hot-toast"
 
-import { Icons } from "@/components/icons"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
 
@@ -144,7 +144,7 @@ export default function ChatFooter(props) {
             className="flex w-full items-center gap-2 md:w-auto"
             onClick={handleStop}
           >
-            <Icons.playStop size={12} />
+            <StopCircleIcon size={12} />
             <span>停止生成</span>
           </Button>
         ) : (
@@ -153,7 +153,7 @@ export default function ChatFooter(props) {
             onClick={onUserSubmit}
             disabled={!user.id || userInput.length <= 0}
           >
-            <Icons.telegram size={12} />
+            <SendIcon size={12} />
             <span>发送</span>
           </Button>
         )}

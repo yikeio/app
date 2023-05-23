@@ -18,7 +18,7 @@ function FeatureHero({ code }) {
   const referUrl = `https://yike.io/?referrer=${code}`
 
   return (
-    <div className="relative overflow-hidden rounded-lg border bg-white p-6 shadow-sm">
+    <div className="relative overflow-hidden rounded-lg border bg-white p-2 shadow-sm md:p-6">
       <img
         src="/background/beams.jpg"
         alt=""
@@ -26,7 +26,7 @@ function FeatureHero({ code }) {
       />
       <div className="absolute inset-0 bg-[url(/background/grid.svg)] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
 
-      <div className="relative flex flex-col gap-6 p-12">
+      <div className="relative flex flex-col gap-6 p-2 md:p-12">
         <div className="flex items-center gap-2 text-xl text-blue-500">
           <Gift />
 
@@ -103,7 +103,7 @@ export default function UserInvitationPage() {
 
   return (
     <UserLayout>
-      <div className="h-full overflow-auto bg-slate-50 p-8">
+      <div className="h-full overflow-auto bg-slate-50 p-4 md:p-8">
         <FeatureHero code={user.referral_code} />
         <div className="mt-4">
           <Tabs defaultValue="leaderboard">

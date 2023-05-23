@@ -1,9 +1,16 @@
+import { useRouter } from "next/router"
 import { updateConversation } from "@/api/conversations"
 import Locale from "@/locales"
 import { useActionsStore, useChatStore, useUserStore } from "@/store"
-import { Edit2, MessageSquare, Share, Trash2 } from "lucide-react"
+import {
+  ChevronLeftIcon,
+  Edit2,
+  MenuIcon,
+  MessageSquare,
+  Share,
+  Trash2,
+} from "lucide-react"
 
-import { Icons } from "@/components/icons"
 import { Button } from "./ui/button"
 import { Label } from "./ui/label"
 
@@ -16,13 +23,21 @@ export default function ChatHeader(props) {
       state.updateCurrentSession,
       state.removeSession,
     ])
+
   const [user] = useUserStore((state) => [state.user])
 
   const [setMode] = useActionsStore((state) => [state.setMode])
 
+  const router = useRouter()
+
   const switchMode = () => {
     autoScrollBottomRef.current = false
     setMode("select")
+  }
+
+  const handleBackToSessions = () => {
+    setMode("normal")
+    router.back()
   }
 
   // 更新对话
@@ -45,10 +60,16 @@ export default function ChatHeader(props) {
 
   return (
     <div className="flex items-center justify-between border-b bg-white px-6 py-4">
-      <div
-        className="items-center gap-4 md:flex"
-        onClick={() => toggleSidebar?.()}
-      >
+      <div className="flex items-center gap-4">
+        <div className="md:hidden">
+          <button
+            className="flex items-center gap-1 p-2"
+            title="对话历史"
+            onClick={handleBackToSessions}
+          >
+            <ChevronLeftIcon size={22} />
+          </button>
+        </div>
         <div className="flex items-center gap-2">
           <MessageSquare className="text-gray-500" />
           <Label className="text-lg">{session.title}</Label>
@@ -56,16 +77,6 @@ export default function ChatHeader(props) {
         <div className="text-sm text-gray-400"></div>
       </div>
       <div className="flex items-center gap-2 text-gray-500">
-        <div className="md:hidden">
-          <button
-            className="flex items-center gap-1 p-2"
-            title="对话历史"
-            onClick={() => toggleSidebar?.()}
-          >
-            <Icons.menu size={22} />
-          </button>
-        </div>
-
         {user.id && (
           <>
             <Button

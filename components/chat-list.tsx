@@ -1,4 +1,5 @@
 import { use, useRef, useState } from "react"
+import { useRouter } from "next/router"
 import { getConversationList } from "@/api/conversations"
 import {
   ChatSession,
@@ -7,9 +8,9 @@ import {
   useUserStore,
 } from "@/store"
 import { isMobileScreen } from "@/utils"
+import { PlusIcon, TrashIcon } from "lucide-react"
 import toast from "react-hot-toast"
 
-import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import Locale from "../locales"
 import SecondMenubar from "./second-menubar"
@@ -22,43 +23,36 @@ export function ChatItem(props: {
   count: number
   time: string
   selected: boolean
-  id: string
+  id: number
 }) {
   return (
     <div
-      className={` group relative rounded-lg border p-2 px-4 shadow-sm ${
-        props.selected ? "border-blue-500" : "border-slate-200"
+      className={` group relative rounded-lg border p-4 shadow-sm ${
+        props.selected ? "border-primary" : "border-slate-200"
       }`}
       onClick={props.onClick}
     >
-      <Label className="text-gray-700">{props.title}</Label>
-      <div className="flex items-center justify-between text-xs">
-        <div className="text-gray-500">
-          {Locale.ChatItem.ChatItemCount(props.count)}
+      <div className="flex items-center justify-between ">
+        <Label className="text-gray-700">{props.title}</Label>
+        <div className="flex h-6 items-center text-gray-500">
+          <div className="text-xs group-hover:hidden">
+            {Locale.ChatItem.ChatItemCount(props.count)}
+          </div>
+          {props.id > 0 && (
+            <div
+              className="hidden cursor-pointer rounded p-1 text-red-500 transition-all hover:bg-red-200 group-hover:block"
+              onClick={props.onDelete}
+            >
+              <TrashIcon size={14} />
+            </div>
+          )}
         </div>
-        <div className="text-gray-400 ">{props.time}</div>
       </div>
-      {props.id === "-1" ? (
-        ""
-      ) : (
-        <div
-          className="absolute right-0 top-0 m-2 cursor-pointer rounded-full p-1 text-red-500 opacity-0 transition-all group-hover:bg-red-200 group-hover:opacity-100"
-          onClick={props.onDelete}
-        >
-          <Icons.trash size={14} />
-        </div>
-      )}
     </div>
   )
 }
 
-export function ChatList({
-  showSideBar,
-  toggleSidebar,
-}: {
-  showSideBar: boolean
-  toggleSidebar: () => void
-}) {
+export function ChatList() {
   const [
     sessions,
     currentIndex,
@@ -83,6 +77,7 @@ export function ChatList({
 
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const chatListRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   const handleCreateConversation = () => {
     if (!user.id) {
@@ -95,7 +90,12 @@ export function ChatList({
       return
     }
     createConversation()
-    toggleSidebar()
+    router.push({ hash: "hide-nav" })
+  }
+
+  const handleSelectSession = (index: number) => {
+    selectSession(index)
+    router.push({ hash: "hide-nav" })
   }
 
   // 懒加载会话列表
@@ -143,14 +143,11 @@ export function ChatList({
   }
 
   return (
-    <SecondMenubar
-      className={showSideBar ? "left-0" : "-left-[100%] md:left-0"}
-    >
+    <SecondMenubar>
       <Label className="text-gray-500">会话历史({sessions.length})</Label>
       <div
         ref={chatListRef}
         className="flex h-auto flex-1 flex-col gap-4 overflow-y-auto"
-        onClick={() => toggleSidebar()}
         onScroll={handleSideBarScroll}
       >
         <div className="flex flex-col gap-4 pb-4">
@@ -162,10 +159,10 @@ export function ChatList({
               count={item.messages_count || item.messages.length || 1}
               key={item.id}
               selected={i === currentIndex}
-              onClick={() => selectSession(i)}
+              onClick={() => handleSelectSession(i)}
               onDelete={(e) => {
                 e.stopPropagation()
-                if (!isMobileScreen() || confirm(Locale.Home.DeleteChat)) {
+                if (!isMobileScreen() || confirm("删除该对话")) {
                   removeSession(i)
                 }
               }}
@@ -177,21 +174,21 @@ export function ChatList({
 
       <div className="flex flex-col gap-4">
         <Button
-          className="flex w-full items-center justify-center border-red-400 bg-red-500 p-2 px-4 text-white md:hidden"
+          className="flex w-full items-center justify-center gap-2 border-red-400 bg-red-500 text-white md:hidden"
           onClick={() => {
-            if (confirm(Locale.Home.DeleteChat)) {
+            if (confirm("删除该对话")) {
               removeSession(currentIndex)
             }
           }}
         >
-          <Icons.trash size={22} />
+          <TrashIcon size={22} />
           <span>删除选中会话</span>
         </Button>
         <Button
           className="flex w-full items-center justify-center gap-2"
           onClick={handleCreateConversation}
         >
-          <Icons.plus size={22} />
+          <PlusIcon size={22} />
           <span>开启新的会话</span>
         </Button>
       </div>

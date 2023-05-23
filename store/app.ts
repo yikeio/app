@@ -10,7 +10,7 @@ import { ControllerPool, requestChatStream } from "@/utils/requests"
 import { create } from "zustand"
 
 export type Message = {
-  id: string
+  id: number
   date: string
   role: string
   content: string
@@ -22,9 +22,9 @@ export type Message = {
 export const ROLES: Message["role"][] = ["system", "user", "assistant"]
 
 export interface ChatSession {
-  messages_count: number
-  id: string
+  id: number
   title: string
+  messages_count: number
   memoryPrompt: string
   messages: Message[]
   updated_at: string
@@ -32,14 +32,14 @@ export interface ChatSession {
 
 const DEFAULT_TOPIC = Locale.Store.DefaultTopic
 export const BOT_HELLO: Message = {
-  id: "hello",
+  id: 0,
   role: "assistant",
   content: Locale.Store.BotHello,
   date: "",
 }
 
 export const BOT_HELLO_LOGIN: Message = {
-  id: "hello",
+  id: -1,
   role: "assistant",
   content: Locale.Store.LoginHello,
   date: "",
@@ -49,7 +49,7 @@ function createEmptySession(): ChatSession {
   const createDate = getCurrentDate().toDateString()
 
   return {
-    id: "-1",
+    id: -2,
     title: DEFAULT_TOPIC,
     memoryPrompt: "",
     messages: [],
@@ -74,13 +74,13 @@ interface ChatStore {
   ) => Promise<void>
   createConversation: () => Promise<ChatSession>
   getConversationHistory: (
-    conversationId: string,
+    conversationId: number,
     params?: { page: number; pageSize?: number }
   ) => Promise<Message[]>
   // 对话分页
   conversationPager: Pager
   // 对话历史分页
-  messageHistoryPagerMap: Map<string, Pager>
+  messageHistoryPagerMap: Map<number, Pager>
 
   clearSessions: () => void
   removeSession: (index: number) => void
@@ -140,7 +140,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
     // 有列表则获取当前会话历史
     if (list.length) {
-      const conversationId = String(get().currentSession().id)
+      const conversationId = get().currentSession().id
       const messageList: Message[] = await get().getConversationHistory(
         conversationId
       )
@@ -202,13 +202,13 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   async selectSession(index: number) {
     set({ currentSessionIndex: index })
 
-    const conversationId = String(get().currentSession().id)
+    const conversationId = get().currentSession().id
 
     // 判断缓存是否获取过
     if (cacheSet.has(conversationId)) return
 
     // 获取历史消息
-    if (conversationId === "-1") return
+    if (conversationId <= 0) return
 
     const messageList = await get().getConversationHistory(conversationId)
     get().updateCurrentSession((session) => (session.messages = messageList))
@@ -252,14 +252,14 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   async onUserInput(content) {
     set(() => ({ isStreaming: true }))
     const userMessage: Message = {
-      id: `${new Date().getTime().toString()}_user`,
+      id: new Date().getTime(),
       role: "user",
       content,
       date: getCurrentDate().toDateString(),
     }
 
     const botMessage: Message = {
-      id: `${new Date().getTime().toString()}_bot`,
+      id: new Date().getTime(),
       content: "",
       role: "assistant",
       date: getCurrentDate().toDateString(),
@@ -277,7 +277,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
     // make request
     requestChatStream(content, {
-      conversationId: String(get().currentSession().id),
+      conversationId: get().currentSession().id,
       onMessage(content, done) {
         // stream response
         if (done) {

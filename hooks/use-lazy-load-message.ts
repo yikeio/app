@@ -39,7 +39,7 @@ export const useLazyLoadMessage = () => {
   // 懒加载聊天内容
   const onChatBodyScroll = async (e) => {
     if (e.currentTarget.scrollTop <= 0) {
-      if (session.id === "-1" || !pager) return
+      if (session.id < 1 || !pager) return
       if (pager?.currentPage < pager?.lastPage) {
         const params = {
           page: pager.currentPage + 1,

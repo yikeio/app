@@ -1,15 +1,17 @@
 "use client"
 
+import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
 import { CreditCard, Gift, UserCog } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import Menu from "@/components/menu"
 
 const menus = [
-  { icon: UserCog, label: "个人资料", href: "/user" },
-  { icon: Gift, label: "我的邀请", href: "/user/invitations" },
-  { icon: CreditCard, label: "我的订单", href: "/user/payments" },
-  { icon: Gift, label: "礼品卡", href: "/user/gift-cards" },
+  { icon: UserCog, label: "个人资料", href: "/user#hide-nav" },
+  { icon: Gift, label: "我的邀请", href: "/user/invitations#hide-nav" },
+  { icon: CreditCard, label: "我的订单", href: "/user/payments#hide-nav" },
+  { icon: Gift, label: "礼品卡", href: "/user/gift-cards#hide-nav" },
 ]
 
 export default function Sidebar({ className = "" }) {

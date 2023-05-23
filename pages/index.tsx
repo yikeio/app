@@ -1,5 +1,12 @@
-import ChatPage from "./chat"
+import { useEffect } from "react"
+import { useRouter } from "next/router"
 
 export default function IndexPage() {
-  return <ChatPage />
+  const router = useRouter()
+
+  useEffect(() => {
+    router.replace("/chat")
+  })
+
+  return <>Loading...</>
 }

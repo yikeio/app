@@ -1,6 +1,5 @@
 import { useRef } from "react"
 import { useLazyLoadMessage } from "@/hooks/use-lazy-load-message"
-import { usePrompt } from "@/hooks/use-prompt"
 import { useSelectMode } from "@/hooks/use-select-mode"
 import { useChatStore } from "@/store"
 import classNames from "classnames"
@@ -12,10 +11,7 @@ import ChatHeader from "./chat-header"
 import ExportImage from "./export-image"
 import MessageBody from "./message-body"
 
-export function Chat(props: {
-  showSideBar: boolean
-  toggleSidebar: () => void
-}) {
+export function Chat() {
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const [session] = useChatStore((state) => [state.currentSession()])
@@ -33,14 +29,11 @@ export function Chat(props: {
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto bg-slate-100">
-      <ChatHeader
-        toggleSidebar={props.toggleSidebar}
-        autoScrollBottomRef={autoScrollBottomRef}
-      />
+      <ChatHeader autoScrollBottomRef={autoScrollBottomRef} />
 
       {/* 对话列表 */}
       <div
-        className={"flex flex-1 flex-col overflow-y-auto py-6"}
+        className={"flex flex-1 flex-col overflow-y-auto"}
         ref={chatBodyRef}
         onScroll={onChatBodyScroll}
         onTouchStart={() => inputRef.current?.blur()}

@@ -1,8 +1,8 @@
 import { Message, useChatStore } from "@/store"
 import { copyToClipboard } from "@/utils"
+import { CopyIcon, RotateCcwIcon } from "lucide-react"
 
 import { formatTimeAgo } from "@/lib/utils"
-import { Icons } from "@/components/icons"
 
 export default function MessageActions({ message, inputRef, preMessage }) {
   const isUser = message.role === "user"
@@ -34,7 +34,7 @@ export default function MessageActions({ message, inputRef, preMessage }) {
               className="flex cursor-pointer items-center gap-1 hover:text-blue-500"
               onClick={() => onResend(preMessage)}
             >
-              <Icons.reload size={12} /> 重新生成
+              <RotateCcwIcon size={12} /> 重新生成
             </div>
           )}
 
@@ -42,7 +42,7 @@ export default function MessageActions({ message, inputRef, preMessage }) {
             className="flex cursor-pointer items-center gap-1 hover:text-blue-500"
             onClick={() => copyToClipboard(message.content)}
           >
-            <Icons.copy size={12} /> 复制
+            <CopyIcon size={12} /> 复制
           </div>
         </div>
       )}
