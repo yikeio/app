@@ -31,9 +31,6 @@ export function Chat(props: {
 
   const hasChecked = (message: any) => selectedMessages.includes(message)
 
-  // // TODO
-  // const { xxx } = usePrompt()
-
   return (
     <div className="flex flex-1 flex-col overflow-y-auto bg-slate-100">
       <ChatHeader

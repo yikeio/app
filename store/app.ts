@@ -65,6 +65,7 @@ type Pager = {
 }
 
 interface ChatStore {
+  isStreaming: boolean
   sessions: ChatSession[]
   currentSessionIndex: number
   getConversationList: (
@@ -87,6 +88,7 @@ interface ChatStore {
   currentSession: () => ChatSession
   onNewMessage: (message: Message) => void
   onUserInput: (content: string) => Promise<void>
+  onUserInputStop: () => Promise<void>
 
   updateCurrentSession: (updater: (session: ChatSession) => void) => void
   updateMessage: (
@@ -104,6 +106,7 @@ interface ChatStore {
 const cacheSet = new Set()
 
 export const useChatStore = create<ChatStore>()((set, get) => ({
+  isStreaming: false,
   sessions: [createEmptySession()],
   currentSessionIndex: 0,
 
@@ -240,7 +243,14 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     })
   },
 
+  async onUserInputStop() {
+    const sessionIndex = get().currentSessionIndex
+    const messageIndex = get().currentSession().messages.length + 1
+    ControllerPool.remove(sessionIndex, messageIndex)
+    set(() => ({ isStreaming: false }))
+  },
   async onUserInput(content) {
+    set(() => ({ isStreaming: true }))
     const userMessage: Message = {
       id: `${new Date().getTime().toString()}_user`,
       role: "user",
@@ -277,15 +287,19 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
           ControllerPool.remove(sessionIndex, messageIndex)
         } else {
           botMessage.content = content
-          set(() => ({}))
         }
+        set(() => ({
+          isStreaming: false,
+        }))
       },
       onError(error, statusCode) {
         botMessage.content += "\n\n" + Locale.Store.Error
         botMessage.streaming = false
         userMessage.isError = true
         botMessage.isError = true
-        set(() => ({}))
+        set(() => ({
+          isStreaming: false,
+        }))
         ControllerPool.remove(sessionIndex, messageIndex)
       },
       onController(controller) {

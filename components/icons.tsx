@@ -8,6 +8,7 @@ import {
   IconMessage2,
   IconMoon,
   IconPencil,
+  IconPlayerStop,
   IconPlus,
   IconReload,
   IconSettings,
@@ -29,6 +30,7 @@ export const Icons = {
   reload: IconReload,
   copy: IconCopy,
   plus: IconPlus,
+  playStop: IconPlayerStop,
   logo: (props) => <IconLogo {...props} />,
   loading: (props) => (
     <svg viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" {...props}>
