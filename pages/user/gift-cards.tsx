@@ -21,7 +21,7 @@ export default function UserGiftCardsPage() {
 
   return (
     <UserLayout>
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <div className="mt-4">
           <h2>礼品卡</h2>
         </div>
@@ -37,14 +37,18 @@ export default function UserGiftCardsPage() {
             </Link>{" "}
             中查看激活记录。
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center gap-4 md:flex-row">
             <Input
               value={code}
-              className="w-96 bg-white"
+              className="w-96 max-w-full bg-white"
               onChange={(e) => setCode(e.target.value)}
               placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
             />
-            <Button disabled={code.length != 36} onClick={handleActivate}>
+            <Button
+              disabled={code.length != 36}
+              onClick={handleActivate}
+              className="w-full md:w-auto"
+            >
               激活
             </Button>
           </div>
