@@ -41,7 +41,7 @@ export function ChatItem(props: {
         </div>
         <div className="flex h-6 shrink-0 items-center text-gray-500">
           <div className="text-xs group-hover:hidden">{props.count} 条对话</div>
-          {props.id > 0 && (
+          {props.id > 0 && !isMobileScreen() && (
             <div
               className="hidden cursor-pointer rounded p-1 text-red-500 transition-all hover:bg-red-200 group-hover:block"
               onClick={props.onDelete}
@@ -176,17 +176,6 @@ export function ChatList() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <Button
-          className="flex w-full items-center justify-center gap-2 border-red-400 bg-red-500 text-white md:hidden"
-          onClick={() => {
-            if (confirm("删除该对话")) {
-              removeSession(currentIndex)
-            }
-          }}
-        >
-          <TrashIcon size={22} />
-          <span>删除选中会话</span>
-        </Button>
         <Button
           className="flex w-full items-center justify-center gap-2"
           onClick={handleCreateConversation}
