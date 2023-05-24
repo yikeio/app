@@ -29,15 +29,15 @@ export function ChatItem(props: {
     <div
       className={` group relative rounded-lg border p-4 shadow-sm ${
         props.selected
-          ? "border-2 border-primary shadow-none"
+          ? "border-2 border-primary shadow-none bg-gray-50"
           : "border-slate-200"
       }`}
       onClick={props.onClick}
     >
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 overflow-hidden">
-          <MessageSquareIcon size={16} className="flex-shink-0" />
-          <div className="truncate text-gray-700">{props.title}</div>
+        <div className="flex items-center gap-2 overflow-hidden text-gray-600">
+          <MessageSquareIcon size={16} className=" shrink-0 " />
+          <div className="truncate">{props.title}</div>
         </div>
         <div className="flex h-6 shrink-0 items-center text-gray-500">
           <div className="text-xs group-hover:hidden">{props.count} 条对话</div>
