@@ -18,7 +18,7 @@ export default function UserLayout(props) {
         <Sidebar />
       </SecondMenubar>
       <main className="h-screen flex-1 overflow-auto">
-        <div className="flex h-12 items-center justify-between border-b bg-white px-4">
+        <div className="flex h-12 items-center justify-between border-b bg-white px-4 md:hidden">
           <button
             className="flex items-center gap-1 p-2"
             title="返回"

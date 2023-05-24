@@ -18,7 +18,7 @@ function FeatureHero({ code }) {
   const referUrl = `https://yike.io/?referrer=${code}`
 
   return (
-    <div className="relative overflow-hidden rounded-lg border bg-white p-2 shadow-sm md:p-6">
+    <div className="relative overflow-hidden rounded-lg border bg-white p-2 shadow-sm xl:p-6">
       <img
         src="/background/beams.jpg"
         alt=""
@@ -26,22 +26,22 @@ function FeatureHero({ code }) {
       />
       <div className="absolute inset-0 bg-[url(/background/grid.svg)] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
 
-      <div className="relative flex flex-col gap-6 p-2 md:p-12">
+      <div className="relative flex flex-col gap-4 p-2 md:gap-6 md:p-4 xl:p-12">
         <div className="flex items-center gap-2 text-xl text-blue-500">
           <Gift />
 
           <span>邀请返现</span>
         </div>
 
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-xl font-bold md:text-3xl">
           邀请好友，你和朋友都会获得奖励，
           <br />
           邀请越多返利比例越高！
         </h1>
 
-        <div className="flex flex-col gap-6 text-blue-500 lg:flex-row">
+        <div className="flex flex-col gap-6 text-blue-500 xl:flex-row">
           <div className="flex gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-blue-500 text-xl">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-blue-500 text-sm md:h-12 md:w-12 md:text-xl">
               1
             </div>
             <div className="max-w-[240px] text-gray-700">
@@ -49,7 +49,7 @@ function FeatureHero({ code }) {
             </div>
           </div>
           <div className="flex gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-blue-500 text-xl">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-blue-500 text-sm md:h-12 md:w-12 md:text-xl">
               2
             </div>
             <div className="max-w-[240px] text-gray-700">
@@ -57,7 +57,7 @@ function FeatureHero({ code }) {
             </div>
           </div>
           <div className="flex gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-blue-500 text-xl">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-blue-500 text-sm md:h-12 md:w-12 md:text-xl">
               3
             </div>
             <div className="max-w-[240px] text-gray-700">
@@ -107,7 +107,7 @@ export default function UserInvitationPage() {
         <FeatureHero code={user.referral_code} />
         <div className="mt-4">
           <Tabs defaultValue="leaderboard">
-            <TabsList className="inline-grid grid-cols-2">
+            <TabsList className="grid grid-cols-2 md:inline-grid">
               <TabsTrigger value="invitations">
                 我的邀请记录（{referrals.length}）
               </TabsTrigger>

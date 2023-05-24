@@ -207,21 +207,12 @@ export function LoginDialog() {
         }
       })
       .catch(() => {
-        if (!["/", "/oauth/callback"].includes(location.pathname)) {
-          location.href = "/"
-        }
         localStorage.removeItem("login_token")
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    if (!user.id && !localStorage.getItem("login_token")) {
-      if (!["/", "/oauth/callback"].includes(location.pathname)) {
-        location.href = "/"
-      }
-    }
-
     // 如果用户已经登录，关闭登录弹窗
     if (user.id && localStorage.getItem("login_token") && loginModalVisible) {
       setLoginModalVisible(false)

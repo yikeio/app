@@ -7,7 +7,7 @@ export default function Divider({ label = "" }) {
       }
     >
       {label && (
-        <div className="-mt-[0.5em] leading-none px-2 bg-white">{label}</div>
+        <div className="-mt-[0.5em] bg-white px-2 leading-none">{label}</div>
       )}
     </div>
   )

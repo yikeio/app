@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import { useUserStore } from "@/store"
 import { isMobileScreen } from "@/utils"
 import classNames from "classnames"
-import { MessageSquare, ScalingIcon, Settings2, User } from "lucide-react"
+import { MessageSquare, Settings2, User } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -15,7 +15,7 @@ export function Sidebar(props) {
     state.setLoginModalVisible,
   ])
 
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(true)
 
   const handleClickNav = (url: string) => () => {
     if (!user.id) {
@@ -26,6 +26,9 @@ export function Sidebar(props) {
   }
 
   useEffect(() => {
+    if (!isMobileScreen()) {
+      return
+    }
     setShow(!router.asPath.includes("#hide-nav"))
   }, [router])
 

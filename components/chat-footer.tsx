@@ -9,7 +9,6 @@ import {
   useUserStore,
 } from "@/store"
 import { isMobileScreen } from "@/utils"
-import { ControllerPool } from "@/utils/requests"
 import classNames from "classnames"
 import { SendIcon, StopCircleIcon } from "lucide-react"
 import toast from "react-hot-toast"
@@ -106,7 +105,7 @@ export default function ChatFooter(props) {
   }, [inputRef, user])
 
   return (
-    <div className="sticky bottom-0 p-6">
+    <div className="sticky bottom-0 p-4 md:p-6">
       {!user.id && (
         <Button
           variant="link"

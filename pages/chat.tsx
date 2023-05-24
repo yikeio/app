@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { useUserStore } from "@/store"
-import { isMobileScreen } from "@/utils"
 
 import { Chat } from "@/components/chat"
 import { ChatList } from "@/components/chat-list"

@@ -8,7 +8,7 @@ import {
   useUserStore,
 } from "@/store"
 import { isMobileScreen } from "@/utils"
-import { PlusIcon, TrashIcon } from "lucide-react"
+import { MessageSquareIcon, PlusIcon, TrashIcon } from "lucide-react"
 import toast from "react-hot-toast"
 
 import { Button } from "@/components/ui/button"
@@ -28,16 +28,19 @@ export function ChatItem(props: {
   return (
     <div
       className={` group relative rounded-lg border p-4 shadow-sm ${
-        props.selected ? "border-primary" : "border-slate-200"
+        props.selected
+          ? "border-2 border-primary shadow-none"
+          : "border-slate-200"
       }`}
       onClick={props.onClick}
     >
-      <div className="flex items-center justify-between ">
-        <Label className="text-gray-700">{props.title}</Label>
-        <div className="flex h-6 items-center text-gray-500">
-          <div className="text-xs group-hover:hidden">
-            {Locale.ChatItem.ChatItemCount(props.count)}
-          </div>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 overflow-hidden">
+          <MessageSquareIcon size={16} className="flex-shink-0" />
+          <div className="truncate text-gray-700">{props.title}</div>
+        </div>
+        <div className="flex h-6 shrink-0 items-center text-gray-500">
+          <div className="text-xs group-hover:hidden">{props.count} 条对话</div>
           {props.id > 0 && (
             <div
               className="hidden cursor-pointer rounded p-1 text-red-500 transition-all hover:bg-red-200 group-hover:block"

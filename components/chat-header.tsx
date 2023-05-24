@@ -59,24 +59,25 @@ export default function ChatHeader(props) {
   }
 
   return (
-    <div className="flex items-center justify-between border-b bg-white px-6 py-4">
-      <div className="flex items-center gap-4">
-        <div className="md:hidden">
+    <div className="flex items-center justify-between overflow-hidden border-b bg-white px-2 py-4 md:px-6">
+      <div className="flex flex-1 items-center gap-2 md:gap-4">
+        <div className="shrink-0 md:hidden">
           <button
             className="flex items-center gap-1 p-2"
-            title="对话历史"
+            title="返回对话历史"
             onClick={handleBackToSessions}
           >
             <ChevronLeftIcon size={22} />
           </button>
         </div>
-        <div className="flex items-center gap-2">
-          <MessageSquare className="text-gray-500" />
-          <Label className="text-lg">{session.title}</Label>
+        <div className="flex max-w-[45vw] items-center gap-2 overflow-hidden">
+          <MessageSquare className="hidden shrink-0 text-gray-500 md:block" />
+          <div className="truncate text-lg">
+            {session.title} xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          </div>
         </div>
-        <div className="text-sm text-gray-400"></div>
       </div>
-      <div className="flex items-center gap-2 text-gray-500">
+      <div className="flex shrink-0 items-center gap-2 text-gray-500">
         {user.id && (
           <>
             <Button
