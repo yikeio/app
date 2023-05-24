@@ -1,9 +1,7 @@
-import ReactMarkdown from "react-markdown"
-
-import "katex/dist/katex.min.css"
 import { useRef } from "react"
 import { copyToClipboard } from "@/utils"
 import { Copy } from "lucide-react"
+import ReactMarkdown from "react-markdown"
 import RehypeHighlight from "rehype-highlight"
 import RehypeKatex from "rehype-katex"
 import RemarkBreaks from "remark-breaks"
