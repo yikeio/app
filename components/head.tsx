@@ -8,7 +8,10 @@ export default function Head({ title = "" }) {
         name="description"
         content="一刻 AI 助手是一个基于 AI 的智能助手，可以帮助你更好的管理你的生活。"
       />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta
+        name="viewport"
+        content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+      />
       <link
         rel="apple-touch-icon"
         sizes="180x180"
