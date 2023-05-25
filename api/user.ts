@@ -1,3 +1,5 @@
+import Cookies from "js-cookie"
+
 import { request } from "./common"
 
 /**
@@ -5,7 +7,7 @@ import { request } from "./common"
  * @returns
  */
 export async function checkUser() {
-  const token = localStorage.getItem("login_token")
+  const token = Cookies.get("auth.token")
   if (!token) {
     return Promise.reject({
       status: 404,

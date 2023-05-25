@@ -115,13 +115,13 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     // update pager
     set(() => ({
       conversationPager: {
-        currentPage: conversationRes.result.current_page,
-        pageSize: conversationRes.result.per_page,
-        lastPage: conversationRes.result.last_page,
+        currentPage: conversationRes.current_page,
+        pageSize: conversationRes.per_page,
+        lastPage: conversationRes.last_page,
       },
     }))
 
-    const list: ChatSession[] = conversationRes.result.data
+    const list: ChatSession[] = conversationRes.data
 
     if (list.length === 0) {
       const conversation = await get().createConversation()
@@ -153,7 +153,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   // 创建新的对话
   async createConversation() {
     const res = await createConversation(DEFAULT_TOPIC)
-    const conversation = res.result
+    const conversation = res
     conversation.messages = []
     conversation.updated_at = new Date(conversation.updated_at).toLocaleString()
 
@@ -170,13 +170,13 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     // update pager
     set(() => ({
       messageHistoryPagerMap: get().messageHistoryPagerMap.set(conversationId, {
-        currentPage: messageRes.result.current_page,
-        pageSize: messageRes.result.per_page,
-        lastPage: messageRes.result.last_page,
+        currentPage: messageRes.current_page,
+        pageSize: messageRes.per_page,
+        lastPage: messageRes.last_page,
       }),
     }))
 
-    const list: ChatSession[] = messageRes.result.data.reverse()
+    const list: ChatSession[] = messageRes.data.reverse()
     cacheSet.add(conversationId)
 
     const historyList = list.map((item: any) => {

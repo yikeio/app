@@ -37,15 +37,15 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
       getUserQuotas(userId),
     ])
     set(() => ({
-      currentCombo: currentComboRes.result,
-      allCombos: allCombosRes.result,
+      currentCombo: currentComboRes,
+      allCombos: allCombosRes,
     }))
   },
 
   payableQuotas: [],
   async getPayableQuotas(type: string) {
     const res = await getPayableQuotas(type)
-    set(() => ({ payableQuotas: res.result }))
+    set(() => ({ payableQuotas: res }))
   },
 
   totalUsage() {

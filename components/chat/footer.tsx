@@ -13,8 +13,8 @@ import classNames from "classnames"
 import { SendIcon, StopCircleIcon } from "lucide-react"
 import toast from "react-hot-toast"
 
-import { Button } from "./ui/button"
-import { Textarea } from "./ui/textarea"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function ChatFooter(props) {
   const { autoScrollBottomRef, inputRef } = props
@@ -126,7 +126,7 @@ export default function ChatFooter(props) {
       >
         <Textarea
           ref={inputRef}
-          className="h-10 min-h-[40px] w-full flex-1 bg-white"
+          className="h-10 min-h-[40px] w-full max-w-6xl flex-1 bg-white"
           placeholder={Locale.Chat.Input(config.chat_submit_key)}
           onChange={(e) => setUserInput(e.currentTarget.value)}
           onFocus={() => (autoScrollBottomRef.current = true)}

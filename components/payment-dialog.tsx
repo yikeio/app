@@ -28,7 +28,7 @@ export function PaymentDialog({ paymentDetail, onClose }) {
   const loopQueryPayment = (id: string) => {
     const timer = setInterval(() => {
       getPayment(id).then((res) => {
-        if (res.result.state === "paid") {
+        if (res.state === "paid") {
           setPayStatus(2)
           clearInterval(timer)
           // 购买成功后，刷新一下用户套餐信息

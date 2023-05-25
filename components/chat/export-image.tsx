@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useId, useRef, useState } from "react"
+import LoadingIcon from "@/icons/loading.svg"
 import { useActionsStore, useUserStore } from "@/store"
 import { isMobileScreen } from "@/utils"
 import classNames from "classnames"
@@ -8,9 +9,8 @@ import html2canvas from "html2canvas"
 import QRCode from "react-qr-code"
 
 import { UserAvatar } from "@/components/avatar"
-import LoadingIcon from "../icons/loading.svg"
+import Modal from "../modal"
 import { Markdown } from "./markdown"
-import Modal from "./modal"
 
 /**
  * 1. 设置一个 z-index: -999 的 dom，用于渲染聊天记录和转 canvas
@@ -82,7 +82,7 @@ export default function ExportImage() {
       <div
         ref={chatRef}
         key={messagesId}
-        className="fixed -z-10 max-w-xl overflow-auto bg-slate-100"
+        className="fixed -ml-[1000vw] max-w-xl overflow-auto bg-slate-100"
       >
         <div className="flex flex-col gap-6 px-4 py-6">
           {[...selectedMessages]

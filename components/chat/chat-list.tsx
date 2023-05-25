@@ -12,9 +12,8 @@ import { MessageSquareIcon, PlusIcon, TrashIcon } from "lucide-react"
 import toast from "react-hot-toast"
 
 import { Button } from "@/components/ui/button"
-import Locale from "../locales"
-import SecondMenubar from "./second-menubar"
-import { Label } from "./ui/label"
+import SecondMenubar from "../second-menubar"
+import { Label } from "../ui/label"
 
 export function ChatItem(props: {
   onClick?: (e: React.MouseEvent) => void
@@ -29,7 +28,7 @@ export function ChatItem(props: {
     <div
       className={` group relative rounded-lg border p-4 shadow-sm ${
         props.selected
-          ? "border-2 border-primary shadow-none bg-gray-50"
+          ? "border-2 border-primary bg-gray-50 shadow-none"
           : "border-slate-200"
       }`}
       onClick={props.onClick}
@@ -115,7 +114,7 @@ export function ChatList() {
             pageSize: conversationPager.pageSize,
           }
           const conversationRes = await getConversationList(user.id, params)
-          const list: ChatSession[] = conversationRes.result.data
+          const list: ChatSession[] = conversationRes.data
           const newList: ChatSession[] = [
             ...sessions,
             ...list.map((conversation) => {
@@ -131,9 +130,9 @@ export function ChatList() {
           useChatStore.setState({
             sessions: newList,
             conversationPager: {
-              currentPage: conversationRes.result.current_page,
-              pageSize: conversationRes.result.per_page,
-              lastPage: conversationRes.result.last_page,
+              currentPage: conversationRes.current_page,
+              pageSize: conversationRes.per_page,
+              lastPage: conversationRes.last_page,
             },
           })
 
@@ -146,7 +145,7 @@ export function ChatList() {
   }
 
   return (
-    <SecondMenubar>
+    <div className="flex flex-col gap-6">
       <Label className="text-gray-500">会话历史({sessions.length})</Label>
       <div
         ref={chatListRef}
@@ -184,6 +183,6 @@ export function ChatList() {
           <span>开启新的会话</span>
         </Button>
       </div>
-    </SecondMenubar>
+    </div>
   )
 }

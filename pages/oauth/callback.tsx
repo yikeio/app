@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { createTokens } from "@/api/auth"
+import Cookies from "js-cookie"
 import toast from "react-hot-toast"
 
 import AuthLoading from "../../icons/auth-loading.svg"
@@ -12,9 +13,9 @@ export default function OAuthCallback() {
     // 走 oauth 登陆
     if (code && state) {
       createTokens({ code, state }).then((loginRes) => {
-        localStorage.setItem("login_token", loginRes.result.value)
+        Cookies.set("auth.token", loginRes.value)
         toast.success("登录成功")
-        location.href = "/chat"
+        location.href = "/"
       })
       return
     } else {

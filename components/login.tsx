@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import { getAuthRedirect } from "@/api/auth"
 import {
   activateUser,
@@ -15,15 +16,16 @@ import {
   useSettingsStore,
   useUserStore,
 } from "@/store"
+import Cookies from "js-cookie"
 import toast from "react-hot-toast"
 
-import Divider from "./divider"
-import Modal from "./modal"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
-import { Label } from "./ui/label"
+import Divider from "@/components/divider"
+import Modal from "@/components/modal"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
-export function PhoneLoginForm({ closeModal }: { closeModal: Function }) {
+export function PhoneLoginForm() {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [code, setCode] = useState("")
 
@@ -73,21 +75,23 @@ export function PhoneLoginForm({ closeModal }: { closeModal: Function }) {
 
     try {
       const params = { phoneNumber: `+86:${phoneNumber}`, code }
-      const loginRes = await loginUser(params)
-      localStorage.setItem("login_token", loginRes.result.value)
-      closeModal()
+      const response = await loginUser(params)
+
+      Cookies.set("auth.token", response.value, {
+        expires: new Date(response.expires_at),
+      })
       resetForm()
       toast.success("登录成功")
 
-      const userRes = await checkUser()
-      updateUser(userRes.result)
-      getConversationList(userRes.result.id)
+      const user = await checkUser()
+      updateUser(user)
+      getConversationList(user.id)
     } catch (e) {}
   }
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-0.5">
         <Label
           htmlFor="phone-number-input"
           className="mb-1 block text-sm font-medium text-gray-900 dark:text-white"
@@ -101,7 +105,7 @@ export function PhoneLoginForm({ closeModal }: { closeModal: Function }) {
           <Input
             type="text"
             id="phone-number-input"
-            className="block w-full pl-12"
+            className="block w-full bg-white pl-12"
             placeholder="请输入手机号"
             maxLength={11}
             autoFocus={true}
@@ -110,7 +114,7 @@ export function PhoneLoginForm({ closeModal }: { closeModal: Function }) {
           />
         </div>
       </div>
-      <div className="relative flex flex-col gap-2">
+      <div className="relative flex flex-col gap-0.5">
         <Label
           htmlFor="verify-code-input"
           className="mb-1 block text-sm font-medium text-gray-900 dark:text-white"
@@ -121,7 +125,7 @@ export function PhoneLoginForm({ closeModal }: { closeModal: Function }) {
           <Input
             type="text"
             id="verify-code-input"
-            className="w-full rounded-md pr-24"
+            className="w-full rounded-md bg-white pr-24"
             placeholder="请输入验证码"
             maxLength={6}
             value={code}
@@ -181,68 +185,48 @@ export function OAuthLoginButtons() {
   )
 }
 
-export function LoginDialog() {
-  const [user, updateUser, loginModalVisible, setLoginModalVisible] =
-    useUserStore((state) => [
-      state.user,
-      state.updateUser,
-      state.loginModalVisible,
-      state.setLoginModalVisible,
-    ])
-  const [getUserQuotaInfo] = useBillingStore((state) => [
-    state.getUserQuotaInfo,
+export default function Login() {
+  const router = useRouter()
+  const [user, updateUser] = useUserStore((state) => [
+    state.user,
+    state.updateUser,
   ])
-  const [getConversationList] = useChatStore((state) => [
-    state.getConversationList,
-  ])
+
   const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
 
   useEffect(() => {
     checkUser()
       .then((res) => {
-        updateUser(res.result)
-        if (res.result.state !== "unactivated") {
-          getConversationList(res.result.id)
-          getUserSettings(res.result.id)
+        updateUser(res)
+        if (res.state !== "unactivated") {
+          getUserSettings(res.id)
         }
       })
       .catch(() => {
-        localStorage.removeItem("login_token")
+        Cookies.remove("auth.token")
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     // 如果用户已经登录，关闭登录弹窗
-    if (user.id && localStorage.getItem("login_token") && loginModalVisible) {
-      setLoginModalVisible(false)
+    if (user.id && Cookies.get("auth.token")) {
+      router.back()
     }
-
-    // 获取用户的套餐信息
-    if (user.id && user.state !== "unactivated") {
-      getUserQuotaInfo(user.id)
-    }
-  }, [user, loginModalVisible])
+  }, [user])
 
   return (
-    <Modal
-      size="sm"
-      show={loginModalVisible}
-      noPadding
-      onClose={() => setLoginModalVisible(false)}
-    >
-      <div className="flex flex-col gap-4 p-6">
-        <div className="flex items-center justify-center">
-          <Image src="/logo.svg" alt="" height={80} width={80} />
-        </div>
-        <h1 className="text-center text-2xl">欢迎回来</h1>
-        <OAuthLoginButtons />
-        <div className="my-2">
-          <Divider label="或使用手机验证码登录" />
-        </div>
-        <PhoneLoginForm closeModal={setLoginModalVisible} />
+    <div className="flex flex-col gap-6 bg-primary-50/70 p-6">
+      <div className="flex items-center">
+        <Image src="/logo.svg" alt="" height={48} width={48} />
       </div>
-    </Modal>
+      <h1 className="text-xl font-normal">登录 一刻</h1>
+      <OAuthLoginButtons />
+      <div className="my-2">
+        <Divider label="或使用手机验证码登录" />
+      </div>
+      <PhoneLoginForm />
+    </div>
   )
 }
 
@@ -268,7 +252,7 @@ export function ActivateDialog() {
       await activateUser({ userId: user.id, inviteCode })
       toast.success("激活成功")
       const userRes = await checkUser()
-      updateUser(userRes.result)
+      updateUser(userRes)
       setActivateVisible(false)
       // 激活成功后，拿到用户设置信息
       getConversationList(user.id)
@@ -280,8 +264,8 @@ export function ActivateDialog() {
     try {
       await activateUser({ userId: user.id, inviteCode: referrer })
       const userRes = await checkUser()
-      updateUser(userRes.result)
-      if (userRes.result.state === "activated") {
+      updateUser(userRes)
+      if (userRes.state === "activated") {
         toast.success("账号已激活")
       }
     } catch (e) {
@@ -289,14 +273,14 @@ export function ActivateDialog() {
       toast.error("账号未激活，请先激活!")
       setActivateVisible(true)
     } finally {
-      localStorage.removeItem("referrer")
+      Cookies.remove("referrer")
     }
   }
 
   useEffect(() => {
     if (user.state === "unactivated" && !activateVisible) {
-      const referrer = localStorage.getItem("referrer")
-      const token = localStorage.getItem("login_token")
+      const referrer = Cookies.get("referrer")
+      const token = Cookies.get("auth.token")
 
       // 登录了没激活，但是本地存储有邀请码，尝试激活
       if (user.id && token && referrer) {

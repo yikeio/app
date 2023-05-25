@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import Cookies from "js-cookie"
 
 /**
  * 需要存在 localStorage 里的属性集合
@@ -11,7 +12,7 @@ export const useStorageParams = () => {
     const { searchParams } = new URL(location.href)
     STORE_PARAMS.forEach((param) => {
       if (searchParams.get(param)) {
-        localStorage.setItem(param, searchParams.get(param))
+        Cookies.set(param, searchParams.get(param))
       }
     })
   }, [])

@@ -3,28 +3,26 @@ import { useStorageParams } from "@/hooks/use-storage-params"
 import { ThemeProvider } from "next-themes"
 import NextNProgress from "nextjs-progressbar"
 import { Toaster } from "react-hot-toast"
+import { SWRConfig } from "swr"
 
-import { ActivateDialog, LoginDialog } from "@/components/login"
 import "@/styles/globals.scss"
+import { request } from "@/api/common"
 
 export default function App({ Component, pageProps }: AppProps) {
-  const isStaticPage = ["Privacy", "Terms", "OAuthCallback"].includes(
-    Component.name
-  )
-
   useStorageParams()
-
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <NextNProgress />
-      <Component {...pageProps} />
-      {!isStaticPage && (
-        <>
-          <LoginDialog />
-          <ActivateDialog />
-          <Toaster />
-        </>
-      )}
+      <SWRConfig
+        value={{
+          refreshInterval: 5000,
+          fetcher: (resource, init) =>
+            request(resource, init).then((res) => res),
+        }}
+      >
+        <NextNProgress />
+        <Component {...pageProps} />
+        <Toaster />
+      </SWRConfig>
     </ThemeProvider>
   )
 }

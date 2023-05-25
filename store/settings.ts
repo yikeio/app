@@ -57,7 +57,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => ({
   // 获取用户配置
   async getUserSettings(userId: string) {
     const res = await getListUserSettings(userId)
-    const config = res.result
+    const config = res
     set(() => ({ config }))
   },
 }))

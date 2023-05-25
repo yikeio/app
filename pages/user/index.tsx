@@ -2,6 +2,7 @@
 
 import { useBillingStore, useUserStore } from "@/store"
 import { copyToClipboard } from "@/utils"
+import Cookies from "js-cookie"
 import toast from "react-hot-toast"
 
 import { formatDatetime, formatTimeAgo } from "@/lib/utils"
@@ -21,7 +22,7 @@ export default function UserIndexPage() {
   ])
 
   function handleLogout() {
-    localStorage.removeItem("login_token")
+    Cookies.remove("auth.token")
     updateUser({})
     toast.success("已登出")
   }

@@ -1,4 +1,5 @@
 const { fontFamily } = require("tailwindcss/defaultTheme")
+const colors = require("tailwindcss/colors")
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -14,20 +15,23 @@ module.exports = {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        border: colors.gray[200],
+        input: colors.gray[200],
+        ring: colors.violet[500],
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          ...colors.violet,
+          DEFAULT: colors.violet[700],
+          foreground: colors.violet[50],
         },
         secondary: {
+          ...colors.gray,
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
+          ...colors.red,
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
@@ -36,8 +40,9 @@ module.exports = {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          ...colors.gray,
+          DEFAULT: colors.gray[200],
+          foreground: colors.gray[500],
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",

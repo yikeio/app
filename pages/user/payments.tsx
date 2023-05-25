@@ -18,7 +18,7 @@ export default function UserInvitationPage() {
   useEffect(() => {
     if (!user.id) return
     getPayments(user.id).then((res) => {
-      setPayments(res.result || [])
+      setPayments(res || [])
     })
   }, [user])
 
@@ -36,7 +36,7 @@ export default function UserInvitationPage() {
               待支付
             </span>
             <button
-              className="ml-6 inline-block rounded bg-slate-900 p-1 text-xs text-white hover:bg-slate-700 dark:bg-slate-50"
+              className="ml-6 inline-block rounded bg-slate-900 p-1 text-xs text-white hover:bg-slate-700 dark:bg-primary-50"
               onClick={() => {
                 setPaymentDetail(payment)
               }}

@@ -1,9 +1,10 @@
 import { useEffect } from "react"
 import dynamic from "next/dynamic"
+import LoadingIcon from "@/icons/loading.svg"
 import { useChatStore, useUserStore } from "@/store"
 import classNames from "classnames"
+import { twMerge } from "tailwind-merge"
 
-import LoadingIcon from "../icons/loading.svg"
 import MessageActions from "./message-actions"
 
 const LOADING_MESSAGE = {
@@ -40,19 +41,19 @@ export default function MessageBody({
 
   return (
     <div
-      className={classNames(
-        "export-container group relative flex max-w-[90%] flex-col gap-2 overflow-hidden md:max-w-[75%]",
+      className={twMerge(
+        "export-container group relative flex max-w-[90%] flex-col gap-2 overflow-hidden md:max-w-[75%] min-w-[200px]",
         className
       )}
     >
       <div className="rounded-lg">
         <div
-          className={
-            `p-3 md:p-4 rounded-xl border text-gray-700 relative shadow-sm ` +
-            (isUser
-              ? "bg-blue-200 border-blue-300 justify-self-end rounded-br-none"
-              : "bg-white rounded-bl-none")
-          }
+          className={twMerge(
+            `p-3 md:p-4 rounded-[24px] border text-gray-800 relative flex flex-col gap-4`,
+            isUser
+              ? "bg-primary text-white border-primary justify-self-end rounded-br-none"
+              : "bg-primary-50 rounded-bl-none"
+          )}
         >
           {/* 消息内容 */}
           {(message.preview || message.content.length === 0) && !isUser ? (
@@ -62,15 +63,16 @@ export default function MessageBody({
               <Markdown content={message.content} />
             </div>
           )}
+
+          {user.id && inputRef && (
+            <MessageActions
+              message={message}
+              preMessage={preMessage}
+              inputRef={inputRef}
+            />
+          )}
         </div>
       </div>
-      {user.id && inputRef && (
-        <MessageActions
-          message={message}
-          preMessage={preMessage}
-          inputRef={inputRef}
-        />
-      )}
     </div>
   )
 }

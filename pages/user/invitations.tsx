@@ -93,17 +93,17 @@ export default function UserInvitationPage() {
   useEffect(() => {
     if (!user.id) return
     getReferrals(user.id).then((res) => {
-      setReferrals(res.result || [])
+      setReferrals(res || [])
     })
 
     getLeaderboards().then((res) => {
-      setLeaderboards(res.result || [])
+      setLeaderboards(res || [])
     })
   }, [user])
 
   return (
     <UserLayout>
-      <div className="h-full overflow-auto bg-slate-50 p-4 md:p-8">
+      <div className="h-full overflow-auto bg-primary-50 p-4 md:p-8">
         <FeatureHero code={user.referral_code} />
         <div className="mt-4">
           <Tabs defaultValue="leaderboard">

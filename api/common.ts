@@ -1,9 +1,10 @@
+import Cookies from "js-cookie"
 import toast from "react-hot-toast"
 
 export const API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN
 
 export function request(url: string, options: Record<string, any> = {}) {
-  const token = localStorage.getItem("login_token")
+  const token = Cookies.get("auth.token")
 
   options.headers = {
     "Content-Type": "application/json",
@@ -15,18 +16,34 @@ export function request(url: string, options: Record<string, any> = {}) {
       .then((res: any) => {
         if (res.status === 204) {
           return res.text().then((result: any) => {
-            resolve({ result, status: res.status })
+            resolve(result)
           })
         }
 
         if (res.status >= 200 && res.status <= 300) {
           res.json().then((result: any) => {
-            resolve({ result, status: res.status })
+            resolve(result)
           })
-        } else {
+        }
+
+        if (res.status === 401) {
           res.json().then((result: any) => {
-            toast.error(res.status == 401 ? "用户身份过期" : result.message)
-            reject({ result, status: res.status })
+            Cookies.remove("auth.token")
+
+            toast.error("请登录")
+
+            // setTimeout(() => {
+            //   window.location.href = '/auth/login';
+            // }, 1000);
+
+            reject(result)
+          })
+        }
+
+        if (res.status > 401) {
+          res.json().then((result: any) => {
+            toast.error(result.message)
+            reject(result)
           })
         }
       })

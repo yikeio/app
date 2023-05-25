@@ -6,9 +6,9 @@ import classNames from "classnames"
 
 import { UserAvatar } from "@/components/avatar"
 import { Checkbox } from "@/components/ui/checkbox"
-import ChatFooter from "./chat-footer"
-import ChatHeader from "./chat-header"
 import ExportImage from "./export-image"
+import ChatFooter from "./footer"
+import ChatHeader from "./header"
 import MessageBody from "./message-body"
 
 export function Chat() {
@@ -28,12 +28,12 @@ export function Chat() {
   const hasChecked = (message: any) => selectedMessages.includes(message)
 
   return (
-    <div className="flex flex-1 flex-col overflow-y-auto bg-slate-100">
+    <div className="flex flex-1 flex-col overflow-y-auto">
       <ChatHeader autoScrollBottomRef={autoScrollBottomRef} />
 
       {/* 对话列表 */}
       <div
-        className={"flex flex-1 flex-col overflow-y-auto"}
+        className={"flex flex-1 flex-col overflow-y-auto p-4 md:p-6 xl:p-12"}
         ref={chatBodyRef}
         onScroll={onChatBodyScroll}
         onTouchStart={() => inputRef.current?.blur()}
@@ -59,7 +59,6 @@ export function Chat() {
               preMessage={session.messages[index - 1]}
               inputRef={inputRef}
             />
-            <UserAvatar role={message.role} />
             {mode === "select" && (
               <div
                 className={classNames(`absolute inset-0 p-4 z-50`)}

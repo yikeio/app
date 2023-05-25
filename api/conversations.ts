@@ -61,25 +61,6 @@ export async function createMessage(conversationId: number, content: string) {
 }
 
 /**
- * 创建智能对话
- * @returns
- */
-export async function createSmartMessage(conversationId: number) {
-  const token = localStorage.getItem("login_token")
-
-  return fetch(
-    `${API_DOMAIN}/api/chat/conversations/${conversationId}/completions`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  )
-}
-
-/**
  * 获取单个会话的消息列表
  * @returns
  */

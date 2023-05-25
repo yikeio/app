@@ -39,7 +39,7 @@ export default function PricingPage() {
         quota_type: item.quota_type,
         pricing: item.pricing,
       })
-      setPaymentDetail(res.result)
+      setPaymentDetail(res)
     } catch (e) {
       if (e.status === 403) {
         location.href = "/user/payments"
@@ -51,7 +51,7 @@ export default function PricingPage() {
   const getListUserPaymentList = async () => {
     if (!user.id) return
     const res = await getListUserPayment(user.id)
-    const recentPayment = res.result.filter(
+    const recentPayment = res.filter(
       (item: Record<string, string>) => item.state === "pending"
     )[0]
 

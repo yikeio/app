@@ -14,9 +14,6 @@ export default function UserLayout(props) {
   return (
     <Layout>
       <Head title="用户中心" />
-      <SecondMenubar>
-        <Sidebar />
-      </SecondMenubar>
       <main className="h-screen flex-1 overflow-auto">
         <div className="flex h-12 items-center justify-between border-b bg-white px-4 md:hidden">
           <button
