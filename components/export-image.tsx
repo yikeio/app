@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useId, useRef, useState } from "react"
+import Image from "next/image"
 import { useActionsStore, useUserStore } from "@/store"
 import { isMobileScreen } from "@/utils"
 import classNames from "classnames"
-import html2canvas from "html2canvas"
+import { toPng } from "html-to-image"
 import QRCode from "react-qr-code"
 
 import { UserAvatar } from "@/components/avatar"
@@ -20,7 +21,7 @@ export default function ExportImage() {
   const modelId = useId()
   const messagesId = useId()
   const [user] = useUserStore((state) => [state.user])
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasRef = useRef<HTMLImageElement>(null)
   const chatRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [setMode, selectedMessages, exportImageVisible, setExportImageVisible] =
@@ -34,16 +35,10 @@ export default function ExportImage() {
   const referralUrl = user.referral_url || ""
 
   const drawImage = async (element) => {
-    const canvas = await html2canvas(element, {
-      useCORS: true,
-      scale: 4,
-    })
+    const dataUrl = await toPng(element)
 
     const { current } = canvasRef
-    current.width = canvas.width
-    current.height = canvas.height
-    const ctx = current.getContext("2d")
-    ctx.drawImage(canvas, 0, 0)
+    current.src = dataUrl
   }
 
   useEffect(() => {
@@ -66,12 +61,15 @@ export default function ExportImage() {
         onClose={() => setExportImageVisible(false)}
       >
         <div className="flex min-h-[200px] flex-col items-center justify-center">
-          {loading && <LoadingIcon fill="#000" />}
-          <canvas
+          {loading && <LoadingIcon fill="#000" className="h-[50px]" />}
+
+          <Image
             ref={canvasRef}
-            height="0"
+            src=""
+            alt=""
             className="max-h-[80vh] max-w-full"
-          ></canvas>
+          ></Image>
+
           <p className="rounded-full bg-slate-300/40 px-4 text-center text-gray-100">
             {isMobileScreen()
               ? "长按图片分享或保存到本地"
@@ -82,7 +80,7 @@ export default function ExportImage() {
       <div
         ref={chatRef}
         key={messagesId}
-        className="fixed -z-10 max-w-xl overflow-auto bg-slate-100"
+        className="fixed left-0 top-0 -z-10 max-w-xl overflow-auto bg-slate-100"
       >
         <div className="flex flex-col gap-6 px-4 py-6">
           {[...selectedMessages]
@@ -138,7 +136,7 @@ export default function ExportImage() {
             style={{ height: 48, maxWidth: 48, width: 48, margin: 0 }}
             viewBox={`0 0 72 72`}
           />
-          <div className="-mt-2 flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             <h4 className="m-0 p-0 font-bold leading-none">一刻 AI 助手</h4>
             <div className="m-0 text-sm text-gray-400">
               <span className="mr-2">扫码即可体验智能问答</span>
