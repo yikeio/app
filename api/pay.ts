@@ -4,7 +4,7 @@ import { request } from "./common"
  * 获取会话列表
  * @returns
  */
-export async function getPayableQuotas(type: string) {
+export async function getPlans(type: string) {
   return request(`pricings?quota_type=${type}`)
 }
 

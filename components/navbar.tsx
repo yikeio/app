@@ -38,18 +38,7 @@ import {
 
 export function Navbar(props) {
   const router = useRouter()
-  const [user, setLoginModalVisible] = useUserStore((state) => [
-    state.user,
-    state.setLoginModalVisible,
-  ])
-
-  const handleClickNav = (url: string) => () => {
-    if (!user.id) {
-      setLoginModalVisible(true)
-      return
-    }
-    router.push(url)
-  }
+  const [user] = useUserStore((state) => [state.user])
 
   console.log(router.pathname)
 
@@ -65,7 +54,7 @@ export function Navbar(props) {
               item.href && router.pathname === item.href,
           }
         )}
-        onClick={item.href ? handleClickNav(item.href) : undefined}
+        onClick={item.href ? () => router.push(item.href) : undefined}
       >
         {item.icon}
         <div className="hidden md:block">{item.name}</div>
@@ -98,8 +87,8 @@ export function Navbar(props) {
       <Button
         variant="ghost"
         size="sm"
-        className="hidden w-full items-center justify-start gap-4 text-slate-700 dark:text-slate-400 md:flex"
-        onClick={handleClickNav("/")}
+        className="hidden w-full items-center justify-start gap-4 text-slate-700 hover:bg-primary-200 hover:text-primary-700 dark:text-slate-400 md:flex"
+        onClick={() => router.push("/")}
       >
         <Image src="/logo.svg" height={24} width={24} alt="logo" />
         <div className="hidden text-xl leading-none md:block">一刻 AI</div>

@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-import { getPayableQuotas } from "../api/pay"
+import { getPlans } from "../api/pay"
 import { getUserAvailableQuota, getUserQuotas } from "../api/user"
 
 interface BillingStore {
@@ -15,8 +15,8 @@ interface BillingStore {
   getUserQuotaInfo(userId: string): Promise<void>
 
   // 可购买的套餐
-  payableQuotas: any[]
-  getPayableQuotas: (type: string) => Promise<void>
+  plans: any[]
+  getPlans: (type: string) => Promise<void>
 
   // 当前已用多少token
   totalUsage: () => number
@@ -42,10 +42,10 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
     }))
   },
 
-  payableQuotas: [],
-  async getPayableQuotas(type: string) {
-    const res = await getPayableQuotas(type)
-    set(() => ({ payableQuotas: res }))
+  plans: [],
+  async getPlans(type: string) {
+    const res = await getPlans(type)
+    set(() => ({ plans: res }))
   },
 
   totalUsage() {

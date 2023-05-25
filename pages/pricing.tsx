@@ -1,9 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import * as React from "react"
+import { useRouter } from "next/router"
 import classNames from "classnames"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
 
-import { formatNumber } from "@/lib/utils"
+import { cn, formatNumber } from "@/lib/utils"
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
 import { PaymentDialog } from "@/components/payment-dialog"
@@ -13,26 +14,18 @@ import { getListUserPayment } from "../api/user"
 import { useBillingStore, useUserStore } from "../store"
 
 export default function PricingPage() {
+  const router = useRouter()
   const [user] = useUserStore((state) => [state.user])
-  const [getPayableQuotas, payableQuotas, getUserQuotaInfo] = useBillingStore(
-    (state) => [
-      state.getPayableQuotas,
-      state.payableQuotas,
-      state.getUserQuotaInfo,
-    ]
-  )
+  const [getPlans, plans] = useBillingStore((state) => [
+    state.getPlans,
+    state.plans,
+  ])
   const [paymentDetail, setPaymentDetail] = React.useState<any>({})
 
   React.useEffect(() => {
-    getPayableQuotas("chat")
+    getPlans("chat")
   }, [])
 
-  /**
-
-  /**
-   * 支付
-   * @param item
-   */
   const handlePay = async (item: any) => {
     try {
       const res = await createPayment({
@@ -42,13 +35,13 @@ export default function PricingPage() {
       setPaymentDetail(res)
     } catch (e) {
       if (e.status === 403) {
-        location.href = "/user/payments"
+        router.push("/user/payments")
       }
     }
   }
 
   // 获取用户未付款的订单先展示
-  const getListUserPaymentList = async () => {
+  const getUnpaidPayments = async () => {
     if (!user.id) return
     const res = await getListUserPayment(user.id)
     const recentPayment = res.filter(
@@ -61,7 +54,7 @@ export default function PricingPage() {
   }
 
   React.useEffect(() => {
-    getListUserPaymentList()
+    getUnpaidPayments()
   }, [user])
 
   return (
@@ -77,13 +70,13 @@ export default function PricingPage() {
           </p>
         </div>
         <div className="-m-4 flex flex-wrap justify-center">
-          {payableQuotas.map((item: any, index: number) => (
+          {plans.map((item: any, index: number) => (
             <div className="w-full p-4 md:w-1/2 xl:w-1/4" key={index}>
               <div
-                className={classNames(
-                  `relative flex h-full flex-col overflow-hidden rounded-lg border shadow-sm hover:shadow-lg hover:border-gray-300 bg-white p-6`,
+                className={cn(
+                  `relative flex h-full flex-col overflow-hidden rounded-lg border border-primary-100 bg-primary-50 p-6 shadow-sm hover:border-primary-300 hover:shadow-lg`,
                   {
-                    "border-indigo-500  hover:border-indigo-500":
+                    "border-primary-500  hover:border-primary-600":
                       item.is_popular,
                   }
                 )}
@@ -114,6 +107,10 @@ export default function PricingPage() {
                 <div className="mb-2 flex items-center gap-3 text-gray-600">
                   <CheckCircle2 className="text-green-500" size={16} />
                   <span>无限制预设角色使用</span>
+                </div>
+                <div className="mb-2 flex items-center gap-3 text-gray-600">
+                  <CheckCircle2 className="text-green-500" size={16} />
+                  <span>实验室功能抢先体验</span>
                 </div>
                 <div className="mb-2 flex items-center gap-3 text-gray-600">
                   <CheckCircle2 className="text-green-500" size={16} />

@@ -28,8 +28,8 @@ export default function PromptPage() {
         <div className="grid flex-1 grid-cols-1 justify-center gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {data.data?.map((prompt) => (
             <Link
-              href={`/chat?prompt=${prompt.id}`}
-              className="group flex flex-col gap-6 rounded-xl border bg-primary-50 p-4 hover:bg-primary-100 hover:shadow-sm xl:p-6"
+              href={`/chat?prompt_id=${prompt.id}`}
+              className="group flex flex-col gap-6 rounded-xl border border-primary-200 bg-primary-50 p-4 hover:bg-primary-100 hover:shadow-sm xl:p-6"
               key={prompt.id}
             >
               <div className="flex items-center justify-between">

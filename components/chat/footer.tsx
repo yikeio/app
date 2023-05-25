@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
 import Locale from "@/locales"
 import {
   SubmitKey,
@@ -17,14 +18,11 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 
 export default function ChatFooter(props) {
+  const router = useRouter()
   const { autoScrollBottomRef, inputRef } = props
   const [userInput, setUserInput] = useState("")
-
   const [config] = useSettingsStore((state) => [state.config])
-  const [user, setLoginModalVisible] = useUserStore((state) => [
-    state.user,
-    state.setLoginModalVisible,
-  ])
+  const [user] = useUserStore((state) => [state.user])
 
   const [isStreaming, onUserInput, onUserInputStop, setIsLoadingAnswer] =
     useChatStore((state) => [
@@ -84,14 +82,16 @@ export default function ChatFooter(props) {
 
     if (!currentCombo.is_available) {
       toast.error("当前无可用套餐，请购买套餐!")
-      location.href = "/pricing"
-      return
+      return router.push("/pricing")
     }
     setIsLoadingAnswer(true)
     onUserInput(userInput).then(() => setIsLoadingAnswer(false))
     autoScrollBottomRef.current = true
     setUserInput("")
-    if (!isMobileScreen()) inputRef.current?.focus()
+
+    if (!isMobileScreen()) {
+      inputRef.current?.focus()
+    }
   }
 
   const onCancelExport = () => {
@@ -110,7 +110,7 @@ export default function ChatFooter(props) {
         <Button
           variant="link"
           className="absolute inset-0 z-10 flex h-full items-center justify-center bg-gray-100/70 text-gray-700 shadow"
-          onClick={() => setLoginModalVisible(true)}
+          onClick={() => router.push("/auth/login")}
         >
           立即登录开始对话
         </Button>
@@ -135,7 +135,6 @@ export default function ChatFooter(props) {
           rows={1}
           disabled={!user.id || isStreaming}
           onKeyDown={onInputKeyDown}
-          autoFocus={!props.showSideBar}
         />
 
         {isStreaming ? (
@@ -162,6 +161,7 @@ export default function ChatFooter(props) {
           hidden: mode !== "select",
         })}
       >
+        {/* todo: 移除到 export-image 去 */}
         <div className="text-center text-sm text-gray-400">
           已选择 {selectedMessages.length} 条消息
         </div>

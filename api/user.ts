@@ -2,42 +2,41 @@ import Cookies from "js-cookie"
 
 import { request } from "./common"
 
+export interface User {
+  id: number
+  name: string
+  avatar?: string
+  root_referrer_id?: number
+  referrer_id?: number
+  level: number
+  referrer_path?: string
+  referral_code?: string
+  referrals_count: number
+  phone_number?: string
+  email?: string
+  is_admin?: boolean
+  first_active_at?: string
+  last_active_at?: string
+  state: "activated" | "unactivated" | "banned"
+  referrer?: User
+  paid_total: number
+  created_at?: string
+  updated_at?: string
+}
+
 /**
  * 检测用户登陆
  * @returns
  */
-export async function checkUser() {
+export async function getAuthUser() {
   const token = Cookies.get("auth.token")
-  if (!token) {
-    return Promise.reject({
-      status: 404,
-      result: {
-        message: "暂未登录",
-      },
-    })
-  }
-  return request("user")
-}
 
-/**
- * 用户登陆
- * @param param0
- * @returns
- */
-export async function loginUser({
-  phoneNumber,
-  code,
-}: {
-  phoneNumber: string
-  code: string
-}) {
-  return request("auth/tokens:via-sms", {
-    method: "POST",
-    body: JSON.stringify({
-      phone_number: phoneNumber,
-      sms_verification_code: code,
-    }),
-  })
+  if (!token) {
+    window.location.href = "/auth/login"
+    return Promise.reject("未登录")
+  }
+
+  return request("user")
 }
 
 /**
@@ -65,16 +64,10 @@ export async function activateUser({
  * @param param0
  * @returns
  */
-export async function sendVerificationCode({
-  phoneNumber,
-  scene,
-}: {
-  phoneNumber: string
-  scene: string
-}) {
+export async function sendVerificationCode(phoneNumber: string, scene: string) {
   return request("sms/verification-codes:send", {
     method: "POST",
-    body: JSON.stringify({ scene, phone_number: phoneNumber }),
+    body: JSON.stringify({ scene, phone_number: `+86:${phoneNumber}` }),
   })
 }
 
