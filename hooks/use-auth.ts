@@ -8,17 +8,18 @@ export default function useAuth() {
   const AUTH_USER_KEY = "auth.user"
 
   let [user, setUser] = useState<User>(null)
+  let [hasLogged, setHasLogged] = useState(!!Cookies.get(AUTH_TOKEN_KEY))
 
   const redirectToLogin = () => {
     window.location.href = "/auth/login"
   }
 
-  const isLogged = () => {
+  const userHasLogged = () => {
     return !!Cookies.get(AUTH_TOKEN_KEY)
   }
 
   const getUser = async (): Promise<User> => {
-    if (!isLogged()) {
+    if (!userHasLogged()) {
       return null
     }
 
@@ -89,17 +90,16 @@ export default function useAuth() {
 
   useEffect(() => {
     getUser()
+    setHasLogged(userHasLogged())
   }, [])
 
   return {
+    hasLogged,
     user,
-    refreshAuthUser,
+    logout,
     redirectToLogin,
     handleOauthCallback,
     handleLoginViaSms,
-    logout,
-    get isLogged() {
-      return isLogged()
-    },
+    refreshAuthUser,
   }
 }

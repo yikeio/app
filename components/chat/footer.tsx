@@ -23,7 +23,7 @@ export default function ChatFooter(props) {
   const { autoScrollBottomRef, inputRef } = props
   const [userInput, setUserInput] = useState("")
   const [config] = useSettingsStore((state) => [state.config])
-  const { user, isLogged } = useAuth()
+  const { user, hasLogged } = useAuth()
 
   const [isStreaming, onUserInput, onUserInputStop, setIsLoadingAnswer] =
     useChatStore((state) => [
@@ -107,7 +107,7 @@ export default function ChatFooter(props) {
 
   return (
     <div className="sticky bottom-0 p-4 md:p-6">
-      {!isLogged && (
+      {!hasLogged && (
         <Button
           variant="link"
           className="absolute inset-0 z-10 flex h-full items-center justify-center bg-gray-100/70 text-gray-700 shadow"
@@ -134,7 +134,7 @@ export default function ChatFooter(props) {
           onBlur={() => (autoScrollBottomRef.current = true)}
           value={userInput}
           rows={1}
-          disabled={!isLogged || isStreaming}
+          disabled={!hasLogged || isStreaming}
           onKeyDown={onInputKeyDown}
         />
 
@@ -150,7 +150,7 @@ export default function ChatFooter(props) {
           <Button
             className="flex w-full items-center gap-2 md:w-auto"
             onClick={onUserSubmit}
-            disabled={!isLogged || userInput.length <= 0}
+            disabled={!hasLogged || userInput.length <= 0}
           >
             <SendIcon size={12} />
             <span>发送</span>

@@ -8,18 +8,18 @@ import { ChatList } from "@/components/chat/chat-list"
 import Loading from "@/components/loading"
 
 export default function ChatPage() {
-  const { isLogged, user, redirectToLogin } = useAuth()
+  const { hasLogged, user, redirectToLogin } = useAuth()
 
   useEffect(() => {
-    if (!isLogged) {
-      window.location.href = "/auth/login"
+    if (!hasLogged) {
+      redirectToLogin()
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLogged])
+  }, [hasLogged])
 
-  if (!isLogged || !user) {
-    return <Loading />
+  if (!hasLogged || !user) {
+    return <Loading className="min-h-screen" />
   }
 
   return (

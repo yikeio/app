@@ -65,10 +65,9 @@ export function PhoneLoginForm() {
 
     try {
       await auth.handleLoginViaSms(phoneNumber, code)
-      resetForm()
-      toast.success("登录成功")
-
       redirectToIntend()
+      toast.success("登录成功")
+      resetForm()
     } catch (e) {}
   }
 
@@ -135,9 +134,9 @@ export function PhoneLoginForm() {
 }
 
 export default function Login() {
-  const { isLogged } = useAuth()
+  const { hasLogged } = useAuth()
 
-  if (isLogged) {
+  if (hasLogged) {
     redirectToIntend()
   }
 
