@@ -1,5 +1,4 @@
-import { useState } from "react"
-import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 import { AuthToken, getToken, getTokenViaSms } from "@/api/auth"
 import { User, getAuthUser } from "@/api/user"
 import Cookies from "js-cookie"
@@ -25,7 +24,7 @@ export default function useAuth() {
 
     const cache = localStorage.getItem(AUTH_USER_KEY)
 
-    if (cache === "undefined") {
+    if (!cache) {
       await refreshAuthUser()
     } else {
       setUser(JSON.parse(cache))
@@ -35,11 +34,10 @@ export default function useAuth() {
   }
 
   const refreshAuthUser = async (): Promise<User> => {
-    getAuthUser().then((res) => {
-      localStorage.setItem(AUTH_USER_KEY, JSON.stringify(res))
-    })
+    const res = await getAuthUser()
 
-    setUser(JSON.parse(localStorage.getItem(AUTH_USER_KEY)))
+    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(res))
+    setUser(res)
 
     return user
   }
@@ -86,9 +84,12 @@ export default function useAuth() {
   const logout = () => {
     Cookies.remove(AUTH_TOKEN_KEY)
     localStorage.removeItem(AUTH_USER_KEY)
+    setUser(null)
   }
 
-  getUser()
+  useEffect(() => {
+    getUser()
+  }, [])
 
   return {
     user,

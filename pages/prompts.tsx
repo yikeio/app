@@ -10,16 +10,11 @@ import { Layout } from "@/components/layout"
 import Loading from "@/components/loading"
 
 export default function PromptPage() {
-  const router = useRouter()
-  const { data, error, mutate, isLoading } = useSWR(`prompts`, () =>
-    PromptApi.list()
-  )
+  const { data, isLoading } = useSWR(`prompts`, () => PromptApi.list())
 
   if (isLoading) {
     return <Loading className="min-h-screen" />
   }
-
-  console.log(data)
 
   return (
     <Layout>

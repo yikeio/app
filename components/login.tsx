@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { useRouter } from "next/router"
 import { activateUser, getAuthUser, sendVerificationCode } from "@/api/user"
 import useAuth from "@/hooks/use-auth"
 import { useBillingStore, useSettingsStore, useUserStore } from "@/store"
@@ -14,13 +13,20 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import OAuthLoginButtons from "./auth/oauth-buttons"
 
+function redirectToIntend() {
+  if (window.history.length > 0) {
+    window.history.back()
+  } else {
+    window.location.href = "/"
+  }
+}
+
 export function PhoneLoginForm() {
   const auth = useAuth()
   const [phoneNumber, setPhoneNumber] = useState("")
   const [code, setCode] = useState("")
   const [count, setCount] = useState(0)
   const timerRef = useRef<any>(0)
-  const [updateUser] = useUserStore((state) => [state.updateUser])
 
   function resetForm() {
     setCode("")
@@ -28,7 +34,7 @@ export function PhoneLoginForm() {
     setCount(0)
   }
 
-  async function sendVerfifyCode() {
+  async function sendVerifyCode() {
     if (!phoneNumber) return toast.error("请填写手机号")
     if (count) return
 
@@ -53,7 +59,7 @@ export function PhoneLoginForm() {
   }
 
   // 登录
-  async function handleAttempViaSms() {
+  async function handleAttemptViaSms() {
     if (!code) return toast.error("请填写验证码")
     if (!phoneNumber) return toast.error("请填写手机号")
 
@@ -62,8 +68,7 @@ export function PhoneLoginForm() {
       resetForm()
       toast.success("登录成功")
 
-      const user = await getAuthUser()
-      updateUser(user)
+      redirectToIntend()
     } catch (e) {}
   }
 
@@ -114,14 +119,14 @@ export function PhoneLoginForm() {
             variant="ghost"
             size="sm"
             className="absolute inset-y-0 right-0 z-10 mr-0.5 mt-0.5 flex items-center"
-            onClick={sendVerfifyCode}
+            onClick={sendVerifyCode}
           >
             {count || "获取验证码"}
           </Button>
         </div>
       </div>
       <div>
-        <Button className="w-full" onClick={handleAttempViaSms}>
+        <Button className="w-full" onClick={handleAttemptViaSms}>
           登录
         </Button>
       </div>
@@ -130,21 +135,11 @@ export function PhoneLoginForm() {
 }
 
 export default function Login() {
-  const router = useRouter()
   const { isLogged } = useAuth()
 
-  const [getUserSettings] = useSettingsStore((state) => [state.getUserSettings])
-
-  useEffect(() => {
-    if (isLogged) {
-      if (window.history.length > 0) {
-        router.back()
-      } else {
-        router.push("/")
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLogged])
+  if (isLogged) {
+    redirectToIntend()
+  }
 
   return (
     <div className="flex flex-col gap-6 bg-primary-50/70 p-6">
