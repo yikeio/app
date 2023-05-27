@@ -1,4 +1,4 @@
-import { API_DOMAIN, request } from "./common"
+import { API_DOMAIN, request } from "../lib/request"
 
 export function getAuthRedirectUrl(driver: string) {
   return `${API_DOMAIN}/api/auth/redirect?driver=${driver}`

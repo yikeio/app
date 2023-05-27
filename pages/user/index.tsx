@@ -17,7 +17,7 @@ export default function UserIndexPage() {
   ])
 
   const [currentCombo, totalUsage] = useBillingStore((state) => [
-    state.currentCombo,
+    state.currentQuota,
     state.totalUsage(),
   ])
 

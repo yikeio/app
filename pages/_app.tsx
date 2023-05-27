@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast"
 import { SWRConfig } from "swr"
 
 import "@/styles/globals.scss"
-import { request } from "@/api/common"
+import { request } from "@/lib/request"
 
 export default function App({ Component, pageProps }: AppProps) {
   useStorageParams()

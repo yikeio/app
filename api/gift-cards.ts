@@ -1,4 +1,4 @@
-import { request } from "./common"
+import { request } from "../lib/request"
 
 export async function activateGiftCard({ code }: { code: string }) {
   return request("gift-cards:activate", {

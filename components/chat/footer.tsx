@@ -33,7 +33,7 @@ export default function ChatFooter(props) {
       state.setIsLoadingAnswer,
     ])
 
-  const [currentCombo] = useBillingStore((state) => [state.currentCombo])
+  const [currentCombo] = useBillingStore((state) => [state.currentQuota])
 
   const [
     mode,

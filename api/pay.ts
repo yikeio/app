@@ -1,4 +1,4 @@
-import { request } from "./common"
+import { request } from "../lib/request"
 
 /**
  * 获取会话列表

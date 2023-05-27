@@ -1,6 +1,6 @@
 import Cookies from "js-cookie"
 
-import { request } from "./common"
+import { request } from "../lib/request"
 
 export interface User {
   id: number
@@ -45,13 +45,13 @@ export async function getAuthUser() {
  * @returns
  */
 export async function activateUser({
-  userId,
+  id: id,
   inviteCode,
 }: {
-  userId: number
+  id: number
   inviteCode: string
 }) {
-  return request(`users/${userId}:activate`, {
+  return request(`users/${id}:activate`, {
     method: "POST",
     body: JSON.stringify({
       referral_code: inviteCode,
@@ -76,8 +76,8 @@ export async function sendVerificationCode(phoneNumber: string, scene: string) {
  * @param param0
  * @returns
  */
-export async function getUserQuotas(userId: string) {
-  return request(`users/${userId}/quotas`)
+export async function getUserQuotas(id: number) {
+  return request(`users/${id}/quotas`)
 }
 
 /**
@@ -85,14 +85,14 @@ export async function getUserQuotas(userId: string) {
  * @param param0
  * @returns
  */
-export async function getUserAvailableQuota(userId: string) {
-  return request(`users/${userId}/quota`)
+export async function getUserAvailableQuota(id: number) {
+  return request(`users/${id}/quota`)
 }
 
 /**
  * 获取用户支付订单列表（包括未支付订单）
  */
-export async function getListUserPayment(id: any) {
+export async function getListUserPayment(id: number) {
   return request(`users/${id}/payments`)
 }
 
@@ -103,23 +103,23 @@ export async function getLeaderboards() {
 /**
  * 获取用户设置
  */
-export async function getListUserSettings(id: any) {
+export async function getUserSettings(id: number) {
   return request(`users/${id}/settings`)
 }
 
-export async function getReferrals(id: any) {
+export async function getReferrals(id: number) {
   return request(`users/${id}/referrals`)
 }
 
-export async function getPayments(id: any) {
+export async function getPayments(id: number) {
   return request(`users/${id}/payments`)
 }
 
 /**
  * 修改用户设置
  */
-export async function updateListUserSettings(
-  id: any,
+export async function updateUserSettings(
+  id: number,
   data: Record<string, any>
 ) {
   return request(`users/${id}/settings/${data.key}`, {

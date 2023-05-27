@@ -1,22 +1,15 @@
-import Image from "next/image"
 import { useRouter } from "next/router"
 import { updateConversation } from "@/api/conversations"
 import Locale from "@/locales"
 import { useActionsStore, useChatStore, useUserStore } from "@/store"
-import {
-  ChevronLeftIcon,
-  Edit2,
-  MenuIcon,
-  MessageSquare,
-  PanelRightIcon,
-  Share,
-  Trash2,
-} from "lucide-react"
+import { Edit2, PanelRightIcon, Share, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import BackButton from "../head/back-button"
+import LogoButton from "../head/logo-button"
 
 export default function ChatHeader(props) {
-  const { autoScrollBottomRef, toggleSidebar } = props
+  const { autoScrollBottomRef } = props
   const [session, currentIndex, updateCurrentSession, removeSession] =
     useChatStore((state) => [
       state.currentSession(),
@@ -26,19 +19,11 @@ export default function ChatHeader(props) {
     ])
 
   const [user] = useUserStore((state) => [state.user])
-
   const [setMode] = useActionsStore((state) => [state.setMode])
-
-  const router = useRouter()
 
   const switchMode = () => {
     autoScrollBottomRef.current = false
     setMode("select")
-  }
-
-  const handleBackToSessions = () => {
-    setMode("normal")
-    router.back()
   }
 
   const handleToggleSidebar = () => {
@@ -65,28 +50,10 @@ export default function ChatHeader(props) {
 
   return (
     <div className="flex shrink-0 items-center justify-between overflow-hidden border-b bg-white">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="hidden shrink-0 items-center justify-start gap-4 px-6 text-slate-700 dark:text-slate-400 md:flex"
-        onClick={() => router.push("/")}
-      >
-        <Image src="/logo.svg" height={24} width={24} alt="logo" />
-        <div className="sr-only">一刻 AI</div>
-      </Button>
+      <LogoButton />
       <div className="flex flex-1 gap-6 border-l p-2 md:p-4">
         <div className="flex flex-1 items-center gap-2 md:gap-4">
-          <div className="shrink-0">
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex h-8 w-8 items-center justify-center p-1"
-              title="返回对话历史"
-              onClick={handleBackToSessions}
-            >
-              <ChevronLeftIcon size={22} />
-            </Button>
-          </div>
+          <BackButton />
           <div className="max-w-[45vw] truncate text-lg ">{session.title}</div>
         </div>
         <div className="flex shrink-0 items-center gap-2 text-gray-500">

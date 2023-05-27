@@ -48,7 +48,7 @@ export function Navbar(props) {
         variant="ghost"
         size="sm"
         className={cn(
-          "h-10 items-center justify-start gap-4 text-slate-700 hover:bg-primary-200 hover:text-primary-700 dark:text-slate-400 md:flex md:w-full",
+          "h-10 items-center justify-start gap-4 rounded-xl text-slate-700 hover:bg-primary-200 hover:text-primary-700 dark:text-slate-400 md:flex md:w-full",
           {
             "bg-primary-200 text-primary-700":
               item.href && router.pathname === item.href,

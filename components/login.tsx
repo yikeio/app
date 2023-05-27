@@ -171,7 +171,7 @@ export function ActivateDialog() {
   async function handleActivate() {
     if (!inviteCode) return toast.error("请输入邀请码")
     try {
-      await activateUser({ userId: user.id, inviteCode })
+      await activateUser({ id: user.id, inviteCode })
       toast.success("激活成功")
       const userRes = await getAuthUser()
       updateUser(userRes)
@@ -182,7 +182,7 @@ export function ActivateDialog() {
 
   async function tryActivate(referrer: string) {
     try {
-      await activateUser({ userId: user.id, inviteCode: referrer })
+      await activateUser({ id: user.id, inviteCode: referrer })
       const userRes = await getAuthUser()
       updateUser(userRes)
       if (userRes.state === "activated") {

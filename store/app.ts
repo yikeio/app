@@ -17,6 +17,8 @@ export type Message = {
   streaming?: boolean
   isError?: boolean
   preview?: boolean
+  created_at: string
+  updated_at: string
 }
 
 export const ROLES: Message["role"][] = ["system", "user", "assistant"]

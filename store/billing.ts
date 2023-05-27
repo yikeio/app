@@ -9,10 +9,10 @@ interface BillingStore {
   setActivateVisible: (visible: boolean) => void
 
   // 当前套餐
-  currentCombo: any
+  currentQuota: any
   // 所有购买过的套餐
-  allCombos: any[]
-  getUserQuotaInfo(userId: string): Promise<void>
+  allQuotas: any[]
+  getUserQuotaInfo(userId: number): Promise<void>
 
   // 可购买的套餐
   plans: any[]
@@ -28,17 +28,17 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
     set(() => ({ activateVisible: visible }))
   },
 
-  currentCombo: { is_available: false },
-  allCombos: [],
+  currentQuota: { is_available: false },
+  allQuotas: [],
 
-  async getUserQuotaInfo(userId: string) {
-    const [currentComboRes, allCombosRes] = await Promise.all([
+  async getUserQuotaInfo(userId: number) {
+    const [currentQuota, allQuotas] = await Promise.all([
       getUserAvailableQuota(userId),
       getUserQuotas(userId),
     ])
     set(() => ({
-      currentCombo: currentComboRes,
-      allCombos: allCombosRes,
+      currentQuota: currentQuota,
+      allQuotas: allQuotas,
     }))
   },
 
@@ -49,6 +49,6 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
   },
 
   totalUsage() {
-    return get().allCombos.reduce((acc, cur) => acc + cur.used_tokens_count, 0)
+    return get().allQuotas.reduce((acc, cur) => acc + cur.used_tokens_count, 0)
   },
 }))

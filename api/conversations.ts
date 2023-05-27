@@ -1,4 +1,4 @@
-import { API_DOMAIN, request } from "./common"
+import { API_DOMAIN, request } from "../lib/request"
 
 /**
  * 获取会话列表
