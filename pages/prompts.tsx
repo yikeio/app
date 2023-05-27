@@ -34,22 +34,22 @@ export default function PromptPage() {
         <div className="flex items-center gap-8 border-b  p-6">
           <h1 className="text-xl">选择一个场景，点击开始对话</h1>
           <Tabs onValueChange={handleTabChanged} value={tab}>
-            <TabsList>
+            <TabsList className="bg-primary-50">
               <TabsTrigger value="recommend">
                 <div className="flex items-center gap-1">
-                  <BadgeCheckIcon size={14} />
+                  <BadgeCheckIcon size={14} className="text-primary-500" />
                   <span>推荐场景</span>
                 </div>
               </TabsTrigger>
               <TabsTrigger value="all">
                 <div className="flex items-center gap-1">
-                  <BotIcon size={14} />
+                  <BotIcon size={14} className="text-primary-500" />
                   <span>全部场景</span>
                 </div>
               </TabsTrigger>
               <TabsTrigger value="my">
                 <div className="flex items-center gap-1">
-                  <FlagIcon size={14} />
+                  <FlagIcon size={14} className="text-primary-500" />
                   <span>我的场景</span>
                 </div>
               </TabsTrigger>
