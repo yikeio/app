@@ -1,8 +1,8 @@
 import {
   createConversation,
   deleteConversation,
-  getConversationList,
   getConversationMessageList,
+  getConversations,
 } from "@/api/conversations"
 import Locale from "@/locales"
 import { getCurrentDate } from "@/utils"
@@ -113,7 +113,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   currentSessionIndex: 0,
 
   async getConversationList(userId: string, params) {
-    const conversationRes = await getConversationList(userId, params)
+    const conversationRes = await getConversations(userId, params)
     // update pager
     set(() => ({
       conversationPager: {

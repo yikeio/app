@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <SWRConfig
         value={{
-          refreshInterval: 5000,
+          refreshInterval: 120 * 1000,
           fetcher: (resource, init) =>
             request(resource, init).then((res) => res),
         }}

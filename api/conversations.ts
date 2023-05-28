@@ -4,7 +4,7 @@ import { API_DOMAIN, request } from "../lib/request"
  * 获取会话列表
  * @returns
  */
-export async function getConversationList(
+export async function getConversations(
   userId: string,
   options?: { page?: number; pageSize?: number; sorts?: string }
 ) {

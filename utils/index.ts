@@ -65,7 +65,46 @@ export function isIOS() {
 
 export function isMobileScreen() {
   if (typeof window === "undefined") return false
-  return window.outerWidth <= 600
+  return window.document.body.clientWidth <= 600
+}
+
+export function getScreenBreakpoint() {
+  if (typeof window === "undefined") return "md"
+  const width = window.document.body.clientWidth
+  if (width <= 640) {
+    return "sm"
+  } else if (width <= 768) {
+    return "md"
+  } else if (width <= 1024) {
+    return "lg"
+  } else if (width <= 1280) {
+    return "xl"
+  } else if (width <= 1400) {
+    return "2xl"
+  } else {
+    return "xxl"
+  }
+}
+
+export function isScreenSize(size: "sm" | "md" | "lg" | "xl" | "2xl" | "xxl") {
+  if (typeof window === "undefined") return false
+  const width = window.document.body.clientWidth
+  switch (size) {
+    case "sm":
+      return width <= 640
+    case "md":
+      return width <= 768 && width > 640
+    case "lg":
+      return width <= 1024 && width > 768
+    case "xl":
+      return width <= 1280 && width > 1024
+    case "2xl":
+      return width <= 1400 && width > 1280
+    case "xxl":
+      return width > 1400
+    default:
+      return false
+  }
 }
 
 export function selectOrCopy(el: HTMLElement, content: string) {

@@ -1,3 +1,5 @@
+import qs from "qs"
+
 import { request } from "../lib/request"
 
 export interface Prompt {
@@ -14,8 +16,9 @@ export interface Prompt {
 }
 
 export default class PromptApi {
-  static list = async () => {
-    return request("prompts")
+  static list = async ({ tag = [] }: { tag?: (number | string)[] }) => {
+    const query = qs.stringify({ tag })
+    return request(`prompts?${query}`)
   }
 
   static get = async (id: number | string): Promise<Prompt> => {

@@ -1,6 +1,6 @@
 import { use, useRef, useState } from "react"
 import { useRouter } from "next/router"
-import { getConversationList } from "@/api/conversations"
+import { getConversations } from "@/api/conversations"
 import {
   ChatSession,
   useBillingStore,
@@ -113,7 +113,7 @@ export function ChatList() {
             page: conversationPager.currentPage + 1,
             pageSize: conversationPager.pageSize,
           }
-          const conversationRes = await getConversationList(user.id, params)
+          const conversationRes = await getConversations(user.id, params)
           const list: ChatSession[] = conversationRes.data
           const newList: ChatSession[] = [
             ...sessions,
