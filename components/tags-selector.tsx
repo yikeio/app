@@ -82,7 +82,7 @@ export default function TagsSelector({
           </a>
         </PopoverTrigger>
         <PopoverContent
-          className="max-h-[60vh] w-auto max-w-[90vw] overflow-y-auto lg:max-h-[40vh] lg:max-w-[40w]"
+          className="max-h-[60vh] w-auto max-w-[90vw] overflow-y-auto lg:max-h-[60vh] lg:max-w-[40vw]"
           align={align}
         >
           <div className="flex flex-wrap items-center gap-4">
