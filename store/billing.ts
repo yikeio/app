@@ -1,7 +1,7 @@
 import { create } from "zustand"
 
 import { getPlans } from "../api/pay"
-import { getUserAvailableQuota, getUserQuotas } from "../api/user"
+import { getUserAvailableQuota, getUserQuotas } from "../api/users"
 
 interface BillingStore {
   // 激活弹窗

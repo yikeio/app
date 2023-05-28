@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getPayments } from "@/api/user"
+import { getPayments } from "@/api/users"
 import { useUserStore } from "@/store"
 
 import { formatDatetime } from "@/lib/utils"

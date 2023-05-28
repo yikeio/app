@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import * as React from "react"
 import { useRouter } from "next/router"
-import classNames from "classnames"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
 
 import { cn, formatNumber } from "@/lib/utils"
@@ -10,7 +9,7 @@ import { Layout } from "@/components/layout"
 import { PaymentDialog } from "@/components/payment-dialog"
 import { Button } from "@/components/ui/button"
 import { createPayment } from "../api/pay"
-import { getListUserPayment } from "../api/user"
+import { getListUserPayment } from "../api/users"
 import { useBillingStore, useUserStore } from "../store"
 
 export default function PricingPage() {

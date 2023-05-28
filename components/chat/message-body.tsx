@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import dynamic from "next/dynamic"
-import { User } from "@/api/user"
+import { User } from "@/api/users"
 import LoadingIcon from "@/icons/loading.svg"
 import { Message } from "@/store"
 

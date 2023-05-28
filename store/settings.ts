@@ -1,4 +1,4 @@
-import { getUserSettings, updateUserSettings } from "@/api/user"
+import { getUserSettings, updateUserSettings } from "@/api/users"
 import { create } from "zustand"
 
 export enum SubmitKey {

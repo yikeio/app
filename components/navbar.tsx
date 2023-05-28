@@ -99,19 +99,24 @@ export function Navbar(props) {
           name="对话"
           icon={<MessageSquare size={22} />}
         />
-        <NavItem href="/user" name="我" icon={<UserIcon size={22} />} />
+        <NavItem href="/me" name="我" icon={<UserIcon size={22} />} />
         <NavItem
           href="/discover"
           name="实验室"
           icon={<FlaskConicalIcon size={22} />}
         />
-        <NavItem href="/discover" name="邀请" icon={<GiftIcon size={22} />} />
-        <NavItem href="/settings" name="设置" icon={<CogIcon size={22} />} />
         <NavItem
-          href="/api"
-          name="API"
+          href="/invitations"
+          name="邀请"
+          icon={<GiftIcon size={22} />}
+        />
+        <NavItem href="/pricing" name="价格" icon={<GiftIcon size={22} />} />
+        <NavItem
+          href="/developers"
+          name="开发者"
           icon={<TerminalSquareIcon size={22} />}
         />
+        <NavItem href="/settings" name="设置" icon={<CogIcon size={22} />} />
       </div>
       {/* 待页面支持暗黑模式后开启 */}
       {/* <ThemeToggle /> */}

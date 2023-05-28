@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { AuthToken, getToken, getTokenViaSms } from "@/api/auth"
-import { User, getAuthUser } from "@/api/user"
+import { User, getAuthUser } from "@/api/users"
 import Cookies from "js-cookie"
 
 export default function useAuth() {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { activateUser, getAuthUser, sendVerificationCode } from "@/api/user"
+import { activateUser, getAuthUser, sendVerificationCode } from "@/api/users"
 import useAuth from "@/hooks/use-auth"
 import { useBillingStore, useSettingsStore, useUserStore } from "@/store"
 import Cookies from "js-cookie"
