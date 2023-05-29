@@ -59,14 +59,14 @@ export default function PricingPage() {
   return (
     <Layout>
       <Head title="购买套餐" />
-      <div className="container mx-auto px-5 py-24">
-        <div className="mb-20 flex w-full flex-col text-center">
+      <div className="container mx-auto flex flex-col gap-6 px-5 py-6 lg:gap-12 lg:px-8 lg:py-24">
+        <div className="flex w-full flex-col text-center">
           <h1 className="title-font mb-2 text-3xl font-medium text-gray-900 sm:text-4xl">
             购买
           </h1>
-          <p className="mx-auto text-base leading-relaxed text-gray-500 lg:w-2/3">
+          <div className="mx-auto text-base leading-relaxed text-gray-500 lg:w-2/3">
             按照您的使用习惯，选择合适您的付费套餐
-          </p>
+          </div>
         </div>
         <div className="-m-4 flex flex-wrap justify-center">
           {plans.map((item: any, index: number) => (

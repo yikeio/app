@@ -78,7 +78,11 @@ export default function TagsSelector({
       <Popover>
         <PopoverTrigger>
           <a id="tag-selector-trigger">
-            <MoreHorizontalIcon className="inline-block text-primary-500" />
+            <MoreHorizontalIcon
+              className={cn("inline-block text-primary-500", {
+                hidden: tags.length <= showCount,
+              })}
+            />
           </a>
         </PopoverTrigger>
         <PopoverContent

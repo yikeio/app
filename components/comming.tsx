@@ -6,7 +6,7 @@ export default function Comming({ className = "" }) {
     <div
       className={classNames(
         className,
-        "flex flex-col gap-6 min-h-full items-center justify-center text-primary-400"
+        "flex flex-col gap-6 min-h-[60vh] items-center justify-center text-primary-400"
       )}
     >
       <ChefHatIcon size={48} />

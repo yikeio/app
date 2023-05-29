@@ -21,7 +21,7 @@ import EmptyState from "@/components/empty-state"
 import { Layout } from "@/components/layout"
 import Loading from "@/components/loading"
 import TagsSelector from "@/components/tags-selector"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function PromptPage() {
   const [selectedTagIds, setSelectedTagIds] =
@@ -52,7 +52,7 @@ export default function PromptPage() {
   return (
     <Layout>
       <div className="flex h-full flex-1 flex-col gap-6">
-        <div className="flex flex-col items-center gap-8 border-b p-6 2xl:flex-row">
+        <div className="flex flex-col items-center gap-8 border-b p-6 xl:flex-row">
           <h1 className="text-xl">选择一个场景，点击开始对话</h1>
           <Tabs onValueChange={handleTabChanged} value={tab}>
             <TabsList className="bg-primary-50">
@@ -79,7 +79,7 @@ export default function PromptPage() {
 
           <TagsSelector
             value={selectedTagIds}
-            className="2xl:ml-auto"
+            className="xl:ml-auto"
             onValueChange={handleTagSelected}
             showCount={isScreenSize("sm") || isScreenSize("md") ? 6 : 8}
           />
@@ -88,7 +88,7 @@ export default function PromptPage() {
           <EmptyState className="flex-1" message="暂无相关场景" />
         )}
         {data.data?.length > 0 && (
-          <div className="grid flex-1 grid-cols-1 justify-center gap-6 p-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid flex-1 grid-cols-1 justify-center gap-6 p-6 md:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {data.data?.map((prompt) => (
               <Link
                 href={`/chat?prompt_id=${prompt.id}`}

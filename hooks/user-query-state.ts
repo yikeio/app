@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo } from "react"
-import { useRouter } from "next/router"
+import React from "react"
 import qs from "qs"
 
 export type HistoryOptions = "replace" | "push"

@@ -4,12 +4,11 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import PromptApi, { Prompt } from "@/api/prompts"
 import useAuth from "@/hooks/use-auth"
-import { isMobileScreen } from "@/utils"
-import { Edit2Icon, PanelRightIcon, ShareIcon, Trash2Icon } from "lucide-react"
+import { isMobileScreen, isScreenSizeAbove } from "@/utils"
+import { PanelRightIcon, ShareIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Chat } from "@/components/chat/chat"
-import { ChatList } from "@/components/chat/chat-list"
 import BackButton from "@/components/head/back-button"
 import LogoButton from "@/components/head/logo-button"
 import Loading from "@/components/loading"
@@ -26,7 +25,7 @@ export default function ChatPage() {
   }
 
   useEffect(() => {
-    setShowSidebar(!isMobileScreen())
+    setShowSidebar(isScreenSizeAbove("md"))
 
     if (!hasLogged) {
       redirectToLogin()
@@ -96,7 +95,7 @@ export default function ChatPage() {
       </div>
       <div
         className={cn(
-          "mr-0 w-72 shrink-0 p-6 text-gray-700 transition-all delay-75 md:block",
+          "mr-0 w-72 shrink-0 p-6 text-gray-700 transition-all delay-75",
           {
             "-mr-72": !showSidebar,
           }

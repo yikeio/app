@@ -107,6 +107,29 @@ export function isScreenSize(size: "sm" | "md" | "lg" | "xl" | "2xl" | "xxl") {
   }
 }
 
+export function isScreenSizeAbove(
+  size: "sm" | "md" | "lg" | "xl" | "2xl" | "xxl"
+) {
+  if (typeof window === "undefined") return false
+  const width = window.document.body.clientWidth
+  switch (size) {
+    case "sm":
+      return width > 640
+    case "md":
+      return width > 768
+    case "lg":
+      return width > 1024
+    case "xl":
+      return width > 1280
+    case "2xl":
+      return width > 1400
+    case "xxl":
+      return width > 1680
+    default:
+      return false
+  }
+}
+
 export function selectOrCopy(el: HTMLElement, content: string) {
   const currentSelection = window.getSelection()
 

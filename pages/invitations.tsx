@@ -29,7 +29,7 @@ function FeatureHero({ code }) {
         className="absolute inset-0 max-w-none"
       />
       <div className="absolute inset-0 bg-[url(/background/grid.svg)] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-      <div className="absolute bottom-0 right-0 -mb-24 -mr-24 opacity-50">
+      <div className="absolute bottom-0 right-0 -mb-24 -mr-24 opacity-10 md:opacity-50">
         <Gift size={300} className="text-primary-500" />
       </div>
 
@@ -78,7 +78,7 @@ function FeatureHero({ code }) {
           <div className="inline-flex items-center gap-2">
             <Input
               type="text"
-              className="w-64 bg-primary-200/60 border-primary-300 px-3 py-1"
+              className="w-64 border-primary-300 bg-primary-200/60 px-3 py-1"
               value={referUrl}
               onClick={(e) => (e.target as HTMLInputElement).select()}
             />
@@ -165,9 +165,9 @@ export default function UserInvitationPage() {
               <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
                   <tr>
-                    <td className="border-none">排名</td>
+                    <td className="border-none w-10">排名</td>
                     <td className="border-none">用户</td>
-                    <td className="border-none">已邀请用户数</td>
+                    <td className="w-12 border-none md:w-auto">已邀请用户数</td>
                   </tr>
                 </thead>
                 <tbody>
