@@ -82,7 +82,7 @@ export function Navbar(props) {
         <Image src="/logo.svg" height={24} width={24} alt="logo" />
         <div className="hidden text-xl leading-none md:block">一刻 AI</div>
       </Button>
-      <div className="flex w-full justify-center gap-2 lg:flex-col lg:justify-start lg:py-4">
+      <div className="flex w-full flex-1 justify-center gap-2 lg:flex-col lg:justify-start lg:py-4">
         <NavItem
           href="/prompts"
           name="对话"
@@ -115,10 +115,12 @@ export function Navbar(props) {
           icon={<FlaskConicalIcon size={22} />}
         />
 
+        <div className="flex-1"></div>
+
         {hasLogged && user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="flex cursor-pointer items-center gap-4 p-2 lg:w-full lg:border-t">
+              <div className="mt-auto flex cursor-pointer items-center gap-4 p-2 lg:relative lg:w-full lg:place-self-end lg:border-t">
                 <div className="hidden lg:block">
                   <UserCell user={user} className="h-8 w-8 text-gray-600" />
                 </div>
