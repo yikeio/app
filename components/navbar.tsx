@@ -115,12 +115,12 @@ export function Navbar(props) {
           icon={<FlaskConicalIcon size={22} />}
         />
 
-        <div className="flex-1"></div>
+        <div className="hidden flex-1 lg:block"></div>
 
         {hasLogged && user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="mt-auto flex cursor-pointer items-center gap-4 p-2 lg:relative lg:w-full lg:place-self-end lg:border-t">
+              <div className="mt-auto flex cursor-pointer items-center gap-4 p-2 lg:relative lg:w-full lg:place-self-end lg:border-t lg:pt-6">
                 <div className="hidden lg:block">
                   <UserCell user={user} className="h-8 w-8 text-gray-600" />
                 </div>
