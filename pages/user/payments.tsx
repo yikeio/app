@@ -28,13 +28,7 @@ export default function UserInvitationPage() {
       case "pending":
         return (
           <>
-            <span
-              className={
-                className + "text-orange-500 bg-orange-100 border-orange-200"
-              }
-            >
-              待支付
-            </span>
+            <span className={className + "text-orange-500 bg-orange-100 border-orange-200"}>待支付</span>
             <button
               className="ml-6 inline-block rounded bg-slate-900 p-1 text-xs text-white hover:bg-slate-700 dark:bg-primary-50"
               onClick={() => {
@@ -47,23 +41,9 @@ export default function UserInvitationPage() {
         )
         break
       case "expired":
-        return (
-          <span
-            className={className + "text-red-500 bg-red-100 border-red-200"}
-          >
-            已过期
-          </span>
-        )
+        return <span className={className + "text-red-500 bg-red-100 border-red-200"}>已过期</span>
       case "paid":
-        return (
-          <span
-            className={
-              className + "text-green-500 bg-green-100 border-green-200"
-            }
-          >
-            已支付
-          </span>
-        )
+        return <span className={className + "text-green-500 bg-green-100 border-green-200"}>已支付</span>
       default:
         return <span className={className}>未知</span>
         break
@@ -77,11 +57,7 @@ export default function UserInvitationPage() {
           <div className="flex justify-between pb-4">
             <div className="flex items-center gap-4">
               <h2 className="py-0">我的订单</h2>
-              {payments.length && (
-                <div className="text-sm text-gray-500">
-                  共 {payments.length} 笔支付订单
-                </div>
-              )}
+              {payments.length && <div className="text-sm text-gray-500">共 {payments.length} 笔支付订单</div>}
             </div>
             <div>
               <a href="/pricing" className="text-blue-500">
@@ -99,15 +75,10 @@ export default function UserInvitationPage() {
             {payments.length <= 0 && <EmptyState className="min-h-[200px]" />}
             <div>
               {payments.map((payment) => (
-                <div
-                  key={payment.id}
-                  className="flex items-center border-t text-sm text-gray-500"
-                >
+                <div key={payment.id} className="flex items-center border-t text-sm text-gray-500">
                   <div className="w-1/4 px-4 py-3">{payment.number}</div>
                   <div className="w-1/4 px-4 py-3">{payment.title}</div>
-                  <div className="w-1/4 px-4 py-3">
-                    {formatDatetime(payment.created_at)}
-                  </div>
+                  <div className="w-1/4 px-4 py-3">{formatDatetime(payment.created_at)}</div>
                   <div className="w-1/4 px-4 py-3">{paymentState(payment)}</div>
                 </div>
               ))}
@@ -116,10 +87,7 @@ export default function UserInvitationPage() {
         </div>
       </div>
       {/* 支付过程弹窗 */}
-      <PaymentDialog
-        paymentDetail={paymentDetail}
-        onClose={() => setPaymentDetail({})}
-      ></PaymentDialog>
+      <PaymentDialog paymentDetail={paymentDetail} onClose={() => setPaymentDetail({})}></PaymentDialog>
     </UserLayout>
   )
 }

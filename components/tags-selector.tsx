@@ -20,11 +20,7 @@ export default function TagsSelector({
   align?: "center" | "start" | "end"
   onValueChange?: (selectedTags: Tag[]) => void
 }) {
-  const {
-    data: tags,
-    error,
-    isLoading,
-  } = useSWR(`tags`, getAllTags, { refreshInterval: 120 * 1000 })
+  const { data: tags, error, isLoading } = useSWR(`tags`, getAllTags, { refreshInterval: 120 * 1000 })
 
   const [selectedTags, setSelectedTags] = useState([])
 
@@ -65,12 +61,9 @@ export default function TagsSelector({
         <a
           key={tag.id}
           onClick={() => toggleSelectTag(tag)}
-          className={cn(
-            "rounded-full border bg-primary-50 px-4 py-1 text-sm text-primary-500",
-            {
-              "border-primary-600 text-primary-600": hasBeenSelected(tag),
-            }
-          )}
+          className={cn("rounded-full border bg-primary-50 px-4 py-1 text-sm text-primary-500", {
+            "border-primary-600 text-primary-600": hasBeenSelected(tag),
+          })}
         >
           {tag.name}
         </a>
@@ -96,13 +89,9 @@ export default function TagsSelector({
                 <a
                   key={`popover-tag-${tag.id}`}
                   onClick={() => toggleSelectTag(tag)}
-                  className={cn(
-                    "rounded-full border bg-primary-50 px-4 py-1 text-sm text-primary-500",
-                    {
-                      "border-primary-600 text-primary-600":
-                        hasBeenSelected(tag),
-                    }
-                  )}
+                  className={cn("rounded-full border bg-primary-50 px-4 py-1 text-sm text-primary-500", {
+                    "border-primary-600 text-primary-600": hasBeenSelected(tag),
+                  })}
                 >
                   {tag.name}
                 </a>

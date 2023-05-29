@@ -8,12 +8,7 @@ import { Tag } from "@/api/tags"
 import useLocalStorage from "@/hooks/use-localstorage"
 import { useQueryState } from "@/hooks/user-query-state"
 import { isScreenSize } from "@/utils"
-import {
-  ArrowRightCircleIcon,
-  BadgeCheckIcon,
-  BotIcon,
-  FlagIcon,
-} from "lucide-react"
+import { ArrowRightCircleIcon, BadgeCheckIcon, BotIcon, FlagIcon } from "lucide-react"
 import qs from "qs"
 import useSWR from "swr"
 
@@ -24,13 +19,10 @@ import TagsSelector from "@/components/tags-selector"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function PromptPage() {
-  const [selectedTagIds, setSelectedTagIds] =
-    useQueryState<Array<string | number>>("tag")
-
+  const [selectedTagIds, setSelectedTagIds] = useQueryState<Array<string | number>>("tag")
   const [tab, setTab] = useLocalStorage("prompts.selected.tab", "recommend")
-  const { data, mutate, isLoading } = useSWR(
-    `prompts?tag=${qs.stringify(selectedTagIds)}`,
-    () => PromptApi.list({ tag: selectedTagIds })
+  const { data, mutate, isLoading } = useSWR(`prompts?tag=${qs.stringify(selectedTagIds)}`, () =>
+    PromptApi.list({ tag: selectedTagIds })
   )
 
   const handleTabChanged = (tab: string) => {
@@ -43,7 +35,8 @@ export default function PromptPage() {
 
   useEffect(() => {
     mutate()
-  }, [mutate, selectedTagIds])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTagIds])
 
   if (isLoading) {
     return <Loading className="min-h-screen" />
@@ -84,11 +77,9 @@ export default function PromptPage() {
             showCount={isScreenSize("sm") || isScreenSize("md") ? 6 : 8}
           />
         </div>
-        {data.data?.length <= 0 && (
-          <EmptyState className="flex-1" message="暂无相关场景" />
-        )}
+        {data.data?.length <= 0 && <EmptyState className="flex-1" message="暂无相关场景" />}
         {data.data?.length > 0 && (
-          <div className="grid flex-1 grid-cols-1 justify-center gap-6 p-6 md:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          <div className="grid flex-1 grid-cols-1 justify-center gap-6 p-6 md:grid-cols-3 xl:grid-cols-4">
             {data.data?.map((prompt) => (
               <Link
                 href={`/chat?prompt_id=${prompt.id}`}
@@ -103,9 +94,7 @@ export default function PromptPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <small className="text-gray-400">12354 人</small>
-                  <span className="text-4xl group-hover:scale-110 xl:text-5xl">
-                    {prompt.logo || "🤖"}
-                  </span>
+                  <span className="text-4xl group-hover:scale-110 xl:text-5xl">{prompt.logo || "🤖"}</span>
                 </div>
               </Link>
             ))}

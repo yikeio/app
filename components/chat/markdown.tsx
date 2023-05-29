@@ -34,10 +34,7 @@ export function Markdown(props: { content: string }) {
   return (
     <ReactMarkdown
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
-      rehypePlugins={[
-        RehypeKatex,
-        [RehypeHighlight, { detect: true, ignoreMissing: true }],
-      ]}
+      rehypePlugins={[RehypeKatex, [RehypeHighlight, { detect: true, ignoreMissing: true }]]}
       components={{ pre: PreCode }}
     >
       {props.content}

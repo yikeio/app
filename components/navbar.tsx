@@ -40,12 +40,7 @@ export function Navbar(props) {
   const router = useRouter()
   const { user, hasLogged } = useAuth()
 
-  const NavItem = (item: {
-    href?: string
-    name: string
-    icon: ReactNode
-    className?: string
-  }) => {
+  const NavItem = (item: { href?: string; name: string; icon: ReactNode; className?: string }) => {
     return (
       <Button
         variant="ghost"
@@ -53,8 +48,7 @@ export function Navbar(props) {
         className={cn(
           "h-10 items-center justify-start gap-4 rounded-xl text-slate-700 hover:bg-primary-200 hover:text-primary-700 dark:text-slate-400 lg:flex lg:w-full",
           {
-            "bg-primary-200 text-primary-700":
-              item.href && router.pathname === item.href,
+            "bg-primary-200 text-primary-700": item.href && router.pathname === item.href,
           },
           item.className
         )}
@@ -83,37 +77,12 @@ export function Navbar(props) {
         <div className="hidden text-xl leading-none md:block">一刻 AI</div>
       </Button>
       <div className="flex w-full flex-1 justify-center gap-2 lg:flex-col lg:justify-start lg:py-4">
-        <NavItem
-          href="/prompts"
-          name="对话"
-          icon={<MessageSquare size={22} />}
-        />
-        <NavItem
-          href="/invitations"
-          name="邀请"
-          icon={<GiftIcon size={22} />}
-        />
-        <NavItem
-          href="/pricing"
-          name="价格"
-          icon={<CreditCardIcon size={22} />}
-        />
-        <NavItem
-          href="/developers"
-          name="开发者"
-          icon={<TerminalSquareIcon size={22} />}
-        />
-        <NavItem
-          href="/settings"
-          className="hidden lg:flex"
-          name="设置"
-          icon={<CogIcon size={22} />}
-        />
-        <NavItem
-          href="/discover"
-          name="实验室"
-          icon={<FlaskConicalIcon size={22} />}
-        />
+        <NavItem href="/prompts" name="对话" icon={<MessageSquare size={22} />} />
+        <NavItem href="/invitations" name="邀请" icon={<GiftIcon size={22} />} />
+        <NavItem href="/pricing" name="价格" icon={<CreditCardIcon size={22} />} />
+        <NavItem href="/developers" name="开发者" icon={<TerminalSquareIcon size={22} />} />
+        <NavItem href="/settings" className="hidden lg:flex" name="设置" icon={<CogIcon size={22} />} />
+        <NavItem href="/discover" name="实验室" icon={<FlaskConicalIcon size={22} />} />
 
         <div className="hidden flex-1 lg:block"></div>
 
@@ -137,9 +106,7 @@ export function Navbar(props) {
                   <User className="mr-2 h-4 w-4" />
                   <span>个人资料</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() => router.push("/user/payments")}
-                >
+                <DropdownMenuItem onSelect={() => router.push("/user/payments")}>
                   <CreditCard className="mr-2 h-4 w-4" />
                   <span>我的订单</span>
                 </DropdownMenuItem>
@@ -147,9 +114,7 @@ export function Navbar(props) {
                   <Users className="mr-2 h-4 w-4" />
                   <span>我的邀请</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() => router.push("/user/gift-cards")}
-                >
+                <DropdownMenuItem onSelect={() => router.push("/user/gift-cards")}>
                   <GiftIcon className="mr-2 h-4 w-4" />
                   <span>礼品卡</span>
                 </DropdownMenuItem>

@@ -6,32 +6,16 @@ import { UserAvatar } from "@/components/avatar"
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
 import { Label } from "@/components/ui/label"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
 
-function SettingItem(props: {
-  title: string
-  subTitle?: string
-  children: JSX.Element
-}) {
+function SettingItem(props: { title: string; subTitle?: string; children: JSX.Element }) {
   return (
     <div className="flex flex-wrap justify-between gap-4 py-6 md:items-center">
       <div>
         <Label className="text-gray-700">{props.title}</Label>
-        {props.subTitle && (
-          <div className="text-sm text-gray-400">{props.subTitle}</div>
-        )}
+        {props.subTitle && <div className="text-sm text-gray-400">{props.subTitle}</div>}
       </div>
       {props.children}
     </div>
@@ -75,11 +59,10 @@ export default function Setting() {
                       lazyLoadEmojis
                       theme={EmojiTheme.AUTO}
                       onEmojiClick={(e) => {
-                        updateConfig(
-                          (config) => (config.avatar = e.unified),
-                          user.id,
-                          { key: "avatar", value: e.unified }
-                        )
+                        updateConfig((config) => (config.avatar = e.unified), user.id, {
+                          key: "avatar",
+                          value: e.unified,
+                        })
                       }}
                     />
                   </PopoverContent>
@@ -91,14 +74,10 @@ export default function Setting() {
                   <Select
                     value={config.chat_submit_key}
                     onValueChange={(key) => {
-                      updateConfig(
-                        (config) => (
-                          (config.chat_submit_key = key as any as SubmitKey),
-                          user.id
-                        ),
-                        user.id,
-                        { key: "chat_submit_key", value: key }
-                      )
+                      updateConfig((config) => ((config.chat_submit_key = key as any as SubmitKey), user.id), user.id, {
+                        key: "chat_submit_key",
+                        value: key,
+                      })
                     }}
                   >
                     <SelectTrigger>
@@ -130,10 +109,7 @@ export default function Setting() {
               </select>
             </SettingItem> */}
 
-              <SettingItem
-                title="附带历史消息数"
-                subTitle="每次请求携带的历史消息数"
-              >
+              <SettingItem title="附带历史消息数" subTitle="每次请求携带的历史消息数">
                 <Slider
                   title={`${config.chat_contexts_count}px`}
                   defaultValue={[config.chat_contexts_count]}
@@ -142,14 +118,10 @@ export default function Setting() {
                   step={1}
                   className="w-64"
                   onValueChange={(value) =>
-                    updateConfig(
-                      (config) => (config.chat_contexts_count = value[0]),
-                      user.id,
-                      {
-                        key: "chat_contexts_count",
-                        value: value[0],
-                      }
-                    )
+                    updateConfig((config) => (config.chat_contexts_count = value[0]), user.id, {
+                      key: "chat_contexts_count",
+                      value: value[0],
+                    })
                   }
                 ></Slider>
               </SettingItem>
@@ -163,11 +135,10 @@ export default function Setting() {
                   step={1}
                   className="w-64"
                   onValueChange={(value) =>
-                    updateConfig(
-                      (config) => (config.chat_font_size = value[0]),
-                      user.id,
-                      { key: "chat_font_size", value: value[0] }
-                    )
+                    updateConfig((config) => (config.chat_font_size = value[0]), user.id, {
+                      key: "chat_font_size",
+                      value: value[0],
+                    })
                   }
                 ></Slider>
               </SettingItem>

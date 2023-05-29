@@ -78,8 +78,7 @@ const cn = {
         SubTitle: "在输入框开头输入 / 即可触发自动补全",
       },
       List: "自定义提示词列表",
-      ListCount: (builtin: number, custom: number) =>
-        `内置 ${builtin} 条，用户定义 ${custom} 条`,
+      ListCount: (builtin: number, custom: number) => `内置 ${builtin} 条，用户定义 ${custom} 条`,
       Edit: "编辑",
     },
     HistoryCount: {
@@ -130,12 +129,10 @@ const cn = {
       "欢迎使用一刻助手，我是一位AI语言助手，可以帮助您回答各种问题，提供各种方面的建议和帮助。不论您有任何困惑或问题，只要发送给我，我就会尽力为您提供最准确、最有用的回复。期待能够为您效劳！",
     Error: "出错了，稍后重试吧",
     Prompt: {
-      History: (content: string) =>
-        "这是 ai 和用户的历史聊天总结作为前情提要：" + content,
+      History: (content: string) => "这是 ai 和用户的历史聊天总结作为前情提要：" + content,
       Topic:
         "使用四到五个字直接返回这句话的简要主题，不要解释、不要标点、不要语气词、不要多余文本，如果没有主题，请直接返回“闲聊”",
-      Summarize:
-        "简要总结一下你和用户的对话，用作后续的上下文提示 prompt，控制在 200 字以内",
+      Summarize: "简要总结一下你和用户的对话，用作后续的上下文提示 prompt，控制在 200 字以内",
     },
     ConfirmClearAll: "确认清除所有聊天、设置数据？",
   },

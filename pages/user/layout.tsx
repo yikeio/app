@@ -16,11 +16,7 @@ export default function UserLayout(props) {
       <Head title="用户中心" />
       <main className="h-screen flex-1 overflow-auto">
         <div className="flex h-12 items-center justify-between border-b bg-white px-4 md:hidden">
-          <button
-            className="flex items-center gap-1 p-2"
-            title="返回"
-            onClick={() => router.back()}
-          >
+          <button className="flex items-center gap-1 p-2" title="返回" onClick={() => router.back()}>
             <ChevronLeftIcon size={22} />
           </button>
         </div>

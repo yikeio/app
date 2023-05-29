@@ -12,12 +12,7 @@ interface AvatarProps {
   className?: string
 }
 
-const Avatar: React.FC<AvatarProps> = ({
-  src,
-  alt = "avatar",
-  size = "md",
-  className = "",
-}) => {
+const Avatar: React.FC<AvatarProps> = ({ src, alt = "avatar", size = "md", className = "" }) => {
   const sizes = {
     sm: 32,
     md: 48,
@@ -35,22 +30,11 @@ const Avatar: React.FC<AvatarProps> = ({
   )
 }
 
-export function UserAvatar(props: {
-  role: Message["role"]
-  className?: string
-}) {
+export function UserAvatar(props: { role: Message["role"]; className?: string }) {
   const config = useSettingsStore((state) => state.config)
 
   if (props.role !== "user") {
-    return (
-      <Avatar
-        src="/logo.svg"
-        className={classNames(
-          "h-10 w-10 shrink-0 rounded-full",
-          props.className
-        )}
-      />
-    )
+    return <Avatar src="/logo.svg" className={classNames("h-10 w-10 shrink-0 rounded-full", props.className)} />
   }
 
   return (

@@ -43,10 +43,7 @@ export default function useAuth() {
     return user
   }
 
-  const handleOauthCallback = async (
-    code: string,
-    state: string
-  ): Promise<User> => {
+  const handleOauthCallback = async (code: string, state: string): Promise<User> => {
     const token = await getToken(code, state)
 
     if (!token.value) {
@@ -71,10 +68,7 @@ export default function useAuth() {
     return await refreshAuthUser()
   }
 
-  const saveToken = (token: {
-    value: string
-    expires_at: string
-  }): AuthToken => {
+  const saveToken = (token: { value: string; expires_at: string }): AuthToken => {
     Cookies.set(AUTH_TOKEN_KEY, token.value, {
       expires: new Date(token.expires_at),
     })

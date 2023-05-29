@@ -43,11 +43,7 @@ export default function Modal({
 
   return (
     <Transition appear show={show} as={Fragment}>
-      <Dialog
-        as="div"
-        className="fixed inset-0 z-50 overflow-y-auto"
-        onClose={onClose}
-      >
+      <Dialog as="div" className="fixed inset-0 z-50 overflow-y-auto" onClose={onClose}>
         <div className="min-h-screen px-4 text-center">
           <Transition.Child
             as={Fragment}
@@ -58,15 +54,9 @@ export default function Modal({
             leaveFrom="opacity-100"
             leaveTo="opacity-"
           >
-            <div
-              className="fixed inset-0 bg-black/40"
-              onClick={closeOnClickMask ? onClose : undefined}
-            />
+            <div className="fixed inset-0 bg-black/40" onClick={closeOnClickMask ? onClose : undefined} />
           </Transition.Child>
-          <span
-            className="inline-block h-screen align-middle"
-            aria-hidden="true"
-          >
+          <span className="inline-block h-screen align-middle" aria-hidden="true">
             &#8203;
           </span>
           <Transition.Child

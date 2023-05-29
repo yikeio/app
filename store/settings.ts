@@ -32,11 +32,7 @@ const DEFAULT_CONFIG: ChatConfig = {
 interface SettingsStore {
   config: ChatConfig
   getConfig: () => ChatConfig
-  updateConfig: (
-    updater: (config: ChatConfig) => void,
-    userId: string,
-    data: Record<string, any>
-  ) => void
+  updateConfig: (updater: (config: ChatConfig) => void, userId: string, data: Record<string, any>) => void
 
   getUserSettings: (userId: string) => Promise<void>
 }

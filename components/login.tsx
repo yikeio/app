@@ -74,16 +74,11 @@ export function PhoneLoginForm() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-0.5">
-        <Label
-          htmlFor="phone-number-input"
-          className="mb-1 block text-sm font-medium text-gray-900 dark:text-white"
-        >
+        <Label htmlFor="phone-number-input" className="mb-1 block text-sm font-medium text-gray-900 dark:text-white">
           手机号
         </Label>
         <div className="relative">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            +86
-          </div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">+86</div>
           <Input
             type="text"
             id="phone-number-input"
@@ -97,10 +92,7 @@ export function PhoneLoginForm() {
         </div>
       </div>
       <div className="relative flex flex-col gap-0.5">
-        <Label
-          htmlFor="verify-code-input"
-          className="mb-1 block text-sm font-medium text-gray-900 dark:text-white"
-        >
+        <Label htmlFor="verify-code-input" className="mb-1 block text-sm font-medium text-gray-900 dark:text-white">
           验证码
         </Label>
         <div className="relative">
@@ -158,10 +150,7 @@ export default function Login() {
 // 激活弹窗
 export function ActivateDialog() {
   const [inviteCode, setInviteCode] = useState("")
-  const [user, updateUser] = useUserStore((state) => [
-    state.user,
-    state.updateUser,
-  ])
+  const [user, updateUser] = useUserStore((state) => [state.user, state.updateUser])
   const [activateVisible, setActivateVisible] = useBillingStore((state) => [
     state.activateVisible,
     state.setActivateVisible,
@@ -213,17 +202,11 @@ export function ActivateDialog() {
   }, [user])
 
   return (
-    <Modal
-      show={activateVisible}
-      size="sm"
-      onClose={() => setActivateVisible(false)}
-    >
+    <Modal show={activateVisible} size="sm" onClose={() => setActivateVisible(false)}>
       <div className="flex flex-col gap-6">
         <header>
           <h2>请输入邀请码</h2>
-          <p className="text-gray-500">
-            当前为内测期间，你需要输入邀请码才能使用
-          </p>
+          <p className="text-gray-500">当前为内测期间，你需要输入邀请码才能使用</p>
         </header>
         <Input
           type="text"

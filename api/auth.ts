@@ -9,10 +9,7 @@ export interface AuthToken {
   expires_at: string
 }
 
-export async function getToken(
-  code: string,
-  state: string
-): Promise<AuthToken> {
+export async function getToken(code: string, state: string): Promise<AuthToken> {
   return request(`auth/tokens:via-code`, {
     method: "POST",
     headers: {
@@ -22,13 +19,7 @@ export async function getToken(
   }).then((res) => res.json())
 }
 
-export async function getTokenViaSms({
-  phoneNumber,
-  code,
-}: {
-  phoneNumber: string
-  code: string
-}) {
+export async function getTokenViaSms({ phoneNumber, code }: { phoneNumber: string; code: string }) {
   return request("auth/tokens:via-sms", {
     method: "POST",
     body: JSON.stringify({

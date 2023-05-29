@@ -32,11 +32,7 @@ export default function ChatInput({
       (submitKey === SubmitKey.CtrlEnter && e.ctrlKey) ||
       (submitKey === SubmitKey.ShiftEnter && e.shiftKey) ||
       (submitKey === SubmitKey.MetaEnter && e.metaKey) ||
-      (submitKey === SubmitKey.Enter &&
-        !e.altKey &&
-        !e.ctrlKey &&
-        !e.shiftKey &&
-        !e.metaKey)
+      (submitKey === SubmitKey.Enter && !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey)
     )
   }
 
@@ -71,9 +67,7 @@ export default function ChatInput({
 
   return (
     <form
-      className={cn(
-        "relative flex flex-col items-start justify-center gap-2 md:flex-row"
-      )}
+      className={cn("relative flex flex-col items-start justify-center gap-2 md:flex-row")}
       onSubmit={(e) => e.preventDefault()}
     >
       <Textarea

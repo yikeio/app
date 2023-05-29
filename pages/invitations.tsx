@@ -23,11 +23,7 @@ function FeatureHero({ code }) {
 
   return (
     <div className="relative overflow-hidden rounded-lg border bg-white p-2 shadow-sm xl:p-6">
-      <img
-        src="/background/gradient.svg"
-        alt=""
-        className="absolute inset-0 max-w-none"
-      />
+      <img src="/background/gradient.svg" alt="" className="absolute inset-0 max-w-none" />
       <div className="absolute inset-0 bg-[url(/background/grid.svg)] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
       <div className="absolute bottom-0 right-0 -mb-24 -mr-24 opacity-10 md:opacity-50">
         <Gift size={300} className="text-primary-500" />
@@ -51,25 +47,19 @@ function FeatureHero({ code }) {
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-primary-500 text-sm md:h-12 md:w-12 md:text-xl">
               1
             </div>
-            <div className="max-w-[240px] text-gray-700">
-              通过分享聊天记录，或者复制专属邀请链接，发送给朋友。
-            </div>
+            <div className="max-w-[240px] text-gray-700">通过分享聊天记录，或者复制专属邀请链接，发送给朋友。</div>
           </div>
           <div className="flex gap-4">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-primary-500 text-sm md:h-12 md:w-12 md:text-xl">
               2
             </div>
-            <div className="max-w-[240px] text-gray-700">
-              他们通过链接加入，并完成任意套餐支付。
-            </div>
+            <div className="max-w-[240px] text-gray-700">他们通过链接加入，并完成任意套餐支付。</div>
           </div>
           <div className="flex gap-4">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-primary-500 text-sm md:h-12 md:w-12 md:text-xl">
               3
             </div>
-            <div className="max-w-[240px] text-gray-700">
-              你和对方都将获得一定比例的返利。
-            </div>
+            <div className="max-w-[240px] text-gray-700">你和对方都将获得一定比例的返利。</div>
           </div>
         </div>
 
@@ -122,15 +112,10 @@ export default function UserInvitationPage() {
         <div className="mt-4">
           <Tabs defaultValue="leaderboard">
             <TabsList className="grid grid-cols-2 bg-primary-50 md:inline-grid">
-              <TabsTrigger value="invitations">
-                我的邀请记录（{referrals.length}）
-              </TabsTrigger>
+              <TabsTrigger value="invitations">我的邀请记录（{referrals.length}）</TabsTrigger>
               <TabsTrigger value="leaderboard">排行榜</TabsTrigger>
             </TabsList>
-            <TabsContent
-              value="invitations"
-              className="rounded-lg border bg-white p-6 shadow-sm"
-            >
+            <TabsContent value="invitations" className="rounded-lg border bg-white p-6 shadow-sm">
               <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
                   <tr>
@@ -140,28 +125,18 @@ export default function UserInvitationPage() {
                 </thead>
                 <tbody>
                   {referrals.map((referral) => (
-                    <tr
-                      key={referral.id}
-                      className="border-t text-sm text-gray-500"
-                    >
+                    <tr key={referral.id} className="border-t text-sm text-gray-500">
                       <td className="border-none px-4 py-3">
                         <UserCell user={referral} />
                       </td>
-                      <td className="border-none px-4 py-3">
-                        {formatDatetime(referral.created_at)}
-                      </td>
+                      <td className="border-none px-4 py-3">{formatDatetime(referral.created_at)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              {referrals.length <= 0 && (
-                <EmptyState className="min-h-[100px]" />
-              )}
+              {referrals.length <= 0 && <EmptyState className="min-h-[100px]" />}
             </TabsContent>
-            <TabsContent
-              value="leaderboard"
-              className="rounded-lg border bg-white p-6 shadow-sm"
-            >
+            <TabsContent value="leaderboard" className="rounded-lg border bg-white p-6 shadow-sm">
               <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
                   <tr>
@@ -172,29 +147,18 @@ export default function UserInvitationPage() {
                 </thead>
                 <tbody>
                   {leaderboards.map((user, i) => (
-                    <tr
-                      key={user.id}
-                      className="border-t text-sm text-gray-500"
-                    >
+                    <tr key={user.id} className="border-t text-sm text-gray-500">
                       <td className="border-none">{i + 1}</td>
                       <td className="border-none px-4 py-3">
                         <UserCell user={user} />
                       </td>
-                      <td className="border-none px-4 py-3">
-                        {user.referrals_count}
-                      </td>
+                      <td className="border-none px-4 py-3">{user.referrals_count}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              {leaderboards.length <= 0 && (
-                <EmptyState className="min-h-[100px]" />
-              )}
-              {leaderboards.length >= 100 && (
-                <div className="text-sm text-gray-400">
-                  * 仅显示榜单前 100 名用户
-                </div>
-              )}
+              {leaderboards.length <= 0 && <EmptyState className="min-h-[100px]" />}
+              {leaderboards.length >= 100 && <div className="text-sm text-gray-400">* 仅显示榜单前 100 名用户</div>}
             </TabsContent>
           </Tabs>
         </div>

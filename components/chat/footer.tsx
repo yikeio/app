@@ -2,14 +2,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import useAuth from "@/hooks/use-auth"
 import Locale from "@/locales"
-import {
-  SubmitKey,
-  useActionsStore,
-  useBillingStore,
-  useChatStore,
-  useSettingsStore,
-  useUserStore,
-} from "@/store"
+import { SubmitKey, useActionsStore, useBillingStore, useChatStore, useSettingsStore, useUserStore } from "@/store"
 import { isMobileScreen } from "@/utils"
 import classNames from "classnames"
 import { SendIcon, StopCircleIcon } from "lucide-react"
@@ -25,23 +18,16 @@ export default function ChatFooter(props) {
   const [config] = useSettingsStore((state) => [state.config])
   const { user, hasLogged } = useAuth()
 
-  const [isStreaming, onUserInput, onUserInputStop, setIsLoadingAnswer] =
-    useChatStore((state) => [
-      state.isStreaming,
-      state.onUserInput,
-      state.onUserInputStop,
-      state.setIsLoadingAnswer,
-    ])
+  const [isStreaming, onUserInput, onUserInputStop, setIsLoadingAnswer] = useChatStore((state) => [
+    state.isStreaming,
+    state.onUserInput,
+    state.onUserInputStop,
+    state.setIsLoadingAnswer,
+  ])
 
   const [currentCombo] = useBillingStore((state) => [state.currentQuota])
 
-  const [
-    mode,
-    setMode,
-    selectedMessages,
-    clearSelectedMessages,
-    setExportImageVisible,
-  ] = useActionsStore((state) => [
+  const [mode, setMode, selectedMessages, clearSelectedMessages, setExportImageVisible] = useActionsStore((state) => [
     state.mode,
     state.setMode,
     state.selectedMessages,
@@ -57,11 +43,7 @@ export default function ChatFooter(props) {
       (config.chat_submit_key === SubmitKey.CtrlEnter && e.ctrlKey) ||
       (config.chat_submit_key === SubmitKey.ShiftEnter && e.shiftKey) ||
       (config.chat_submit_key === SubmitKey.MetaEnter && e.metaKey) ||
-      (config.chat_submit_key === SubmitKey.Enter &&
-        !e.altKey &&
-        !e.ctrlKey &&
-        !e.shiftKey &&
-        !e.metaKey)
+      (config.chat_submit_key === SubmitKey.Enter && !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey)
     )
   }
 
@@ -118,12 +100,9 @@ export default function ChatFooter(props) {
       )}
 
       <div
-        className={classNames(
-          "relative flex flex-col items-start gap-2 md:flex-row justify-center",
-          {
-            hidden: mode !== "normal",
-          }
-        )}
+        className={classNames("relative flex flex-col items-start gap-2 md:flex-row justify-center", {
+          hidden: mode !== "normal",
+        })}
       >
         <Textarea
           ref={inputRef}
@@ -139,10 +118,7 @@ export default function ChatFooter(props) {
         />
 
         {isStreaming ? (
-          <Button
-            className="flex w-full items-center gap-2 md:w-auto"
-            onClick={handleStop}
-          >
+          <Button className="flex w-full items-center gap-2 md:w-auto" onClick={handleStop}>
             <StopCircleIcon size={12} />
             <span>停止生成</span>
           </Button>
@@ -163,14 +139,9 @@ export default function ChatFooter(props) {
         })}
       >
         {/* todo: 移除到 export-image 去 */}
-        <div className="text-center text-sm text-gray-400">
-          已选择 {selectedMessages.length} 条消息
-        </div>
+        <div className="text-center text-sm text-gray-400">已选择 {selectedMessages.length} 条消息</div>
         <div className="flex flex-col justify-center gap-4 md:flex-row">
-          <Button
-            disabled={!selectedMessages.length}
-            onClick={() => setExportImageVisible(true)}
-          >
+          <Button disabled={!selectedMessages.length} onClick={() => setExportImageVisible(true)}>
             导出图片
           </Button>
           <Button variant="destructive" onClick={onCancelExport}>

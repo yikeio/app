@@ -15,8 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <SWRConfig
         value={{
           refreshInterval: 120 * 1000,
-          fetcher: (resource, init) =>
-            request(resource, init).then((res) => res),
+          fetcher: (resource, init) => request(resource, init).then((res) => res),
         }}
       >
         <NextNProgress />

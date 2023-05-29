@@ -9,7 +9,5 @@ export default function IndexPage() {
     router.replace("/prompts")
   })
 
-  return (
-    <div className="flex h-screen items-center justify-center">Loading...</div>
-  )
+  return <div className="flex h-screen items-center justify-center">Loading...</div>
 }

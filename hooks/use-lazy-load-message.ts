@@ -7,12 +7,7 @@ export const useLazyLoadMessage = () => {
   const autoScrollBottomRef = useRef(true)
   const [isLoadingMessage, setIsLoadingMessage] = useState(false)
 
-  const [
-    session,
-    messageHistoryPagerMap,
-    getConversationHistory,
-    updateCurrentSession,
-  ] = useChatStore((state) => [
+  const [session, messageHistoryPagerMap, getConversationHistory, updateCurrentSession] = useChatStore((state) => [
     state.currentSession(),
     state.messageHistoryPagerMap,
     state.getConversationHistory,

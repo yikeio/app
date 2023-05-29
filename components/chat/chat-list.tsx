@@ -1,12 +1,7 @@
 import { use, useRef, useState } from "react"
 import { useRouter } from "next/router"
 import { getConversations } from "@/api/conversations"
-import {
-  ChatSession,
-  useBillingStore,
-  useChatStore,
-  useUserStore,
-} from "@/store"
+import { ChatSession, useBillingStore, useChatStore, useUserStore } from "@/store"
 import { isMobileScreen } from "@/utils"
 import { MessageSquareIcon, PlusIcon, TrashIcon } from "lucide-react"
 import toast from "react-hot-toast"
@@ -27,9 +22,7 @@ export function ChatItem(props: {
   return (
     <div
       className={` group relative rounded-lg border p-4 shadow-sm ${
-        props.selected
-          ? "border-2 border-primary bg-gray-50 shadow-none"
-          : "border-slate-200"
+        props.selected ? "border-2 border-primary bg-gray-50 shadow-none" : "border-slate-200"
       }`}
       onClick={props.onClick}
     >
@@ -55,27 +48,19 @@ export function ChatItem(props: {
 }
 
 export function ChatList() {
-  const [
-    sessions,
-    currentIndex,
-    conversationPager,
-    createConversation,
-    selectSession,
-    removeSession,
-  ] = useChatStore((state) => [
-    state.sessions,
-    state.currentSessionIndex,
-    state.conversationPager,
-    state.createConversation,
-    state.selectSession,
-    state.removeSession,
-  ])
+  const [sessions, currentIndex, conversationPager, createConversation, selectSession, removeSession] = useChatStore(
+    (state) => [
+      state.sessions,
+      state.currentSessionIndex,
+      state.conversationPager,
+      state.createConversation,
+      state.selectSession,
+      state.removeSession,
+    ]
+  )
 
   const [currentCombo] = useBillingStore((state) => [state.currentQuota])
-  const [user, setLoginModalVisible] = useUserStore((state) => [
-    state.user,
-    state.setLoginModalVisible,
-  ])
+  const [user, setLoginModalVisible] = useUserStore((state) => [state.user, state.setLoginModalVisible])
 
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const chatListRef = useRef<HTMLDivElement>(null)
@@ -119,9 +104,7 @@ export function ChatList() {
             ...sessions,
             ...list.map((conversation) => {
               conversation.messages = []
-              conversation.updated_at = new Date(
-                conversation.updated_at
-              ).toLocaleString()
+              conversation.updated_at = new Date(conversation.updated_at).toLocaleString()
               return conversation
             }),
           ]
@@ -175,10 +158,7 @@ export function ChatList() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <Button
-          className="flex w-full items-center justify-center gap-2"
-          onClick={handleCreateConversation}
-        >
+        <Button className="flex w-full items-center justify-center gap-2" onClick={handleCreateConversation}>
           <PlusIcon size={22} />
           <span>开启新的会话</span>
         </Button>

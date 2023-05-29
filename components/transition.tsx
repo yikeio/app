@@ -24,13 +24,7 @@ const Transition = ({ children }) => {
 
   return (
     <AnimatePresence initial={false} mode="wait">
-      <motion.div
-        key={asPath}
-        variants={variants}
-        animate="in"
-        initial="out"
-        exit="out"
-      >
+      <motion.div key={asPath} variants={variants} animate="in" initial="out" exit="out">
         {children}
       </motion.div>
     </AnimatePresence>

@@ -12,9 +12,7 @@ export interface UseQueryStateOptions<T> {
 
 export function useQueryState<T = string>(
   key: string,
-  {
-    defaultValue = undefined,
-  }: Partial<UseQueryStateOptions<T>> & { defaultValue?: T } = {
+  { defaultValue = undefined }: Partial<UseQueryStateOptions<T>> & { defaultValue?: T } = {
     history: "replace",
     defaultValue: undefined,
   }
@@ -24,11 +22,7 @@ export function useQueryState<T = string>(
       return null
     }
 
-    return (
-      qs.parse(window.location.search, { ignoreQueryPrefix: true })[key] ??
-      defaultValue ??
-      null
-    )
+    return qs.parse(window.location.search, { ignoreQueryPrefix: true })[key] ?? defaultValue ?? null
   }, [defaultValue, key])
 
   const [value, setValue] = React.useState<T | null>(getValue)
@@ -50,11 +44,7 @@ export function useQueryState<T = string>(
     }
 
     const search = qs.stringify(query, { addQueryPrefix: true })
-    window.history.replaceState(
-      {},
-      undefined,
-      `${window.location.pathname}${search}${window.location.hash}`
-    )
+    window.history.replaceState({}, undefined, `${window.location.pathname}${search}${window.location.hash}`)
 
     setValue(newValue)
   }

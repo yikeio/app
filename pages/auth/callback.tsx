@@ -14,10 +14,7 @@ export default function OauthCallback() {
   useEffect(() => {
     if (query.has("code") && query.has("state")) {
       auth
-        .handleCallback(
-          query.get("code") as string,
-          query.get("state") as string
-        )
+        .handleCallback(query.get("code") as string, query.get("state") as string)
         .then(() => {
           setState("success")
           window.location.replace("/")
@@ -43,9 +40,7 @@ export default function OauthCallback() {
           {state === "error" && (
             <>
               <div>登录失败</div>
-              <code className="text-xs text-red-400">
-                {error?.substring(0, 500)}
-              </code>
+              <code className="text-xs text-red-400">{error?.substring(0, 500)}</code>
             </>
           )}
           {state === "success" && (

@@ -1,75 +1,78 @@
 import { API_DOMAIN, request } from "../lib/request"
 
-/**
- * 获取会话列表
- * @returns
- */
-export async function getConversations(
-  userId: string,
-  options?: { page?: number; pageSize?: number; sorts?: string }
-) {
-  const { page = 1, pageSize = 15, sorts = "last_active_at" } = options || {}
-  return request(
-    `users/${userId}/chat/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`
-  )
+export interface Conversation {
+  id: number
+  creator_id: number
+  title: string
+  messages_count: number
+  tokens_count: number
+  first_active_at: string
+  last_active_at: string
+  created_at: string
+  updated_at: string
 }
 
-/**
- * 创建新的话
- * @returns
- */
-export async function createConversation(title: string) {
+export interface Message {
+  id: number
+  quota_id: number
+  creator_id: number
+  conversation_id: number
+  role: "user" | "system" | "assistant"
+  content: string
+  tokens_count: number
+
+  // 后端没有的属性
+  isLoading?: boolean
+  isStreaming: boolean
+}
+
+export async function getConversations(options?: { page?: number; pageSize?: number; sorts?: string }) {
+  const { page = 1, pageSize = 15, sorts = "last_active_at" } = options || {}
+  return request(`chat/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`)
+}
+
+export async function getConversation(conversationId: number): Promise<Conversation> {
+  return request(`chat/conversations/${conversationId}`)
+}
+
+export async function createConversation(title: string = ""): Promise<Conversation> {
   return request("chat/conversations", {
     method: "POST",
     body: JSON.stringify({ title }),
   })
 }
 
-/**
- * 更新对话
- * @returns
- */
-export async function updateConversation(
-  conversationId: number,
-  data: Record<string, any>
-) {
+export async function updateConversation(conversationId: number, data: Partial<Conversation>): Promise<Conversation> {
   return request(`chat/conversations/${conversationId}`, {
     method: "PUT",
     body: JSON.stringify(data),
   })
 }
 
-/**
- * 删除对话
- * @returns
- */
-export async function deleteConversation(conversationId: number) {
+export async function deleteConversation(conversationId: number): Promise<undefined> {
   return request(`chat/conversations/${conversationId}`, {
     method: "DELETE",
   })
 }
 
-/**
- * 用户创建会话对话
- * @returns
- */
-export async function createMessage(conversationId: number, content: string) {
+export async function createMessage(conversationId: number, data: Partial<Message>) {
   return request(`chat/conversations/${conversationId}/messages`, {
     method: "POST",
-    body: JSON.stringify({ content }),
+    body: JSON.stringify(data),
   })
 }
 
-/**
- * 获取单个会话的消息列表
- * @returns
- */
-export async function getConversationMessageList(
+export async function getMessages(
   conversationId: number,
   options?: { page?: number; pageSize?: number; sorts?: string }
 ) {
   const { page = 1, pageSize = 15, sorts = "id:desc" } = options || {}
-  return request(
-    `chat/conversations/${conversationId}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`
-  )
+  return request(`chat/conversations/${conversationId}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`)
+}
+
+export async function createCompletion(conversationId: number, messageId: number) {
+  return request(`chat/conversations/${conversationId}/completions`, {
+    method: "POST",
+    body: JSON.stringify({ message_id: messageId }),
+  })
 }

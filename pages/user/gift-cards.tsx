@@ -44,11 +44,7 @@ export default function UserGiftCardsPage() {
               onChange={(e) => setCode(e.target.value)}
               placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
             />
-            <Button
-              disabled={code.length != 36}
-              onClick={handleActivate}
-              className="w-full md:w-auto"
-            >
+            <Button disabled={code.length != 36} onClick={handleActivate} className="w-full md:w-auto">
               激活
             </Button>
           </div>

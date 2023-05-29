@@ -13,10 +13,7 @@ import { Label } from "@/components/ui/label"
 export default function ApiPage() {
   const { user, hasLogged, logout } = useAuth()
 
-  const [currentPlan, totalUsage] = useBillingStore((state) => [
-    state.currentQuota,
-    state.totalUsage(),
-  ])
+  const [currentPlan, totalUsage] = useBillingStore((state) => [state.currentQuota, state.totalUsage()])
 
   function handleLogout() {
     logout()
@@ -55,10 +52,7 @@ export default function ApiPage() {
               <Label className="uppercase text-gray-400">我的邀请码</Label>
               <div className="flex items-center gap-2">
                 <span className="uppercase">{user.referral_code}</span>
-                <Button
-                  onClick={() => copyToClipboard(user.referral_code)}
-                  size="sm"
-                >
+                <Button onClick={() => copyToClipboard(user.referral_code)} size="sm">
                   复制
                 </Button>
               </div>
@@ -68,11 +62,7 @@ export default function ApiPage() {
               <Label className="uppercase text-gray-400">使用情况</Label>
               <div className="flex flex-col gap-4 md:flex-row">
                 <div>累计已使用 {totalUsage || 0}，剩余可用</div>
-                <span className="ml-2">
-                  {(currentPlan.is_available &&
-                    currentPlan?.available_tokens_count) ||
-                    0}
-                </span>
+                <span className="ml-2">{(currentPlan.is_available && currentPlan?.available_tokens_count) || 0}</span>
               </div>
             </div>
 
@@ -81,9 +71,7 @@ export default function ApiPage() {
               <div className="flex flex-col gap-4 md:flex-row">
                 <div>
                   {currentPlan?.expired_at
-                    ? `${formatDatetime(
-                        currentPlan?.expired_at
-                      )} 过期 (${formatTimeAgo(currentPlan?.expired_at)})`
+                    ? `${formatDatetime(currentPlan?.expired_at)} 过期 (${formatTimeAgo(currentPlan?.expired_at)})`
                     : "暂无可用套餐"}
                 </div>
                 <Button onClick={() => handleBuy()}>购买套餐</Button>

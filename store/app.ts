@@ -70,15 +70,9 @@ interface ChatStore {
   isStreaming: boolean
   sessions: ChatSession[]
   currentSessionIndex: number
-  getConversationList: (
-    userId: string,
-    params?: { page: number; pageSize?: number }
-  ) => Promise<void>
+  getConversationList: (userId: string, params?: { page: number; pageSize?: number }) => Promise<void>
   createConversation: () => Promise<ChatSession>
-  getConversationHistory: (
-    conversationId: number,
-    params?: { page: number; pageSize?: number }
-  ) => Promise<Message[]>
+  getConversationHistory: (conversationId: number, params?: { page: number; pageSize?: number }) => Promise<Message[]>
   // 对话分页
   conversationPager: Pager
   // 对话历史分页
@@ -93,11 +87,7 @@ interface ChatStore {
   onUserInputStop: () => Promise<void>
 
   updateCurrentSession: (updater: (session: ChatSession) => void) => void
-  updateMessage: (
-    sessionIndex: number,
-    messageIndex: number,
-    updater: (message?: Message) => void
-  ) => void
+  updateMessage: (sessionIndex: number, messageIndex: number, updater: (message?: Message) => void) => void
 
   // 答案是否正在加载
   isLoadingAnswer: boolean
@@ -133,9 +123,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     set(() => ({
       sessions: list.map((conversation) => {
         conversation.messages = []
-        conversation.updated_at = new Date(
-          conversation.updated_at
-        ).toLocaleString()
+        conversation.updated_at = new Date(conversation.updated_at).toLocaleString()
         return conversation
       }),
     }))
@@ -143,9 +131,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     // 有列表则获取当前会话历史
     if (list.length) {
       const conversationId = get().currentSession().id
-      const messageList: Message[] = await get().getConversationHistory(
-        conversationId
-      )
+      const messageList: Message[] = await get().getConversationHistory(conversationId)
       get().updateCurrentSession((session) => (session.messages = messageList))
     }
   },
@@ -321,11 +307,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     } as Message
   },
 
-  updateMessage(
-    sessionIndex: number,
-    messageIndex: number,
-    updater: (message?: Message) => void
-  ) {
+  updateMessage(sessionIndex: number, messageIndex: number, updater: (message?: Message) => void) {
     const sessions = get().sessions
     const session = sessions.at(sessionIndex)
     const messages = session?.messages

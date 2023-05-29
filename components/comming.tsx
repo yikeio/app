@@ -4,10 +4,7 @@ import { ChefHatIcon } from "lucide-react"
 export default function Comming({ className = "" }) {
   return (
     <div
-      className={classNames(
-        className,
-        "flex flex-col gap-6 min-h-[60vh] items-center justify-center text-primary-400"
-      )}
+      className={classNames(className, "flex flex-col gap-6 min-h-[60vh] items-center justify-center text-primary-400")}
     >
       <ChefHatIcon size={48} />
       <div className="text-primary-500">建设中...</div>

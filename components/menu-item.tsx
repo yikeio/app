@@ -15,9 +15,7 @@ export default function MenuItem({ menu: { icon, label, href } }) {
       href={href}
       className={classNames(
         baseClassNames,
-        currentPath === href
-          ? "text-primray bg-secondary text-secondary-foreground"
-          : "text-gray-600"
+        currentPath === href ? "text-primray bg-secondary text-secondary-foreground" : "text-gray-600"
       )}
     >
       <Icon className="mr-2 h-4 w-4" />

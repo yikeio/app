@@ -6,9 +6,7 @@ import { useBillingStore, useUserStore } from "../store"
 import Modal from "./modal"
 
 export function PaymentDialog({ paymentDetail, onClose }) {
-  const [getUserQuotaInfo] = useBillingStore((state) => [
-    state.getUserQuotaInfo,
-  ])
+  const [getUserQuotaInfo] = useBillingStore((state) => [state.getUserQuotaInfo])
   const [payStatus, setPayStatus] = React.useState<number>(0) // 1:创建订单，暂时支付二维码 2：支付成功
   const [user] = useUserStore((state) => [state.user])
   const [timer, setTimer] = React.useState<any>(null)
@@ -52,11 +50,7 @@ export function PaymentDialog({ paymentDetail, onClose }) {
         {payStatus === 1 ? (
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-2xl font-bold">请扫码支付</h1>
-            <img
-              src={paymentDetail.context.qrcode}
-              alt=""
-              className="h-32 w-32"
-            />
+            <img src={paymentDetail.context.qrcode} alt="" className="h-32 w-32" />
             <div>请使用微信扫码支付</div>
           </div>
         ) : (

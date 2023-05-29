@@ -79,8 +79,7 @@ const en = {
         SubTitle: "Input / to trigger auto-completion",
       },
       List: "Prompt List",
-      ListCount: (builtin: number, custom: number) =>
-        `${builtin} built-in, ${custom} user-defined`,
+      ListCount: (builtin: number, custom: number) => `${builtin} built-in, ${custom} user-defined`,
       Edit: "Edit",
     },
     HistoryCount: {
@@ -89,8 +88,7 @@ const en = {
     },
     CompressThreshold: {
       Title: "History Compression Threshold",
-      SubTitle:
-        "Will compress if uncompressed messages length exceeds the value",
+      SubTitle: "Will compress if uncompressed messages length exceeds the value",
     },
     Usage: {
       Title: "Account Balance",
@@ -122,8 +120,7 @@ const en = {
     },
     PresencePenlty: {
       Title: "Presence Penalty",
-      SubTitle:
-        "A larger value increases the likelihood to talk about new topics",
+      SubTitle: "A larger value increases the likelihood to talk about new topics",
     },
   },
   Store: {
@@ -134,12 +131,10 @@ const en = {
     Error: "Something went wrong, please try again later.",
     Prompt: {
       History: (content: string) =>
-        "This is a summary of the chat history between the AI and the user as a recap: " +
-        content,
+        "This is a summary of the chat history between the AI and the user as a recap: " + content,
       Topic:
         "Please generate a four to five word title summarizing our conversation without any lead-in, punctuation, quotation marks, periods, symbols, or additional text. Remove enclosing quotation marks.",
-      Summarize:
-        "Summarize our discussion briefly in 200 words or less to use as a prompt for future context.",
+      Summarize: "Summarize our discussion briefly in 200 words or less to use as a prompt for future context.",
     },
     ConfirmClearAll: "Confirm to clear all chat and setting data?",
   },

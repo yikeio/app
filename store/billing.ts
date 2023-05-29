@@ -32,10 +32,7 @@ export const useBillingStore = create<BillingStore>()((set, get) => ({
   allQuotas: [],
 
   async getUserQuotaInfo(userId: number) {
-    const [currentQuota, allQuotas] = await Promise.all([
-      getUserAvailableQuota(userId),
-      getUserQuotas(userId),
-    ])
+    const [currentQuota, allQuotas] = await Promise.all([getUserAvailableQuota(userId), getUserQuotas(userId)])
     set(() => ({
       currentQuota: currentQuota,
       allQuotas: allQuotas,

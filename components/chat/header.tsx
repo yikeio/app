@@ -10,13 +10,12 @@ import LogoButton from "../head/logo-button"
 
 export default function ChatHeader(props) {
   const { autoScrollBottomRef } = props
-  const [session, currentIndex, updateCurrentSession, removeSession] =
-    useChatStore((state) => [
-      state.currentSession(),
-      state.currentSessionIndex,
-      state.updateCurrentSession,
-      state.removeSession,
-    ])
+  const [session, currentIndex, updateCurrentSession, removeSession] = useChatStore((state) => [
+    state.currentSession(),
+    state.currentSessionIndex,
+    state.updateCurrentSession,
+    state.removeSession,
+  ])
 
   const [user] = useUserStore((state) => [state.user])
   const [setMode] = useActionsStore((state) => [state.setMode])
@@ -68,11 +67,7 @@ export default function ChatHeader(props) {
                 <Edit2 className="h-4 w-4" />
               </Button>
 
-              <Button
-                variant="outline"
-                className="flex h-8 w-8 items-center justify-center p-1"
-                onClick={switchMode}
-              >
+              <Button variant="outline" className="flex h-8 w-8 items-center justify-center p-1" onClick={switchMode}>
                 <Share className="h-4 w-4" />
               </Button>
 

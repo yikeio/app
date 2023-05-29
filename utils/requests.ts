@@ -67,11 +67,7 @@ export const ControllerPool = {
   isStreaming: false,
   controllers: {} as Record<string, AbortController>,
 
-  addController(
-    sessionIndex: number,
-    messageIndex: number,
-    controller: AbortController
-  ) {
+  addController(sessionIndex: number, messageIndex: number, controller: AbortController) {
     const key = this.key(sessionIndex, messageIndex)
     this.controllers[key] = controller
     return key

@@ -30,10 +30,7 @@ export async function copyToClipboard(text: string) {
 
 export function downloadAs(text: string, filename: string) {
   const element = document.createElement("a")
-  element.setAttribute(
-    "href",
-    "data:text/plain;charset=utf-8," + encodeURIComponent(text)
-  )
+  element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text))
   element.setAttribute("download", filename)
 
   element.style.display = "none"
@@ -107,9 +104,7 @@ export function isScreenSize(size: "sm" | "md" | "lg" | "xl" | "2xl" | "xxl") {
   }
 }
 
-export function isScreenSizeAbove(
-  size: "sm" | "md" | "lg" | "xl" | "2xl" | "xxl"
-) {
+export function isScreenSizeAbove(size: "sm" | "md" | "lg" | "xl" | "2xl" | "xxl") {
   if (typeof window === "undefined") return false
   const width = window.document.body.clientWidth
   switch (size) {
@@ -145,9 +140,7 @@ export function selectOrCopy(el: HTMLElement, content: string) {
 export function queryMeta(key: string, defaultValue?: string): string {
   let ret: string
   if (document) {
-    const meta = document.head.querySelector(
-      `meta[name='${key}']`
-    ) as HTMLMetaElement
+    const meta = document.head.querySelector(`meta[name='${key}']`) as HTMLMetaElement
     ret = meta?.content ?? ""
   } else {
     ret = defaultValue ?? ""

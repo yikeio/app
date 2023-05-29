@@ -2,13 +2,24 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
+import {
+  Conversation,
+  Message,
+  createConversation,
+  getConversation,
+  getConversations,
+  getMessages,
+} from "@/api/conversations"
 import PromptApi, { Prompt } from "@/api/prompts"
 import useAuth from "@/hooks/use-auth"
+import useSettings from "@/hooks/use-settings"
 import { isMobileScreen, isScreenSizeAbove } from "@/utils"
-import { PanelRightIcon, ShareIcon } from "lucide-react"
+import { PanelRightIcon, ShareIcon, StopCircleIcon } from "lucide-react"
+import useSWR from "swr"
 
 import { cn } from "@/lib/utils"
-import { Chat } from "@/components/chat/chat"
+import ChatInput from "@/components/chat/input"
+import { MessageList } from "@/components/chat/message-list"
 import BackButton from "@/components/head/back-button"
 import LogoButton from "@/components/head/logo-button"
 import Loading from "@/components/loading"
@@ -16,51 +27,99 @@ import { Button } from "@/components/ui/button"
 
 export default function ChatPage() {
   const router = useRouter()
+  const { settings, isLoading: isSettingsLoading } = useSettings()
   const [prompt, setPrompt] = useState<Prompt>(null)
   const { hasLogged, user, redirectToLogin } = useAuth()
   const [showSidebar, setShowSidebar] = useState(false)
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [conversation, setConversation] = useState<Conversation>(null)
+  const [messages, setMessages] = useState<Message[]>([])
+
+  const { data: conversations, isLoading: isConversationsLoading } = useSWR(`conversations`, () => getConversations())
+
+  const refreshMessages = async () => {
+    if (!conversation) {
+      return
+    }
+    const { data } = await getMessages(conversation.id)
+    console.log(data)
+
+    setMessages(data)
+  }
 
   const handleToggleSidebar = () => {
     setShowSidebar(!showSidebar)
   }
 
-  useEffect(() => {
-    setShowSidebar(isScreenSizeAbove("md"))
+  const handleUserSubmit = () => {
+    // todo
+  }
 
+  const handleAbortAnswing = () => {
+    // todo
+  }
+
+  useEffect(() => {
     if (!hasLogged) {
       redirectToLogin()
     }
+  }, [hasLogged])
 
+  useEffect(() => {
+    if (isConversationsLoading) {
+      return
+    }
+
+    if (conversations?.data.length) {
+      setConversation(conversations.data[0])
+      refreshMessages()
+    } else {
+      createConversation(prompt?.name || "新的聊天").then((res) => {
+        setConversation(res)
+        refreshMessages()
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversations])
+
+  useEffect(() => {
+    conversation && refreshMessages()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversation])
+
+  useEffect(() => {
+    setShowSidebar(isScreenSizeAbove("md"))
+  }, [])
+
+  useEffect(() => {
     if (router.query.prompt_id) {
       PromptApi.get(router.query.prompt_id as string).then((res) => {
         setPrompt(res)
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasLogged, router])
+  }, [router.query.prompt_id])
 
   if (!hasLogged || !user) {
     return <Loading className="min-h-screen" />
   }
 
+  if (!isSettingsLoading) {
+    console.log(settings)
+  }
+
   return (
     <main className="relative flex h-screen flex-1 justify-start overflow-y-auto overflow-x-hidden">
       <div
-        className={cn(
-          "flex h-screen w-[100vw] shrink-0 flex-col border-r lg:ml-0 lg:flex-1",
-          {
-            "-ml-72": showSidebar,
-          }
-        )}
+        className={cn("flex h-screen w-[100vw] shrink-0 flex-col border-r lg:ml-0 lg:flex-1", {
+          "-ml-72": showSidebar,
+        })}
       >
         <header className="flex shrink-0 items-center justify-between overflow-hidden border-b bg-white">
           <LogoButton />
           <div className="flex flex-1 gap-6 border-l p-2 md:p-4">
             <div className="flex flex-1 items-center gap-2 md:gap-4">
               <BackButton />
-              <div className="max-w-[45vw] truncate text-lg ">
-                {prompt?.name || "loading..."}
-              </div>
+              <div className="max-w-[45vw] truncate text-lg ">{prompt?.name || "loading..."}</div>
             </div>
             <div className="flex shrink-0 items-center gap-2 text-gray-500">
               {hasLogged && (
@@ -74,13 +133,9 @@ export default function ChatPage() {
 
                   <Button
                     variant="outline"
-                    className={cn(
-                      "flex h-8 w-8 items-center justify-center p-1 hover:bg-primary-100",
-                      {
-                        "border-primary-300 bg-primary-100":
-                          isMobileScreen() && showSidebar,
-                      }
-                    )}
+                    className={cn("flex h-8 w-8 items-center justify-center p-1 hover:bg-primary-100", {
+                      "border-primary-300 bg-primary-100": isMobileScreen() && showSidebar,
+                    })}
                     title="打开/关闭边栏"
                     onClick={handleToggleSidebar}
                   >
@@ -91,15 +146,25 @@ export default function ChatPage() {
             </div>
           </div>
         </header>
-        <Chat />
+
+        <div className="flex-1">
+          <MessageList messages={messages} />
+        </div>
+
+        <footer className="sticky bottom-0 z-10 p-4 md:p-6 xl:p-12">
+          {isStreaming && (
+            <Button className="flex w-full items-center gap-2 md:w-auto" onClick={handleAbortAnswing}>
+              <StopCircleIcon size={12} />
+              <span>停止生成</span>
+            </Button>
+          )}
+          <ChatInput submitKey={settings.chat_submit_key} onSubmit={handleUserSubmit} />
+        </footer>
       </div>
       <div
-        className={cn(
-          "mr-0 w-72 shrink-0 p-6 text-gray-700 transition-all delay-75",
-          {
-            "-mr-72": !showSidebar,
-          }
-        )}
+        className={cn("mr-0 w-72 shrink-0 p-6 text-gray-700 transition-all delay-75", {
+          "-mr-72": !showSidebar,
+        })}
       >
         {prompt && (
           <div className="flex flex-col items-center gap-6 py-6">
