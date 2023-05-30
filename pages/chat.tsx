@@ -12,18 +12,22 @@ import {
 } from "@/api/conversations"
 import PromptApi, { Prompt } from "@/api/prompts"
 import useAuth from "@/hooks/use-auth"
+import useLocalStorage from "@/hooks/use-localstorage"
 import useSettings from "@/hooks/use-settings"
 import { isMobileScreen, isScreenSizeAbove } from "@/utils"
-import { PanelRightIcon, ShareIcon, StopCircleIcon } from "lucide-react"
+import { BadgeCheckIcon, BotIcon, PanelRightIcon, ShareIcon, StopCircleIcon } from "lucide-react"
 import useSWR from "swr"
 
 import { cn } from "@/lib/utils"
+import { ConversationList } from "@/components/chat/conversation-list"
 import ChatInput from "@/components/chat/input"
 import { MessageList } from "@/components/chat/message-list"
 import BackButton from "@/components/head/back-button"
 import LogoButton from "@/components/head/logo-button"
 import Loading from "@/components/loading"
 import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function ChatPage() {
   const router = useRouter()
@@ -32,39 +36,55 @@ export default function ChatPage() {
   const { hasLogged, user, redirectToLogin } = useAuth()
   const [showSidebar, setShowSidebar] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
-  const [conversation, setConversation] = useState<Conversation>(null)
+  const [conversation, setConversation] = useLocalStorage<Conversation>("selectedConversation", null)
+  const [historyTab, setHistoryTab] = useLocalStorage<"current" | "all">("selectedHistoryTab", "current")
   const [messages, setMessages] = useState<Message[]>([])
 
   const { data: conversations, isLoading: isConversationsLoading } = useSWR(`conversations`, () => getConversations())
 
+  // 获取对话消息列表
   const refreshMessages = async () => {
     if (!conversation) {
       return
     }
     const { data } = await getMessages(conversation.id)
-    console.log(data)
-
     setMessages(data)
   }
 
+  // 边栏显示隐藏
   const handleToggleSidebar = () => {
     setShowSidebar(!showSidebar)
   }
 
+  // 提交问题
   const handleUserSubmit = () => {
     // todo
   }
 
+  // 停止生成回答
   const handleAbortAnswing = () => {
     // todo
   }
 
+  // 选择对话
+  const handleSelectConversation = (conversation: Conversation) => {
+    setConversation(conversation)
+  }
+
+  // 切换对话历史记录类型
+  const handleChangeConversationHistoryTab = (tab: "current" | "all") => {
+    setHistoryTab(tab)
+  }
+
+  // 未登录时，跳转到登录页面
   useEffect(() => {
     if (!hasLogged) {
       redirectToLogin()
     }
-  }, [hasLogged])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasLogged, user])
 
+  // 对话列表加载完成后，自动选择第一个对话
   useEffect(() => {
     if (isConversationsLoading) {
       return
@@ -72,25 +92,26 @@ export default function ChatPage() {
 
     if (conversations?.data.length) {
       setConversation(conversations.data[0])
-      refreshMessages()
     } else {
       createConversation(prompt?.name || "新的聊天").then((res) => {
         setConversation(res)
-        refreshMessages()
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversations])
 
+  // 切换对话时，自动刷新消息
   useEffect(() => {
     conversation && refreshMessages()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversation])
 
+  // 根据屏幕尺寸，自动显示/隐藏边栏
   useEffect(() => {
     setShowSidebar(isScreenSizeAbove("md"))
   }, [])
 
+  // 根据路由参数，自动加载对应的场景
   useEffect(() => {
     if (router.query.prompt_id) {
       PromptApi.get(router.query.prompt_id as string).then((res) => {
@@ -99,12 +120,8 @@ export default function ChatPage() {
     }
   }, [router.query.prompt_id])
 
-  if (!hasLogged || !user) {
+  if (!hasLogged || !user || isConversationsLoading || !conversation) {
     return <Loading className="min-h-screen" />
-  }
-
-  if (!isSettingsLoading) {
-    console.log(settings)
   }
 
   return (
@@ -161,7 +178,7 @@ export default function ChatPage() {
           <ChatInput submitKey={settings.chat_submit_key} onSubmit={handleUserSubmit} />
         </footer>
       </div>
-      <div
+      <aside
         className={cn("mr-0 w-72 shrink-0 p-6 text-gray-700 transition-all delay-75", {
           "-mr-72": !showSidebar,
         })}
@@ -176,7 +193,27 @@ export default function ChatPage() {
             <div className="text-gray-500">使用人数： 59281 人</div>
           </div>
         )}
-      </div>
+
+        <div className="flex flex-col gap-4 border-t py-6">
+          <Label className="mt-6">对话历史</Label>
+          <Tabs onValueChange={handleChangeConversationHistoryTab} value={historyTab}>
+            <TabsList className="grid grid-cols-2 bg-primary-50">
+              <TabsTrigger value="current">
+                <div className="flex items-center gap-1">
+                  <span>当前场景(5)</span>
+                </div>
+              </TabsTrigger>
+              <TabsTrigger value="all">
+                <div className="flex items-center gap-1">
+                  <span>全部场景(50)</span>
+                </div>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          <ConversationList conversations={conversations?.data} user={user} onSelect={handleSelectConversation} />
+        </div>
+      </aside>
     </main>
   )
 }

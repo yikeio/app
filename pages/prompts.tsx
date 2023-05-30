@@ -20,6 +20,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function PromptPage() {
   const [selectedTagIds, setSelectedTagIds] = useQueryState<Array<string | number>>("tag")
+
   const [tab, setTab] = useLocalStorage("prompts.selected.tab", "recommend")
   const { data, mutate, isLoading } = useSWR(`prompts?tag=${qs.stringify(selectedTagIds)}`, () =>
     PromptApi.list({ tag: selectedTagIds })
@@ -35,8 +36,7 @@ export default function PromptPage() {
 
   useEffect(() => {
     mutate()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTagIds])
+  }, [mutate, selectedTagIds])
 
   if (isLoading) {
     return <Loading className="min-h-screen" />
@@ -79,7 +79,7 @@ export default function PromptPage() {
         </div>
         {data.data?.length <= 0 && <EmptyState className="flex-1" message="暂无相关场景" />}
         {data.data?.length > 0 && (
-          <div className="grid flex-1 grid-cols-1 justify-center gap-6 p-6 md:grid-cols-3 xl:grid-cols-4">
+          <div className="grid flex-1 grid-cols-1 justify-center gap-6 p-6 md:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {data.data?.map((prompt) => (
               <Link
                 href={`/chat?prompt_id=${prompt.id}`}
