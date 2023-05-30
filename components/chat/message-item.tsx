@@ -10,15 +10,7 @@ const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon width={24} height={24} />,
 })
 
-export default function MessageBody({
-  message,
-  previousMessage: preMessage,
-  className = "",
-}: {
-  message: Message
-  previousMessage: Message
-  className?: string
-}) {
+export default function MessageBody({ message, className = "" }: { message: Partial<Message>; className?: string }) {
   const isUser = message.role === "user"
 
   const tanslate = (content: string) => {}
@@ -35,7 +27,7 @@ export default function MessageBody({
               : "rounded-bl-none bg-primary-50"
           )}
         >
-          {(message.isLoading || message.content.length === 0) && !isUser ? (
+          {(message.isLoading || message.isStreaming || message.content.length === 0) && !isUser ? (
             <LoadingIcon />
           ) : (
             <div className="markdown-body before:hidden after:hidden">
@@ -43,41 +35,53 @@ export default function MessageBody({
             </div>
           )}
 
-          <div
-            className={cn("flex items-center gap-4 text-xs text-gray-400", className, { "text-primary-400": isUser })}
-          >
-            <a
-              title="阅读"
-              className="flex cursor-pointer items-center gap-1 hover:text-primary-500"
-              onClick={() => speak(message.content)}
+          {!message.isStreaming && (
+            <div
+              className={cn("flex items-center gap-4 text-xs text-gray-400", {
+                "text-primary-400": isUser,
+              })}
             >
-              <Volume2Icon size={20} />
-            </a>
+              <a
+                title="阅读"
+                className={cn("flex cursor-pointer items-center gap-1 hover:text-primary-500", {
+                  "hover:text-primary-300": isUser,
+                })}
+                onClick={() => speak(message.content)}
+              >
+                <Volume2Icon size={20} />
+              </a>
 
-            <a
-              title="翻译"
-              className="flex cursor-pointer items-center gap-1 hover:text-primary-500"
-              onClick={() => tanslate(message.content)}
-            >
-              <LanguagesIcon size={20} />
-            </a>
+              <a
+                title="翻译"
+                className={cn("flex cursor-pointer items-center gap-1 hover:text-primary-500", {
+                  "hover:text-primary-300": isUser,
+                })}
+                onClick={() => tanslate(message.content)}
+              >
+                <LanguagesIcon size={20} />
+              </a>
 
-            <a
-              title="喜欢"
-              className="flex cursor-pointer items-center gap-1 hover:text-primary-500"
-              onClick={() => toggleLike(message)}
-            >
-              <HeartIcon size={20} />
-            </a>
+              <a
+                title="喜欢"
+                className={cn("flex cursor-pointer items-center gap-1 hover:text-primary-500", {
+                  "hover:text-primary-300": isUser,
+                })}
+                onClick={() => toggleLike(message as Message)}
+              >
+                <HeartIcon size={20} />
+              </a>
 
-            <a
-              title="复制"
-              className="flex cursor-pointer items-center gap-1 hover:text-primary-500"
-              onClick={() => copyToClipboard(message.content)}
-            >
-              <CopyIcon size={20} />
-            </a>
-          </div>
+              <a
+                title="复制"
+                className={cn("flex cursor-pointer items-center gap-1 hover:text-primary-500", {
+                  "hover:text-primary-300": isUser,
+                })}
+                onClick={() => copyToClipboard(message.content)}
+              >
+                <CopyIcon size={20} />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>

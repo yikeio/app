@@ -9,10 +9,14 @@ import MessageItem from "./message-item"
 export function MessageList({
   messages,
   selectable = false,
+  isStreaming = false,
+  streamContent = "",
   onSelected = (messages: Message[]) => undefined,
 }: {
   messages: Message[]
   selectable?: boolean
+  isStreaming?: boolean
+  streamContent?: string
   onSelected?: (messages: Message[]) => void
 }) {
   const [selectedMessages, setSelectedMessages] = useState<Message[]>([])
@@ -48,7 +52,7 @@ export function MessageList({
                 "pl-10": selectable,
               })}
             >
-              <MessageItem className="py-4" message={message} previousMessage={messages[index - 1]} />
+              <MessageItem className="py-4" message={message} />
 
               {selectable && (
                 <div className={classNames(`absolute inset-0 p-4 z-50`)} onClick={() => toggleSelectMessage(message)}>
@@ -64,6 +68,8 @@ export function MessageList({
               )}
             </div>
           ))}
+
+          {isStreaming && <MessageItem className="py-4" message={{ isStreaming, content: streamContent }} />}
         </div>
       </div>
     </>

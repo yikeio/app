@@ -1,4 +1,6 @@
-import { API_DOMAIN, request } from "../lib/request"
+import qs from "qs"
+
+import Request from "@/lib/request"
 
 export interface Conversation {
   id: number
@@ -13,7 +15,7 @@ export interface Conversation {
 }
 
 export interface Message {
-  id: number
+  id?: number
   quota_id: number
   creator_id: number
   conversation_id: number
@@ -26,40 +28,36 @@ export interface Message {
   isStreaming: boolean
 }
 
-export async function getConversations(options?: { page?: number; pageSize?: number; sorts?: string }) {
-  const { page = 1, pageSize = 15, sorts = "last_active_at" } = options || {}
-  return request(`chat/conversations?page=${page}&per_page=${pageSize}&sorts=${sorts}`)
+export async function getConversations(options?: {
+  prompt?: number | string
+  page?: number
+  pageSize?: number
+  sorts?: string
+}) {
+  const { prompt = "", page = 1, pageSize = 15, sorts = "last_active_at" } = options || {}
+  return Request.getJson(
+    `chat/conversations${qs.stringify({ prompt, page, pageSize, sorts }, { addQueryPrefix: true })}`
+  )
 }
 
 export async function getConversation(conversationId: number): Promise<Conversation> {
-  return request(`chat/conversations/${conversationId}`)
+  return Request.getJson(`chat/conversations/${conversationId}`)
 }
 
-export async function createConversation(title: string = ""): Promise<Conversation> {
-  return request("chat/conversations", {
-    method: "POST",
-    body: JSON.stringify({ title }),
-  })
+export async function createConversation(title: string = "", promptId?: number | string): Promise<Conversation> {
+  return Request.postJson("chat/conversations", { title, prompt_id: promptId })
 }
 
 export async function updateConversation(conversationId: number, data: Partial<Conversation>): Promise<Conversation> {
-  return request(`chat/conversations/${conversationId}`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-  })
+  return Request.patchJson(`chat/conversations/${conversationId}`, data)
 }
 
 export async function deleteConversation(conversationId: number): Promise<undefined> {
-  return request(`chat/conversations/${conversationId}`, {
-    method: "DELETE",
-  })
+  return Request.deleteJson(`chat/conversations/${conversationId}`)
 }
 
 export async function createMessage(conversationId: number, data: Partial<Message>) {
-  return request(`chat/conversations/${conversationId}/messages`, {
-    method: "POST",
-    body: JSON.stringify(data),
-  })
+  return Request.postJson(`chat/conversations/${conversationId}/messages`, data)
 }
 
 export async function getMessages(
@@ -67,12 +65,50 @@ export async function getMessages(
   options?: { page?: number; pageSize?: number; sorts?: string }
 ) {
   const { page = 1, pageSize = 15, sorts = "id:desc" } = options || {}
-  return request(`chat/conversations/${conversationId}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`)
+  return Request.getJson(
+    `chat/conversations/${conversationId}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`
+  )
 }
 
-export async function createCompletion(conversationId: number, messageId: number) {
-  return request(`chat/conversations/${conversationId}/completions`, {
+export async function createCompletion(conversationId: number) {
+  return Request.post(`chat/conversations/${conversationId}/completions`, {
     method: "POST",
-    body: JSON.stringify({ message_id: messageId }),
-  })
+  }).then((res) => res.text())
+}
+
+export async function waitConversationResponse(
+  conversationId: number,
+  callback: (message: string, done: boolean) => void,
+  timeout = 30000
+) {
+  let responseText = ""
+
+  const response = await createCompletion(conversationId)
+  console.log(response)
+
+  if (!response.ok) {
+    console.error("Stream Error", response.body)
+    throw new Error(`Stream Error: ${response}`)
+  }
+
+  const reader = response.body?.getReader()
+  const decoder = new TextDecoder()
+  let done = false
+
+  while (!done) {
+    // handle time out, will stop if no response in 10 secs
+    const timeoutId = setTimeout(() => callback(undefined, true), timeout)
+
+    const content = await reader?.read()
+
+    clearTimeout(timeoutId)
+
+    const text = decoder.decode(content?.value)
+
+    responseText += text
+
+    done = !content || content.done
+
+    callback(responseText, false)
+  }
 }

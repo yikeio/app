@@ -1,6 +1,6 @@
 import Cookies from "js-cookie"
 
-import { request } from "../lib/request"
+import Request from "../lib/request"
 
 export interface User {
   id: number
@@ -36,54 +36,45 @@ export async function getAuthUser(): Promise<User> {
     return Promise.reject("未登录")
   }
 
-  return request("user")
+  return Request.getJson("user")
 }
 
 export async function activateUser({ id: id, inviteCode }: { id: number; inviteCode: string }) {
-  return request(`users/${id}:activate`, {
-    method: "POST",
-    body: JSON.stringify({
-      referral_code: inviteCode,
-    }),
+  return Request.postJson(`users/${id}:activate`, {
+    referral_code: inviteCode,
   })
 }
 
 export async function sendVerificationCode(phoneNumber: string, scene: string) {
-  return request("sms/verification-codes:send", {
-    method: "POST",
-    body: JSON.stringify({ scene, phone_number: `+86:${phoneNumber}` }),
-  })
+  return Request.postJson("sms/verification-codes:send", { scene, phone_number: `+86:${phoneNumber}` })
 }
 
 export async function getUserQuotas(id: number) {
-  return request(`users/${id}/quotas`)
+  return Request.getJson(`users/${id}/quotas`)
 }
 
 export async function getUserAvailableQuota(id: number) {
-  return request(`users/${id}/quota`)
+  return Request.getJson(`users/${id}/quota`)
 }
 
 export async function getLeaderboards() {
-  return request(`leaderboards`)
+  return Request.getJson(`leaderboards`)
 }
 
 export async function getUserSettings() {
-  return request(`settings`)
+  return Request.getJson(`settings`)
 }
 
 export async function getReferrals() {
-  return request(`referrals`)
+  return Request.getJson(`referrals`)
 }
 
 export async function getPayments() {
-  return request(`payments`)
+  return Request.getJson(`payments`)
 }
 
 export async function updateUserSettings(key: string, value: any) {
-  return request(`settings/${key}`, {
-    method: "PUT",
-    body: JSON.stringify({
-      value: value,
-    }),
+  return Request.putJson(`settings/${key}`, {
+    value: value,
   })
 }

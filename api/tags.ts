@@ -1,4 +1,4 @@
-import { request } from "@/lib/request"
+import Request from "@/lib/request"
 
 export interface Tag {
   id: number
@@ -7,7 +7,7 @@ export interface Tag {
 }
 
 export function getTags() {
-  return request("tags")
+  return Request.getJson("tags")
 }
 
 export async function getAllTags() {
@@ -15,7 +15,7 @@ export async function getAllTags() {
   let page = 1
 
   while (true) {
-    let res = await request(`tags?page=${page}&per_page=50`)
+    let res = await Request.getJson(`tags?page=${page}&per_page=50`)
 
     if (!res || res.data?.length === 0) {
       break

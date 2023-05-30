@@ -1,13 +1,12 @@
 import { useState } from "react"
-import { useRouter } from "next/router"
-import { Conversation, createConversation } from "@/api/conversations"
+import { Conversation } from "@/api/conversations"
 import { User } from "@/api/users"
 import { useBillingStore } from "@/store"
 import { isMobileScreen } from "@/utils"
-import { MessageSquareIcon, PlusIcon, TrashIcon } from "lucide-react"
-import toast from "react-hot-toast"
+import { TrashIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import EmptyState from "../empty-state"
 
 export function ConversationItem(props: {
   onClick?: (e: React.MouseEvent) => void
@@ -46,29 +45,20 @@ export function ConversationItem(props: {
 }
 
 export function ConversationList({
-  user,
   conversations,
+  className = "",
   onSelect = (conversation: Conversation) => {},
   onDelete = (conversation: Conversation) => {},
 }: {
-  user: User
+  className?: string
+  conversations: Conversation[]
+  isStreaming?: boolean
+  streamContent?: string
   onSelect?: (conversation: Conversation) => void
   onDelete?: (conversation: Conversation) => void
-  conversations: Conversation[]
 }) {
-  const [currentPlan] = useBillingStore((state) => [state.currentQuota])
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [selected, setSelected] = useState<Conversation | null>(null)
-
-  const handleCreateConversation = () => {
-    if (!currentPlan.is_available) {
-      toast.error("当前无可用套餐，请购买套餐!")
-      location.href = "/pricing"
-      return
-    }
-
-    createConversation("新对话")
-  }
 
   const handleSelect = (conversation: Conversation) => {
     setSelected(conversation)
@@ -82,30 +72,22 @@ export function ConversationList({
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex h-auto flex-1 flex-col gap-4 overflow-y-auto">
-        <div className="flex flex-col gap-4">
-          {conversations.map((item) => (
-            <ConversationItem
-              id={item.id}
-              title={item.title}
-              time={item.updated_at}
-              count={item.messages_count || 1}
-              key={item.id}
-              selected={item.id === selected?.id}
-              onClick={() => handleSelect(item)}
-              onDelete={() => handleDelete(item)}
-            />
-          ))}
-        </div>
-        {isLoadingMore && <div className="animate-spin"></div>}
-      </div>
-
+    <div className={cn("flex h-full flex-1 flex-col gap-4 overflow-y-auto", className)}>
+      {conversations.length <= 0 && <EmptyState />}
+      {isLoadingMore && <div className="animate-spin"></div>}
       <div className="flex flex-col gap-4">
-        <Button className="flex w-full items-center justify-center gap-2" onClick={handleCreateConversation}>
-          <PlusIcon size={22} />
-          <span>开启新的对话</span>
-        </Button>
+        {conversations.map((item) => (
+          <ConversationItem
+            id={item.id}
+            title={item.title}
+            time={item.updated_at}
+            count={item.messages_count || 1}
+            key={item.id}
+            selected={item.id === selected?.id}
+            onClick={() => handleSelect(item)}
+            onDelete={() => handleDelete(item)}
+          />
+        ))}
       </div>
     </div>
   )

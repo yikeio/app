@@ -1,10 +1,7 @@
-import { request } from "../lib/request"
+import Request from "../lib/request"
 
 export async function activateGiftCard({ code }: { code: string }) {
-  return request("gift-cards:activate", {
-    method: "POST",
-    body: JSON.stringify({
-      code: code,
-    }),
+  return Request.postJson("gift-cards:activate", {
+    code: code,
   })
 }

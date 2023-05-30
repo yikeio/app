@@ -5,17 +5,22 @@ import { useRouter } from "next/router"
 import {
   Conversation,
   Message,
+  createCompletion,
   createConversation,
+  createMessage,
   getConversation,
   getConversations,
   getMessages,
+  waitConversationResponse,
 } from "@/api/conversations"
 import PromptApi, { Prompt } from "@/api/prompts"
 import useAuth from "@/hooks/use-auth"
 import useLocalStorage from "@/hooks/use-localstorage"
 import useSettings from "@/hooks/use-settings"
+import { useBillingStore } from "@/store"
 import { isMobileScreen, isScreenSizeAbove } from "@/utils"
-import { BadgeCheckIcon, BotIcon, PanelRightIcon, ShareIcon, StopCircleIcon } from "lucide-react"
+import { BadgeCheckIcon, BotIcon, PanelRightIcon, PlusIcon, ShareIcon, StopCircleIcon } from "lucide-react"
+import { toast } from "react-hot-toast"
 import useSWR from "swr"
 
 import { cn } from "@/lib/utils"
@@ -37,10 +42,32 @@ export default function ChatPage() {
   const [showSidebar, setShowSidebar] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [conversation, setConversation] = useLocalStorage<Conversation>("selectedConversation", null)
-  const [historyTab, setHistoryTab] = useLocalStorage<"current" | "all">("selectedHistoryTab", "current")
+  const [historyTab, setHistoryTab] = useLocalStorage<"prompt" | "all">("selectedHistoryTab", "prompt")
   const [messages, setMessages] = useState<Message[]>([])
+  const [streamContent, setStreamContent] = useState("")
+  const [currentPlan] = useBillingStore((state) => [state.currentQuota])
 
-  const { data: conversations, isLoading: isConversationsLoading } = useSWR(`conversations`, () => getConversations())
+  const {
+    data: conversations,
+    mutate: refreshConversations,
+    isLoading: isConversationsLoading,
+  } = useSWR(
+    () => (hasLogged ? `conversations:${historyTab === "all" ? "all" : prompt.id}` : null),
+    () => getConversations({ prompt: historyTab === "all" ? "" : prompt.id })
+  )
+
+  const startWaitResponse = async () => {
+    waitConversationResponse(conversation.id, (segment, done) => {
+      console.log(segment, done)
+
+      if (done) {
+        refreshMessages()
+      }
+
+      setStreamContent(segment)
+      setIsStreaming(!done)
+    })
+  }
 
   // 获取对话消息列表
   const refreshMessages = async () => {
@@ -57,8 +84,8 @@ export default function ChatPage() {
   }
 
   // 提交问题
-  const handleUserSubmit = () => {
-    // todo
+  const handleUserSubmit = (input: string) => {
+    createMessage(conversation.id, { content: input }).then(refreshMessages).then(startWaitResponse)
   }
 
   // 停止生成回答
@@ -72,8 +99,18 @@ export default function ChatPage() {
   }
 
   // 切换对话历史记录类型
-  const handleChangeConversationHistoryTab = (tab: "current" | "all") => {
+  const handleChangeConversationHistoryTab = (tab: "prompt" | "all") => {
     setHistoryTab(tab)
+  }
+
+  const handleCreateConversation = () => {
+    if (!currentPlan.is_available) {
+      toast.error("当前无可用套餐，请购买套餐!")
+      location.href = "/pricing"
+      return
+    }
+
+    createConversation("新对话")
   }
 
   // 未登录时，跳转到登录页面
@@ -86,15 +123,17 @@ export default function ChatPage() {
 
   // 对话列表加载完成后，自动选择第一个对话
   useEffect(() => {
-    if (isConversationsLoading) {
+    if (isConversationsLoading || !prompt) {
       return
     }
 
     if (conversations?.data.length) {
       setConversation(conversations.data[0])
     } else {
-      createConversation(prompt?.name || "新的聊天").then((res) => {
-        setConversation(res)
+      createConversation(prompt?.name || "新的聊天", prompt.id).then((res) => {
+        refreshConversations().then(() => {
+          setConversation(res)
+        })
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,11 +166,11 @@ export default function ChatPage() {
   return (
     <main className="relative flex h-screen flex-1 justify-start overflow-y-auto overflow-x-hidden">
       <div
-        className={cn("flex h-screen w-[100vw] shrink-0 flex-col border-r lg:ml-0 lg:flex-1", {
+        className={cn("flex h-screen w-[100vw] shrink-0 flex-col overflow-y-auto lg:ml-0 lg:flex-1", {
           "-ml-72": showSidebar,
         })}
       >
-        <header className="flex shrink-0 items-center justify-between overflow-hidden border-b bg-white">
+        <header className="sticky top-0 z-40 flex shrink-0 items-center justify-between overflow-hidden border-b bg-white">
           <LogoButton />
           <div className="flex flex-1 gap-6 border-l p-2 md:p-4">
             <div className="flex flex-1 items-center gap-2 md:gap-4">
@@ -168,7 +207,7 @@ export default function ChatPage() {
           <MessageList messages={messages} />
         </div>
 
-        <footer className="sticky bottom-0 z-10 p-4 md:p-6 xl:p-12">
+        <footer className="sticky bottom-0 z-10 bg-white p-4 md:p-6 xl:p-12">
           {isStreaming && (
             <Button className="flex w-full items-center gap-2 md:w-auto" onClick={handleAbortAnswing}>
               <StopCircleIcon size={12} />
@@ -179,39 +218,58 @@ export default function ChatPage() {
         </footer>
       </div>
       <aside
-        className={cn("mr-0 w-72 shrink-0 p-6 text-gray-700 transition-all delay-75", {
-          "-mr-72": !showSidebar,
-        })}
+        className={cn(
+          "sticky top-0 mr-0 flex h-full w-72 shrink-0 flex-col gap-6 overflow-hidden border-l bg-white p-6 text-gray-700 transition-all delay-75",
+          {
+            "-mr-72": !showSidebar,
+          }
+        )}
       >
         {prompt && (
-          <div className="flex flex-col items-center gap-6 py-6">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary-50 text-5xl">
+          <div className="flex shrink-0 flex-col items-center gap-6">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-5xl">
               {prompt.logo}
             </div>
             <div className="text-xl">{prompt.name}</div>
-            <div className="text-gray-500">{prompt.description}</div>
-            <div className="text-gray-500">使用人数： 59281 人</div>
+            <div className="flex flex-col gap-4">
+              <div className="text-gray-500">{prompt.description}</div>
+              <div className="text-center text-sm text-primary-500">使用人数： 59281 人</div>
+            </div>
           </div>
         )}
 
-        <div className="flex flex-col gap-4 border-t py-6">
-          <Label className="mt-6">对话历史</Label>
+        <div className="border-t"></div>
+
+        <div className="flex flex-1 flex-col gap-4 overflow-y-auto">
+          <Label>对话历史</Label>
           <Tabs onValueChange={handleChangeConversationHistoryTab} value={historyTab}>
             <TabsList className="grid grid-cols-2 bg-primary-50">
-              <TabsTrigger value="current">
+              <TabsTrigger value="prompt">
                 <div className="flex items-center gap-1">
-                  <span>当前场景(5)</span>
+                  <span>当前场景</span>
                 </div>
               </TabsTrigger>
               <TabsTrigger value="all">
                 <div className="flex items-center gap-1">
-                  <span>全部场景(50)</span>
+                  <span>全部场景</span>
                 </div>
               </TabsTrigger>
             </TabsList>
           </Tabs>
 
-          <ConversationList conversations={conversations?.data} user={user} onSelect={handleSelectConversation} />
+          <ConversationList
+            conversations={conversations?.data || []}
+            streamContent={streamContent}
+            isStreaming={isStreaming}
+            onSelect={handleSelectConversation}
+          />
+
+          <div className="flex flex-col gap-4">
+            <Button className="flex w-full items-center justify-center gap-2" onClick={handleCreateConversation}>
+              <PlusIcon size={22} />
+              <span>开启新的对话</span>
+            </Button>
+          </div>
         </div>
       </aside>
     </main>

@@ -1,20 +1,13 @@
-import { request } from "../lib/request"
+import Request from "../lib/request"
 
 export async function getPlans(type: string) {
-  return request(`pricings?quota_type=${type}`)
+  return Request.getJson(`pricings?quota_type=${type}`)
 }
 
 export async function getPayments() {
-  return request(`payments`)
-}
-
-export async function createPayment(data: any) {
-  return request(`payments`, {
-    method: "POST",
-    body: JSON.stringify(data),
-  })
+  return Request.getJson(`payments`)
 }
 
 export async function getPayment(id: any) {
-  return request(`payments/${id}`)
+  return Request.getJson(`payments/${id}`)
 }
