@@ -8,10 +8,10 @@ export default class Request {
     return Request.request(url, options)
   }
 
-  static post(url: string, data: Record<string, any>, options: Record<string, any> = {}) {
+  static post(url: string, data: Record<string, any> = undefined, options: Record<string, any> = {}) {
     return Request.request(url, {
       method: "POST",
-      body: JSON.stringify(data),
+      body: data ? JSON.stringify(data) : undefined,
       ...options,
     })
   }
@@ -43,8 +43,8 @@ export default class Request {
     return Request.get(url, options).then((res) => res.json())
   }
 
-  static postJson(url, data: Record<string, any>, options: Record<string, any> = {}) {
-    return Request.post(url, data, options).then((res) => res.json())
+  static postJson(url, data: Record<string, any> = undefined, options: Record<string, any> = {}) {
+    return Request.post(url, data, options).then((res) => (res.status == 204 ? res : res.json()))
   }
 
   static patchJson(url, data: Record<string, any>, options: Record<string, any> = {}) {

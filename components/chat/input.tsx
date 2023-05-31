@@ -66,10 +66,7 @@ export default function ChatInput({
   }, [textAreaRef, input])
 
   return (
-    <form
-      className={cn("relative flex flex-col items-start justify-center gap-2 md:flex-row")}
-      onSubmit={(e) => e.preventDefault()}
-    >
+    <form className={cn("relative flex items-start justify-center gap-2")} onSubmit={(e) => e.preventDefault()}>
       <Textarea
         ref={textAreaRef}
         className="h-10 max-h-64 min-h-[40px] w-full flex-1 resize-none rounded-[24px] bg-primary-50 px-6"
@@ -83,7 +80,7 @@ export default function ChatInput({
       />
 
       <Button
-        className="flex h-10 w-full items-center justify-center gap-2 rounded-full p-0 text-primary-100 md:w-10"
+        className="flex h-10 w-10 items-center justify-center gap-2 rounded-full p-0 text-primary-100"
         onClick={handleSubmit}
         disabled={input.length <= 0 || isStreaming}
       >

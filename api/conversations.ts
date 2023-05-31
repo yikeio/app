@@ -76,6 +76,10 @@ export async function createCompletion(conversationId: number) {
   }).then((res) => res.text())
 }
 
+export async function truncateConversation(conversationId: number) {
+  return Request.post(`chat/conversations/${conversationId}:truncate`)
+}
+
 export async function waitConversationResponse(
   conversationId: number,
   callback: (message: string, done: boolean) => void,
