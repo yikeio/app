@@ -9,6 +9,7 @@ import {
   createConversation,
   createMessage,
   deleteConversation,
+  getAllMessages,
   getConversation,
   getConversations,
   getMessages,
@@ -73,15 +74,19 @@ export default function ChatPage() {
   )
 
   const startWaitResponse = async () => {
-    waitConversationResponse(conversation.id, (segment, done) => {
-      console.log(segment, done)
+    waitConversationResponse(conversation.id, {
+      onStreaming: (segment, done) => {
+        setStreamContent(segment)
+        setIsStreaming(!done)
 
-      if (done) {
-        refreshMessages()
-      }
-
-      setStreamContent(segment)
-      setIsStreaming(!done)
+        if (done) {
+          refreshMessages()
+        }
+      },
+      onError(response) {
+        setStreamContent("加载失败")
+        setIsStreaming(false)
+      },
     })
   }
 
@@ -90,8 +95,9 @@ export default function ChatPage() {
     if (!conversation) {
       return
     }
-    const { data } = await getMessages(conversation.id)
-    setMessages(data)
+
+    const messages = await getAllMessages(conversation.id)
+    setMessages(messages)
   }
 
   // 边栏显示隐藏
@@ -288,7 +294,7 @@ export default function ChatPage() {
             <div className="flex flex-col gap-4">
               {isStreaming && (
                 <div className="flex items-center justify-center gap-4">
-                  <Button className="flex w-full items-center gap-2 md:w-auto" onClick={handleAbortAnswing}>
+                  <Button className="flex items-center gap-2" onClick={handleAbortAnswing}>
                     <StopCircleIcon size={16} />
                     <span>停止生成</span>
                   </Button>

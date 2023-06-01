@@ -48,6 +48,9 @@ export function MessageList({
     setSelectedMessages([])
   }, [selectable])
 
+  const messageItemWrapperClassNames =
+    "group relative z-10 flex flex-col gap-2 p-4 md:flex-row md:gap-4 md:px-6 xl:px-12"
+
   return (
     <>
       <div className="flex flex-col">
@@ -56,11 +59,10 @@ export function MessageList({
           {messages.map((message) => (
             <div
               key={message.id}
-              className={cn("group relative z-10 flex flex-col gap-2 p-4 md:flex-row md:gap-4 md:px-6 xl:px-12", {
+              className={cn(messageItemWrapperClassNames, {
                 "bg-primary-200/60": hasBeenSelected(message),
                 "pl-10": selectable,
-                "items-end md:items-start md:justify-end": message.role === "user",
-                "items-start md:flex-row-reverse md:justify-end": message.role !== "user",
+                "md:justify-end": message.role === "user",
               })}
             >
               {selectable && (
@@ -72,11 +74,18 @@ export function MessageList({
                   />
                 </div>
               )}
-              <MessageItem message={message} />
+              <MessageItem
+                message={message}
+                className={cn({
+                  "self-end": message.role === "user",
+                })}
+              />
             </div>
           ))}
 
-          {isStreaming && <MessageItem className="py-4" message={{ isStreaming, content: streamContent }} />}
+          {isStreaming && (
+            <MessageItem className={messageItemWrapperClassNames} message={{ isStreaming, content: streamContent }} />
+          )}
         </div>
       </div>
     </>

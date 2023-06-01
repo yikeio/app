@@ -82,7 +82,7 @@ export function Navbar(props) {
         <NavItem href="/pricing" name="价格" icon={<CreditCardIcon size={22} />} />
         <NavItem href="/developers" name="开发者" icon={<TerminalSquareIcon size={22} />} />
         <NavItem href="/settings" className="hidden lg:flex" name="设置" icon={<CogIcon size={22} />} />
-        <NavItem href="/discover" name="实验室" icon={<FlaskConicalIcon size={22} />} />
+        {/* <NavItem href="/discover" name="实验室" icon={<FlaskConicalIcon size={22} />} /> */}
 
         <div className="hidden flex-1 lg:block"></div>
 

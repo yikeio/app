@@ -70,10 +70,23 @@ export async function getMessages(
   )
 }
 
+export async function getAllMessages(conversationId: number) {
+  const messages: Message[] = []
+  let page = 1
+  let response = await getMessages(conversationId, { page })
+  messages.push(...response.data)
+  while (response.data.length > 0) {
+    page++
+    response = await getMessages(conversationId, { page })
+    messages.push(...response.data)
+  }
+  return messages
+}
+
 export async function createCompletion(conversationId: number) {
   return Request.post(`chat/conversations/${conversationId}/completions`, {
     method: "POST",
-  }).then((res) => res.text())
+  })
 }
 
 export async function truncateConversation(conversationId: number) {
@@ -82,30 +95,33 @@ export async function truncateConversation(conversationId: number) {
 
 export async function waitConversationResponse(
   conversationId: number,
-  callback: (message: string, done: boolean) => void,
-  timeout = 30000
+  options: {
+    onStreaming: (message: string, done: boolean) => void
+    onError?: (response) => void
+    timeout?: number
+  }
 ) {
+  const { onStreaming, onError = () => {}, timeout = 10000 } = options
+
   let responseText = ""
 
   const response = await createCompletion(conversationId)
-  console.log(response)
 
   if (!response.ok) {
     console.error("Stream Error", response.body)
-    throw new Error(`Stream Error: ${response}`)
+    onError(response)
   }
 
   const reader = response.body?.getReader()
   const decoder = new TextDecoder()
   let done = false
 
+  const timeoutId = setTimeout(() => done || onStreaming(undefined, true), timeout)
+
+  clearTimeout(timeoutId)
+
   while (!done) {
-    // handle time out, will stop if no response in 10 secs
-    const timeoutId = setTimeout(() => callback(undefined, true), timeout)
-
     const content = await reader?.read()
-
-    clearTimeout(timeoutId)
 
     const text = decoder.decode(content?.value)
 
@@ -113,6 +129,6 @@ export async function waitConversationResponse(
 
     done = !content || content.done
 
-    callback(responseText, false)
+    onStreaming(responseText, done)
   }
 }

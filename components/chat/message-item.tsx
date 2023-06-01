@@ -18,15 +18,15 @@ export default function MessageBody({ message, className = "" }: { message: Part
 
   return (
     <div
-      className={cn("group relative inline-flex min-w-[200px] max-w-[90%] overflow-hidden md:max-w-[75%]", className)}
+      className={cn("group relative flex min-w-[200px] max-w-[90%] overflow-hidden md:max-w-[75%]", className, {
+        "justify-end": isUser,
+      })}
     >
       <div
-        className={cn(
-          `relative flex flex-col gap-4 rounded-[24px] border p-3 text-gray-800 md:p-4`,
-          isUser
-            ? "justify-self-end rounded-br-none border-primary bg-primary text-primary-100/90"
-            : "rounded-bl-none bg-primary-50"
-        )}
+        className={cn(`relative flex flex-col gap-4 rounded-xl border p-3 text-gray-800 md:p-4 lg:rounded-[24px]`, {
+          "rounded-br-none lg:rounded-br-none border-primary bg-primary text-primary-100/90": isUser,
+          "rounded-bl-none lg:rounded-bl-none bg-primary-50": !isUser,
+        })}
       >
         {(message.isLoading || message.isStreaming) && (
           <LoadingIcon className="absolute -mt-6 rounded border bg-white px-1 py-0.5" />
