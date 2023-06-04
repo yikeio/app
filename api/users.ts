@@ -19,15 +19,12 @@ export interface User {
   last_active_at?: string
   state: "activated" | "unactivated" | "banned"
   referrer?: User
+  referral_url: string
   paid_total: number
   created_at?: string
   updated_at?: string
 }
 
-/**
- * 检测用户登陆
- * @returns
- */
 export async function getAuthUser(): Promise<User> {
   const token = Cookies.get("auth.token")
 
@@ -39,8 +36,8 @@ export async function getAuthUser(): Promise<User> {
   return Request.getJson("user")
 }
 
-export async function activateUser({ id: id, inviteCode }: { id: number; inviteCode: string }) {
-  return Request.postJson(`users/${id}:activate`, {
+export async function activateUser({ inviteCode }: { id: number; inviteCode: string }) {
+  return Request.postJson(`user:activate`, {
     referral_code: inviteCode,
   })
 }
@@ -49,19 +46,19 @@ export async function sendVerificationCode(phoneNumber: string, scene: string) {
   return Request.postJson("sms/verification-codes:send", { scene, phone_number: `+86:${phoneNumber}` })
 }
 
-export async function getUserQuotas(id: number) {
-  return Request.getJson(`users/${id}/quotas`)
+export async function getQuotas() {
+  return Request.getJson(`quotas`)
 }
 
-export async function getUserAvailableQuota(id: number) {
-  return Request.getJson(`users/${id}/quota`)
+export async function getCurrentQuota() {
+  return Request.getJson(`quota`)
 }
 
 export async function getLeaderboards() {
   return Request.getJson(`leaderboards`)
 }
 
-export async function getUserSettings() {
+export async function getSettings() {
   return Request.getJson(`settings`)
 }
 
@@ -73,7 +70,7 @@ export async function getPayments() {
   return Request.getJson(`payments`)
 }
 
-export async function updateUserSettings(key: string, value: any) {
+export async function updateSettings(key: string, value: any) {
   return Request.putJson(`settings/${key}`, {
     value: value,
   })

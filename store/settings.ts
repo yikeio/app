@@ -1,4 +1,4 @@
-import { getUserSettings, updateUserSettings } from "@/api/users"
+import { getUserSettings, updateSettings } from "@/api/users"
 import { create } from "zustand"
 
 export enum SubmitKey {
@@ -46,7 +46,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => ({
   async updateConfig(updater, userId, data = {}) {
     const config = get().config
     updater(config)
-    await updateUserSettings(userId, data)
+    await updateSettings(userId, data)
     set(() => ({ config }))
   },
 

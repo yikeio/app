@@ -1,34 +1,34 @@
-/* eslint-disable @next/next/no-img-element */
-import * as React from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
+import PaymentApi, { Payment } from "@/api/payments"
+import useAuth from "@/hooks/use-auth"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
+import useSWR from "swr"
 
 import { cn, formatNumber } from "@/lib/utils"
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
-import { PaymentDialog } from "@/components/payment-dialog"
+import { PaymentDialog } from "@/components/payment/dialog"
 import { Button } from "@/components/ui/button"
-import { createPayment } from "../api/pay"
-import { getListUserPayment } from "../api/users"
-import { useBillingStore, useUserStore } from "../store"
 
 export default function PricingPage() {
   const router = useRouter()
-  const [user] = useUserStore((state) => [state.user])
-  const [getPlans, plans] = useBillingStore((state) => [state.getPlans, state.plans])
-  const [paymentDetail, setPaymentDetail] = React.useState<any>({})
+  const { user } = useAuth()
+  const [payment, setPayment] = useState<Payment>(null)
 
-  React.useEffect(() => {
-    getPlans("chat")
-  }, [])
+  const { data: plans, isLoading: isPlansLoading } = useSWR("/pricing", PaymentApi.plans)
 
   const handlePay = async (item: any) => {
+    if (!user) {
+      return router.push("/auth/login")
+    }
+
     try {
-      const res = await createPayment({
+      const response = await PaymentApi.create({
         quota_type: item.quota_type,
         pricing: item.pricing,
       })
-      setPaymentDetail(res)
+      setPayment(response)
     } catch (e) {
       if (e.status === 403) {
         router.push("/user/payments")
@@ -38,18 +38,21 @@ export default function PricingPage() {
 
   // 获取用户未付款的订单先展示
   const getUnpaidPayments = async () => {
-    if (!user.id) return
-    const res = await getListUserPayment(user.id)
-    const recentPayment = res.filter((item: Record<string, string>) => item.state === "pending")[0]
+    const payments = await PaymentApi.list()
+    const latestPayment = payments.filter((item: Record<string, string>) => item.state === "pending")[0]
 
-    if (recentPayment) {
-      setPaymentDetail(recentPayment)
+    if (latestPayment) {
+      setPayment(latestPayment)
     }
   }
 
-  React.useEffect(() => {
-    getUnpaidPayments()
+  useEffect(() => {
+    user && getUnpaidPayments()
   }, [user])
+
+  if (isPlansLoading) {
+    return
+  }
 
   return (
     <Layout>
@@ -116,7 +119,7 @@ export default function PricingPage() {
         </div>
       </div>
       {/* 支付过程弹窗 */}
-      <PaymentDialog paymentDetail={paymentDetail} onClose={() => setPaymentDetail({})}></PaymentDialog>
+      <PaymentDialog payment={payment} onClose={() => setPayment(null)}></PaymentDialog>
     </Layout>
   )
 }

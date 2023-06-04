@@ -40,23 +40,31 @@ export default class Request {
   }
 
   static getJson(url: string, options: Record<string, any> = {}) {
-    return Request.get(url, options).then((res) => res.json())
+    return Request.get(url, options).then(this.toJson)
   }
 
   static postJson(url, data: Record<string, any> = undefined, options: Record<string, any> = {}) {
-    return Request.post(url, data, options).then((res) => (res.status == 204 ? res : res.json()))
+    return Request.post(url, data, options).then(this.toJson)
   }
 
   static patchJson(url, data: Record<string, any>, options: Record<string, any> = {}) {
-    return Request.patch(url, data, options).then((res) => res.json())
+    return Request.patch(url, data, options).then(this.toJson)
   }
 
   static putJson(url, data: Record<string, any>, options: Record<string, any> = {}) {
-    return Request.put(url, data, options).then((res) => res.json())
+    return Request.put(url, data, options).then(this.toJson)
   }
 
   static deleteJson(url, options: Record<string, any> = {}) {
-    return Request.delete(url, options).then((res) => res.json())
+    return Request.delete(url, options).then(this.toJson)
+  }
+
+  private static toJson(res: Response) {
+    if (res.status == 204) {
+      return res.text()
+    }
+
+    return res.json()
   }
 
   static request(url: string, options: Record<string, any> = {}) {
@@ -70,32 +78,40 @@ export default class Request {
     return new Promise<any>((resolve, reject) => {
       return fetch(`${API_DOMAIN}/api/${url}`, options)
         .then((response: any) => {
-          if (response.status === 204) {
-            return response.text().then((result: any) => {
-              resolve(result)
-            })
-          }
-
-          if (response.status >= 200 && response.status <= 300) {
+          if (response.status >= 200 && response.status < 300) {
             resolve(response)
           }
 
           if (response.status === 401) {
-            response.json().then((result: any) => {
-              Cookies.remove("auth.token")
-              toast.error("请登录")
-              setTimeout(() => {
-                window.location.href = "/auth/login"
-              }, 1000)
-              reject(result)
-            })
+            Cookies.remove("auth.token")
+            toast.error("请登录")
+            setTimeout(() => {
+              window.location.href = "/auth/login"
+            }, 1000)
+            reject(response)
           }
 
           if (response.status > 401) {
-            response.json().then((result: any) => {
-              toast.error(result.message)
-              reject(result)
-            })
+            if (response.status === 403) {
+              response.json().then((result: any) => {
+                if (result.context?.state || null) {
+                  toast.error(result.message)
+                  switch (result["context"]["state"]) {
+                    case "unactivated":
+                      return (window.location.href = "/auth/activate")
+                    case "quota_not_enough":
+                      return (window.location.href = "/pricing")
+                    default:
+                      break
+                  }
+                }
+              })
+            } else {
+              response.json().then((result: any) => {
+                toast.error(result.message)
+                reject(result)
+              })
+            }
           }
         })
         .catch((error) => {

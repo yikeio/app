@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react"
 import { Message } from "@/api/conversations"
-import useSettings from "@/hooks/use-settings"
-import classNames from "classnames"
 
 import { cn } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -20,8 +18,9 @@ export function MessageList({
   streamContent?: string
   onSelect?: (messages: Message[]) => void
 }) {
-  const messagesContainer = useRef<HTMLDivElement>(null)
+  const bottom = useRef<HTMLDivElement>(null)
   const [selectedMessages, setSelectedMessages] = useState<Message[]>([])
+  const scrollIntoViewTimeId = useRef<NodeJS.Timer | null>(null)
 
   const hasBeenSelected = (message: Message) => selectedMessages.some((m) => m.id === message.id)
 
@@ -38,9 +37,15 @@ export function MessageList({
     onSelect(newSelectedMessages)
   }
 
+  const scrollLastMessageIntoView = () => {
+    bottom.current.scrollIntoView({ behavior: "smooth", block: "end" })
+  }
+
   useEffect(() => {
     if (messages.length > 0) {
-      messagesContainer.current?.lastElementChild?.scrollIntoView({ behavior: "smooth" })
+      setTimeout(() => {
+        scrollLastMessageIntoView()
+      }, 300)
     }
   }, [messages])
 
@@ -48,14 +53,27 @@ export function MessageList({
     setSelectedMessages([])
   }, [selectable])
 
+  useEffect(() => {
+    if (!isStreaming) {
+      if (scrollIntoViewTimeId) {
+        clearInterval(scrollIntoViewTimeId.current)
+      }
+      return
+    }
+
+    scrollIntoViewTimeId.current = setInterval(() => {
+      scrollLastMessageIntoView()
+    }, 1000)
+  }, [isStreaming])
+
   const messageItemWrapperClassNames =
     "group relative z-10 flex flex-col gap-2 p-4 md:flex-row md:gap-4 md:px-6 xl:px-12"
 
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-y-auto" id="test">
         {/* 对话列表 */}
-        <div className={"flex flex-1 flex-col py-6"} ref={messagesContainer}>
+        <div className={"flex flex-1 flex-col py-6"}>
           {messages.map((message) => (
             <div
               key={message.id}
@@ -87,6 +105,7 @@ export function MessageList({
             <MessageItem className={messageItemWrapperClassNames} message={{ isStreaming, content: streamContent }} />
           )}
         </div>
+        <div ref={bottom}></div>
       </div>
     </>
   )

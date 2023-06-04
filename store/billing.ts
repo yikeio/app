@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-import { getPlans } from "../api/pay"
+import { getPlans } from "../api/payments"
 import { getUserAvailableQuota, getUserQuotas } from "../api/users"
 
 interface BillingStore {

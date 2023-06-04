@@ -40,7 +40,7 @@ export default function useAuth() {
     localStorage.setItem(AUTH_USER_KEY, JSON.stringify(res))
     setUser(res)
 
-    return user
+    return res
   }
 
   const handleOauthCallback = async (code: string, state: string): Promise<User> => {

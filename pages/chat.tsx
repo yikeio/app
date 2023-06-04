@@ -1,20 +1,18 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
 import {
+  CompletionRequest,
   Conversation,
   Message,
-  createCompletion,
+  abortCompletion,
   createConversation,
   createMessage,
   deleteConversation,
   getAllMessages,
-  getConversation,
   getConversations,
-  getMessages,
   truncateConversation,
-  waitConversationResponse,
 } from "@/api/conversations"
 import PromptApi, { Prompt } from "@/api/prompts"
 import useAuth from "@/hooks/use-auth"
@@ -22,26 +20,21 @@ import useLocalStorage from "@/hooks/use-localstorage"
 import useSettings from "@/hooks/use-settings"
 import { useBillingStore } from "@/store"
 import { isMobileScreen, isScreenSizeAbove } from "@/utils"
-import {
-  BadgeCheckIcon,
-  BotIcon,
-  ImageIcon,
-  ListXIcon,
-  PanelRightIcon,
-  PlusIcon,
-  Share2Icon,
-  ShareIcon,
-  StopCircleIcon,
-  Trash2Icon,
-  XIcon,
-} from "lucide-react"
+import { PanelRightIcon } from "lucide-react"
 import { toast } from "react-hot-toast"
 import useSWR from "swr"
 
 import { cn } from "@/lib/utils"
+import AbortButton from "@/components/chat/abort-button"
+import ClearButton from "@/components/chat/clear-button"
 import { ConversationList } from "@/components/chat/conversation-list"
+import CreateButton from "@/components/chat/create-button"
+import DeleteButton from "@/components/chat/delete-button"
+import ExportButton from "@/components/chat/export-button"
 import ChatInput from "@/components/chat/input"
+import MessageExporter from "@/components/chat/message-exporter"
 import { MessageList } from "@/components/chat/message-list"
+import PromptCard from "@/components/chat/prompt-card"
 import BackButton from "@/components/head/back-button"
 import LogoButton from "@/components/head/logo-button"
 import Loading from "@/components/loading"
@@ -63,6 +56,7 @@ export default function ChatPage() {
   const [currentPlan] = useBillingStore((state) => [state.currentQuota])
   const [selectable, setSelectable] = useState(false)
   const [selectedMessages, setSelectedMessages] = useState<Message[]>([])
+  let completionRequest = useRef<CompletionRequest>(null)
 
   const {
     data: conversations,
@@ -74,20 +68,21 @@ export default function ChatPage() {
   )
 
   const startWaitResponse = async () => {
-    waitConversationResponse(conversation.id, {
-      onStreaming: (segment, done) => {
-        setStreamContent(segment)
-        setIsStreaming(!done)
+    const request = new CompletionRequest(conversation.id)
+    if (!completionRequest.current) {
+      completionRequest.current = request
+    }
 
-        if (done) {
-          refreshMessages()
-        }
-      },
-      onError(response) {
-        setStreamContent("加载失败")
-        setIsStreaming(false)
-      },
+    request.onStreaming(async (responseText, done) => {
+      if (done) {
+        await refreshMessages()
+      }
+
+      setStreamContent(responseText)
+      setIsStreaming(!done)
     })
+
+    await request.start()
   }
 
   // 获取对话消息列表
@@ -111,8 +106,11 @@ export default function ChatPage() {
   }
 
   // 停止生成回答
-  const handleAbortAnswing = () => {
-    // todo
+  const handleAbortAnswing = async () => {
+    completionRequest.current.abort()
+    await abortCompletion(conversation.id, streamContent.length)
+    await refreshMessages()
+    setIsStreaming(false)
   }
 
   // 切换对话
@@ -150,12 +148,6 @@ export default function ChatPage() {
     }
 
     setSelectable(!selectable)
-  }
-
-  // 导出图片
-  const handleExportToImage = () => {
-    console.log("导出图片")
-    //todo
   }
 
   const handleCreateConversation = () => {
@@ -196,7 +188,10 @@ export default function ChatPage() {
 
   // 切换对话时，自动刷新消息
   useEffect(() => {
-    conversation && refreshMessages()
+    if (!conversation) {
+      return
+    }
+    refreshMessages()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversation])
 
@@ -235,32 +230,9 @@ export default function ChatPage() {
             <div className="flex shrink-0 items-center gap-2 text-gray-500">
               {hasLogged && (
                 <>
-                  <Button
-                    title="清空消息"
-                    variant="outline"
-                    onClick={() => handleTruncateConversation(conversation)}
-                    className="flex h-8 w-8 items-center justify-center p-1 hover:bg-primary-100"
-                  >
-                    <ListXIcon className="h-4 w-4" />
-                  </Button>
-
-                  <Button
-                    title="分享"
-                    variant="outline"
-                    onClick={toggleSelectable}
-                    className="flex h-8 w-8 items-center justify-center p-1 hover:bg-primary-100"
-                  >
-                    <Share2Icon className="h-4 w-4" />
-                  </Button>
-
-                  <Button
-                    title="删除"
-                    variant="outline"
-                    onClick={() => handleDeleteConversation(conversation)}
-                    className="flex h-8 w-8 items-center justify-center p-1 hover:bg-primary-100"
-                  >
-                    <Trash2Icon className="h-4 w-4" />
-                  </Button>
+                  <ClearButton onClick={() => handleTruncateConversation(conversation)} />
+                  <ExportButton onClick={toggleSelectable} />
+                  <DeleteButton onClick={() => handleDeleteConversation(conversation)} />
 
                   <Button
                     variant="outline"
@@ -278,6 +250,7 @@ export default function ChatPage() {
           </div>
         </header>
 
+        {/* 对话列表 */}
         <div className="flex-1 overflow-y-auto">
           <MessageList
             messages={messages}
@@ -288,44 +261,21 @@ export default function ChatPage() {
           />
         </div>
 
+        {/* 底部输入框 */}
         <footer className="sticky bottom-0 z-10 bg-white p-4 md:p-6 xl:p-12">
-          {/* 输入框 */}
           {!selectable && (
             <div className="flex flex-col gap-4">
-              {isStreaming && (
-                <div className="flex items-center justify-center gap-4">
-                  <Button className="flex items-center gap-2" onClick={handleAbortAnswing}>
-                    <StopCircleIcon size={16} />
-                    <span>停止生成</span>
-                  </Button>
-                </div>
-              )}
-              <ChatInput submitKey={settings.chat_submit_key} onSubmit={handleUserSubmit} />
+              {isStreaming && <AbortButton onClick={handleAbortAnswing} />}
+              <ChatInput submitKey={settings.chat_submit_key} onSubmit={handleUserSubmit} isStreaming={isStreaming} />
             </div>
           )}
 
           {/* 导出图片 */}
-          {selectable && (
-            <div className="flex items-center justify-between gap-4">
-              <div className="text-gray-500">已选择 {selectedMessages.length} 条消息</div>
-              <div className="flex items-center gap-4">
-                <Button className="flex w-full items-center gap-2 md:w-auto" onClick={handleExportToImage}>
-                  <ImageIcon size={16} />
-                  <span>导出</span>
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="flex w-full items-center gap-2 md:w-auto"
-                  onClick={toggleSelectable}
-                >
-                  <XIcon size={16} />
-                  <span>取消</span>
-                </Button>
-              </div>
-            </div>
-          )}
+          {selectable && <MessageExporter messages={selectedMessages} user={user} onCancel={toggleSelectable} />}
         </footer>
       </div>
+
+      {/* 信息边栏 */}
       <aside
         className={cn(
           "sticky top-0 mr-0 flex h-full w-72 shrink-0 flex-col gap-6 overflow-hidden border-l bg-white p-6 text-gray-700 transition-all delay-75",
@@ -334,18 +284,7 @@ export default function ChatPage() {
           }
         )}
       >
-        {prompt && (
-          <div className="flex shrink-0 flex-col items-center gap-4">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary-50 text-5xl">
-              {prompt.logo}
-            </div>
-            <div className="text-xl">{prompt.name}</div>
-            <div className="flex flex-col gap-4">
-              <div className="text-gray-500">{prompt.description}</div>
-              <div className="text-center text-sm text-primary-500">使用人数： 59281 人</div>
-            </div>
-          </div>
-        )}
+        {prompt && <PromptCard prompt={prompt} />}
 
         <div className="border-t"></div>
 
@@ -367,13 +306,7 @@ export default function ChatPage() {
           </Tabs>
 
           <ConversationList conversations={conversations?.data || []} onSelect={handleSelectConversation} />
-
-          <div className="flex flex-col gap-4">
-            <Button className="flex w-full items-center justify-center gap-2" onClick={handleCreateConversation}>
-              <PlusIcon size={22} />
-              <span>开启新的对话</span>
-            </Button>
-          </div>
+          <CreateButton onClick={handleCreateConversation} />
         </div>
       </aside>
     </main>

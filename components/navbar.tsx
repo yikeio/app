@@ -2,39 +2,12 @@ import { ReactNode } from "react"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import useAuth from "@/hooks/use-auth"
-import { useUserStore } from "@/store"
 import classNames from "classnames"
-import {
-  Cloud,
-  CogIcon,
-  CreditCard,
-  CreditCardIcon,
-  FlaskConicalIcon,
-  GiftIcon,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  MessageSquare,
-  MoreHorizontalIcon,
-  Settings,
-  TerminalSquareIcon,
-  User,
-  Users,
-} from "lucide-react"
+import { CogIcon, CreditCardIcon, FlaskConicalIcon, GiftIcon, MessageSquare, TerminalSquareIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import UserCell from "./user-cell"
+import UserDropdown from "./user-dropdown"
 
 export function Navbar(props) {
   const router = useRouter()
@@ -82,75 +55,11 @@ export function Navbar(props) {
         <NavItem href="/pricing" name="价格" icon={<CreditCardIcon size={22} />} />
         <NavItem href="/developers" name="开发者" icon={<TerminalSquareIcon size={22} />} />
         <NavItem href="/settings" className="hidden lg:flex" name="设置" icon={<CogIcon size={22} />} />
-        {/* <NavItem href="/discover" name="实验室" icon={<FlaskConicalIcon size={22} />} /> */}
+        <NavItem href="/discover" name="实验室" icon={<FlaskConicalIcon size={22} />} />
 
         <div className="hidden flex-1 lg:block"></div>
 
-        {hasLogged && user && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <div className="mt-auto flex cursor-pointer items-center gap-4 p-2 lg:relative lg:w-full lg:place-self-end lg:border-t lg:pt-6">
-                <div className="hidden lg:block">
-                  <UserCell user={user} className="h-8 w-8 text-gray-600" />
-                </div>
-                <div className="ml-auto">
-                  <MoreHorizontalIcon size={20} />
-                </div>
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end">
-              <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onSelect={() => router.push("/user")}>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>个人资料</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => router.push("/user/payments")}>
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  <span>我的订单</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => router.push("/invitations")}>
-                  <Users className="mr-2 h-4 w-4" />
-                  <span>我的邀请</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => router.push("/user/gift-cards")}>
-                  <GiftIcon className="mr-2 h-4 w-4" />
-                  <span>礼品卡</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onSelect={() => router.push("/settings")}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>系统设置</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem disabled>
-                  <Keyboard className="mr-2 h-4 w-4" />
-                  <span>快捷键</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem disabled>
-                <Github className="mr-2 h-4 w-4" />
-                <span>GitHub</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem disabled>
-                <LifeBuoy className="mr-2 h-4 w-4" />
-                <span>客户服务</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem disabled>
-                <Cloud className="mr-2 h-4 w-4" />
-                <span>API</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>注销登录</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        {hasLogged && user && <UserDropdown user={user} />}
       </div>
     </nav>
   )

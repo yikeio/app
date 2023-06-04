@@ -29,7 +29,7 @@ export default function UserGiftCardsPage() {
           <div>
             请输入礼品卡卡密以激活对应的额度，
             <br />
-            卡密格式为：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx。
+            卡密格式为：12345678-9012-3456-7890-123456789012。
             <br />
             激活后可以在{" "}
             <Link href="/user/payments" className="font-bold text-black">
@@ -42,7 +42,7 @@ export default function UserGiftCardsPage() {
               value={code}
               className="w-96 max-w-full bg-white"
               onChange={(e) => setCode(e.target.value)}
-              placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              placeholder="12345678-9012-3456-7890-123456789012"
             />
             <Button disabled={code.length != 36} onClick={handleActivate} className="w-full md:w-auto">
               激活

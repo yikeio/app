@@ -4,7 +4,6 @@
 import { useEffect, useState } from "react"
 import { getLeaderboards, getReferrals } from "@/api/users"
 import useAuth from "@/hooks/use-auth"
-import { useUserStore } from "@/store"
 import { copyToClipboard } from "@/utils"
 import { Gift } from "lucide-react"
 
@@ -16,7 +15,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCell from "@/components/user-cell"
-import UserLayout from "./user/layout"
 
 function FeatureHero({ code }) {
   const referUrl = `https://yike.io/?referrer=${code}`
@@ -92,7 +90,7 @@ export default function UserInvitationPage() {
       return
     }
 
-    getReferrals(user.id).then((res) => {
+    getReferrals().then((res) => {
       setReferrals(res || [])
     })
 
@@ -112,9 +110,35 @@ export default function UserInvitationPage() {
         <div className="mt-4">
           <Tabs defaultValue="leaderboard">
             <TabsList className="grid grid-cols-2 bg-primary-50 md:inline-grid">
-              <TabsTrigger value="invitations">我的邀请记录（{referrals.length}）</TabsTrigger>
               <TabsTrigger value="leaderboard">排行榜</TabsTrigger>
+              <TabsTrigger value="invitations">我的邀请记录（{referrals.length}）</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="leaderboard" className="rounded-lg border bg-white p-6 shadow-sm">
+              <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
+                  <tr>
+                    <td className="w-14 border-none md:w-auto">排名</td>
+                    <td className="border-none">用户</td>
+                    <td className="w-12 border-none md:w-auto">已邀请用户数</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leaderboards.map((user, i) => (
+                    <tr key={user.id} className="border-t text-sm text-gray-500">
+                      <td className="border-none">{i + 1}</td>
+                      <td className="border-none px-4 py-3">
+                        <UserCell user={user} />
+                      </td>
+                      <td className="border-none px-4 py-3">{user.referrals_count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {leaderboards.length <= 0 && <EmptyState className="min-h-[100px]" />}
+              {leaderboards.length >= 100 && <div className="text-sm text-gray-400">* 仅显示榜单前 100 名用户</div>}
+            </TabsContent>
+
             <TabsContent value="invitations" className="rounded-lg border bg-white p-6 shadow-sm">
               <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
                 <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
@@ -135,30 +159,6 @@ export default function UserInvitationPage() {
                 </tbody>
               </table>
               {referrals.length <= 0 && <EmptyState className="min-h-[100px]" />}
-            </TabsContent>
-            <TabsContent value="leaderboard" className="rounded-lg border bg-white p-6 shadow-sm">
-              <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
-                <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
-                  <tr>
-                    <td className="border-none w-10">排名</td>
-                    <td className="border-none">用户</td>
-                    <td className="w-12 border-none md:w-auto">已邀请用户数</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {leaderboards.map((user, i) => (
-                    <tr key={user.id} className="border-t text-sm text-gray-500">
-                      <td className="border-none">{i + 1}</td>
-                      <td className="border-none px-4 py-3">
-                        <UserCell user={user} />
-                      </td>
-                      <td className="border-none px-4 py-3">{user.referrals_count}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {leaderboards.length <= 0 && <EmptyState className="min-h-[100px]" />}
-              {leaderboards.length >= 100 && <div className="text-sm text-gray-400">* 仅显示榜单前 100 名用户</div>}
             </TabsContent>
           </Tabs>
         </div>

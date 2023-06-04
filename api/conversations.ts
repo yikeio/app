@@ -22,6 +22,8 @@ export interface Message {
   role: "user" | "system" | "assistant"
   content: string
   tokens_count: number
+  created_at: string
+  updated_at: string
 
   // 后端没有的属性
   isLoading?: boolean
@@ -83,9 +85,15 @@ export async function getAllMessages(conversationId: number) {
   return messages
 }
 
-export async function createCompletion(conversationId: number) {
-  return Request.post(`chat/conversations/${conversationId}/completions`, {
-    method: "POST",
+export async function createCompletion(conversationId: number, signal?: AbortSignal) {
+  return Request.post(`chat/conversations/${conversationId}/completions`, [], {
+    signal,
+  })
+}
+
+export async function abortCompletion(conversationId: number, messageLength: number) {
+  return Request.post(`chat/conversations/${conversationId}/completions:abort`, {
+    abort_at_length: messageLength,
   })
 }
 
@@ -93,42 +101,77 @@ export async function truncateConversation(conversationId: number) {
   return Request.post(`chat/conversations/${conversationId}:truncate`)
 }
 
-export async function waitConversationResponse(
-  conversationId: number,
-  options: {
-    onStreaming: (message: string, done: boolean) => void
-    onError?: (response) => void
-    timeout?: number
-  }
-) {
-  const { onStreaming, onError = () => {}, timeout = 10000 } = options
+export type CompletionRequestCallback = (responseText: string, done: boolean, response: Response) => void
 
-  let responseText = ""
+export class CompletionRequest {
+  private timeout: number
+  private controller: AbortController
+  private callback: CompletionRequestCallback | null
 
-  const response = await createCompletion(conversationId)
-
-  if (!response.ok) {
-    console.error("Stream Error", response.body)
-    onError(response)
+  constructor(private conversationId: number, timeout: number = 10000) {
+    this.controller = new AbortController()
+    this.callback = null
+    this.timeout = timeout
   }
 
-  const reader = response.body?.getReader()
-  const decoder = new TextDecoder()
-  let done = false
+  async start(): Promise<void> {
+    if (!this.callback) {
+      throw new Error("Callback is not set")
+    }
+    try {
+      const response = await createCompletion(this.conversationId, this.controller.signal)
 
-  const timeoutId = setTimeout(() => done || onStreaming(undefined, true), timeout)
+      const reader = response.body?.getReader()
+      const decoder = new TextDecoder()
 
-  clearTimeout(timeoutId)
+      let responseText = ""
+      let done = false
 
-  while (!done) {
-    const content = await reader?.read()
+      while (!done) {
+        const timeoutId = setTimeout(() => {
+          this.controller.abort()
+          throw new Error("Failed to load due to request: timeout")
+        }, this.timeout)
 
-    const text = decoder.decode(content?.value)
+        const content = await reader?.read().catch((error) => {
+          clearTimeout(timeoutId)
+          if (error.name === "AbortError") {
+            console.log("Request Aborted")
+          } else {
+            throw error
+          }
+        })
 
-    responseText += text
+        if (!content) {
+          break
+        }
 
-    done = !content || content.done
+        clearTimeout(timeoutId)
 
-    onStreaming(responseText, done)
+        const text = decoder.decode(content.value)
+
+        responseText += text
+
+        this.callback(responseText, (done = content.done), response)
+      }
+    } catch (error) {
+      if (error.name === "AbortError") {
+        return console.log("Request Aborted")
+      } else {
+        throw error
+      }
+    }
+  }
+
+  abort() {
+    this.controller.abort()
+  }
+
+  onStreaming(callback: CompletionRequestCallback) {
+    this.callback = callback
+  }
+
+  onAbort(callback: () => void) {
+    this.controller.signal.addEventListener("abort", callback)
   }
 }

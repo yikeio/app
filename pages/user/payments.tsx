@@ -6,8 +6,7 @@ import { useUserStore } from "@/store"
 
 import { formatDatetime } from "@/lib/utils"
 import EmptyState from "@/components/empty-state"
-import { PaymentDialog } from "@/components/payment-dialog"
-import LinkButton from "@/components/ui/link-button"
+import { PaymentDialog } from "@/components/payment/dialog"
 import UserLayout from "./layout"
 
 export default function UserInvitationPage() {
@@ -17,7 +16,7 @@ export default function UserInvitationPage() {
 
   useEffect(() => {
     if (!user.id) return
-    getPayments(user.id).then((res) => {
+    getPayments().then((res) => {
       setPayments(res || [])
     })
   }, [user])
@@ -39,14 +38,12 @@ export default function UserInvitationPage() {
             </button>
           </>
         )
-        break
       case "expired":
         return <span className={className + "text-red-500 bg-red-100 border-red-200"}>已过期</span>
       case "paid":
         return <span className={className + "text-green-500 bg-green-100 border-green-200"}>已支付</span>
       default:
         return <span className={className}>未知</span>
-        break
     }
   }
 

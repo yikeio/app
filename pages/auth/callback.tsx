@@ -14,7 +14,7 @@ export default function OauthCallback() {
   useEffect(() => {
     if (query.has("code") && query.has("state")) {
       auth
-        .handleCallback(query.get("code") as string, query.get("state") as string)
+        .handleOauthCallback(query.get("code") as string, query.get("state") as string)
         .then(() => {
           setState("success")
           window.location.replace("/")
@@ -30,7 +30,7 @@ export default function OauthCallback() {
   return (
     <>
       <div className="flex h-screen items-center justify-center">
-        <div className="mb-[20vh] flex w-[80vw] flex-col items-center justify-center gap-6 rounded-lg border border-gray-300 bg-primary-200 p-6 text-gray-600 shadow md:w-[50vw]">
+        <div className="mb-[20vh] flex w-[80vw] flex-col items-center justify-center gap-6 rounded-lg border border-gray-300 bg-primary-50/50 p-6 text-gray-600 shadow md:w-[50vw]">
           {state === "loading" && (
             <>
               <div>登录中...</div>
