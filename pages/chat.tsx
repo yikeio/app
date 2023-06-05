@@ -6,7 +6,6 @@ import {
   CompletionRequest,
   Conversation,
   Message,
-  abortCompletion,
   createConversation,
   createMessage,
   deleteConversation,
@@ -15,13 +14,10 @@ import {
   truncateConversation,
 } from "@/api/conversations"
 import PromptApi, { Prompt } from "@/api/prompts"
-import { getCurrentQuota } from "@/api/users"
 import useAuth from "@/hooks/use-auth"
 import useSettings from "@/hooks/use-settings"
 import { isMobileScreen, isScreenSizeAbove } from "@/utils"
 import { PanelRightIcon } from "lucide-react"
-import { toast } from "react-hot-toast"
-import useSWR from "swr"
 
 import { cn } from "@/lib/utils"
 import AbortButton from "@/components/chat/abort-button"
@@ -48,28 +44,42 @@ export default function ChatPage() {
   const { hasLogged, user, redirectToLogin } = useAuth()
   const [showSidebar, setShowSidebar] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
-  const [isPromptsLoading, setIsPromptsLoading] = useState(false)
+  const [isPromptsLoading, setIsPromptsLoading] = useState(true)
+  const [isPromptsLoaded, setIsPromptsLoaded] = useState(false)
   const [conversation, setConversation] = useState<Conversation>(null)
   const [historyTab, setHistoryTab] = useState<"prompt" | "all">("prompt")
   const [messages, setMessages] = useState<Message[]>([])
   const [streamContent, setStreamContent] = useState("")
-  const { data: usingPlan } = useSWR(`using-quota`, () => getCurrentQuota())
   const [selectable, setSelectable] = useState(false)
   const [selectedMessages, setSelectedMessages] = useState<Message[]>([])
-  const [conversations, setConversations] = useState<{ prompt: Conversation[]; all: [] }>({ prompt: [], all: [] })
+  const [conversations, setConversations] = useState<{ prompt: Conversation[]; all: Conversation[] }>({
+    prompt: [],
+    all: [],
+  })
+  const promptId = (router.query.prompt_id as unknown as number) || null
   let completionRequest = useRef<CompletionRequest>(null)
 
-  const loadConversations = async (tab = historyTab) => {
+  const loadConversations = async (promptId: number) => {
     setIsPromptsLoading(true)
-    const { data } = await getConversations({ prompt: tab === "all" ? "" : (router.query.prompt_id as string) })
-    setConversations((conversations) => ({ ...conversations, [tab]: data }))
+
+    const tabs = ["prompt", "all"]
+
+    tabs.forEach(async (tab) => {
+      const { data } = await getConversations({ prompt: tab === "prompt" ? promptId : null })
+      setConversations((conversations) => ({ ...conversations, [tab]: data }))
+    })
+
+    setIsPromptsLoaded(true)
     setIsPromptsLoading(false)
   }
 
-  const loadPrompt = async () => {
-    PromptApi.get(router.query.prompt_id as string).then((res) => {
-      setPrompt(res)
-    })
+  const loadPrompt = async (promptId: number) => {
+    if (!promptId) {
+      return
+    }
+
+    const res = await PromptApi.get(promptId)
+    setPrompt(res)
   }
 
   const startWaitResponse = async () => {
@@ -80,6 +90,7 @@ export default function ChatPage() {
 
     request.onStreaming(async (responseText, done) => {
       if (done) {
+        completionRequest.current = null
         await loadMessages()
       }
 
@@ -106,14 +117,15 @@ export default function ChatPage() {
   }
 
   // 提交问题
-  const handleUserSubmit = (input: string) => {
-    createMessage(conversation.id, { content: input }).then(loadMessages).then(startWaitResponse)
+  const handleUserSubmit = async (input: string) => {
+    await createMessage(conversation.id, { content: input })
+    await loadMessages()
+    await startWaitResponse()
   }
 
   // 停止生成回答
   const handleAbortAnswing = async () => {
-    completionRequest.current.abort()
-    await abortCompletion(conversation.id, streamContent.length)
+    completionRequest.current?.abort()
     await loadMessages()
     setIsStreaming(false)
   }
@@ -124,22 +136,22 @@ export default function ChatPage() {
   }
 
   // 清空对话
-  const handleTruncateConversation = (conversation: Conversation) => {
-    truncateConversation(conversation.id).then(() => setMessages([]))
+  const handleTruncateConversation = async (conversation: Conversation) => {
+    await truncateConversation(conversation.id)
+    setMessages([])
   }
 
   // 删除对话
-  const handleDeleteConversation = (conversation: Conversation) => {
-    deleteConversation(conversation.id).then(() => {
-      setConversation(null)
-      loadConversations()
-    })
+  const handleDeleteConversation = async (conversation: Conversation) => {
+    await deleteConversation(conversation.id)
+    setConversation(null)
+    loadConversations(promptId)
   }
 
   // 切换对话历史记录类型
   const handleChangeConversationHistoryTab = (tab: "prompt" | "all") => {
     setHistoryTab(tab)
-    loadConversations()
+    loadConversations(promptId)
   }
 
   // 选择消息的结果
@@ -157,51 +169,8 @@ export default function ChatPage() {
   }
 
   const handleCreateConversation = () => {
-    if (!usingPlan) {
-      toast.error("当前无可用套餐，请购买套餐!")
-      location.href = "/pricing"
-      return
-    }
-
     createConversation("新对话")
   }
-
-  // 未登录时，跳转到登录页面
-  useEffect(() => {
-    if (!hasLogged) {
-      redirectToLogin()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasLogged, user])
-
-  // 对话列表加载完成后，自动选择第一个对话
-  useEffect(() => {
-    if (!prompt || conversation) {
-      return
-    }
-
-    loadConversations().then(() => {
-      if (conversations.prompt.length) {
-        setConversation(conversations.prompt[0])
-      } else {
-        createConversation(prompt?.name || "新的聊天", prompt.id).then((res) => {
-          loadConversations().then(() => {
-            setConversation(res)
-          })
-        })
-      }
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversation, conversations, prompt])
-
-  // 切换对话时，自动刷新消息
-  useEffect(() => {
-    if (!conversation) {
-      return
-    }
-    loadMessages()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversation])
 
   // 根据屏幕尺寸，自动显示/隐藏边栏
   useEffect(() => {
@@ -210,14 +179,60 @@ export default function ChatPage() {
 
   // 根据路由参数，自动加载对应的场景
   useEffect(() => {
-    if (router.query.prompt_id) {
-      loadPrompt().then(() => {
-        loadConversations("prompt")
-        loadConversations("all")
-      })
+    const init = async () => {
+      if (promptId) {
+        await loadPrompt(promptId as unknown as number)
+      }
+
+      await loadConversations(promptId)
+    }
+
+    init()
+  }, [promptId])
+
+  // 未登录时，跳转到登录页面
+  useEffect(() => {
+    if (!hasLogged) {
+      redirectToLogin()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query.prompt_id])
+  }, [hasLogged])
+
+  // 会话列表更新时，如果没有当前会话，则自动选择第一个会话
+  useEffect(() => {
+    if (conversation || !isPromptsLoaded) {
+      return
+    }
+
+    const setLatestConversation = async () => {
+      let latest = null
+
+      if (promptId && conversations.prompt.length <= 0) {
+        latest = await createConversation("新对话", promptId)
+      } else if (!promptId && conversations.all.length <= 0) {
+        latest = await createConversation("新对话")
+      }
+
+      setConversation(latest)
+    }
+
+    setLatestConversation()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversation, conversations, isPromptsLoaded])
+
+  // 切换对话时，自动刷新消息
+  useEffect(() => {
+    if (!conversation) {
+      return
+    }
+
+    if (completionRequest.current) {
+      handleAbortAnswing()
+    }
+
+    loadMessages()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversation])
 
   if (!hasLogged || !user || !conversation) {
     return <Loading className="min-h-screen" />
@@ -323,6 +338,7 @@ export default function ChatPage() {
                 selectedId={conversation?.id}
                 conversations={conversations.prompt}
                 onSelect={handleSelectConversation}
+                onDelete={handleDeleteConversation}
               />
             </TabsContent>
             <TabsContent value="all" className="flex-1 overflow-y-auto">
@@ -331,6 +347,7 @@ export default function ChatPage() {
                 selectedId={conversation?.id}
                 conversations={conversations.all}
                 onSelect={handleSelectConversation}
+                onDelete={handleDeleteConversation}
               />
             </TabsContent>
           </Tabs>
