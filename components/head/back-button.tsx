@@ -3,15 +3,23 @@ import { ChevronLeftIcon } from "lucide-react"
 
 import { Button } from "../ui/button"
 
-export default function BackButton() {
+export default function BackButton({ onClick = null }: { onClick?: () => void }) {
   const router = useRouter()
+  onClick ??= () => {
+    if (window.history.length > 1) {
+      router.back()
+    } else {
+      router.push("/")
+    }
+  }
+
   return (
     <Button
       variant="outline"
       size="sm"
       className="flex h-8 w-8 items-center justify-center p-1 text-gray-500"
       title="返回"
-      onClick={() => router.back()}
+      onClick={onClick}
     >
       <ChevronLeftIcon size={18} />
     </Button>

@@ -1,7 +1,5 @@
 import { useState } from "react"
 import { Conversation } from "@/api/conversations"
-import { User } from "@/api/users"
-import { useBillingStore } from "@/store"
 import { isMobileScreen } from "@/utils"
 import { TrashIcon } from "lucide-react"
 
@@ -49,16 +47,20 @@ export function ConversationList({
   className = "",
   onSelect = (conversation: Conversation) => {},
   onDelete = (conversation: Conversation) => {},
+  selectedId = 0,
 }: {
   className?: string
   conversations: Conversation[]
   isStreaming?: boolean
   streamContent?: string
+  selectedId?: number
   onSelect?: (conversation: Conversation) => void
   onDelete?: (conversation: Conversation) => void
 }) {
   const [isLoadingMore, setIsLoadingMore] = useState(false)
-  const [selected, setSelected] = useState<Conversation | null>(null)
+  const [selected, setSelected] = useState<Conversation | null>(
+    selectedId ? conversations.find((item) => item.id === selectedId) : null
+  )
 
   const handleSelect = (conversation: Conversation) => {
     setSelected(conversation)

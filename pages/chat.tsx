@@ -39,7 +39,7 @@ import LogoButton from "@/components/head/logo-button"
 import Loading from "@/components/loading"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function ChatPage() {
   const router = useRouter()
@@ -48,6 +48,7 @@ export default function ChatPage() {
   const { hasLogged, user, redirectToLogin } = useAuth()
   const [showSidebar, setShowSidebar] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
+  const [isPromptsLoading, setIsPromptsLoading] = useState(false)
   const [conversation, setConversation] = useState<Conversation>(null)
   const [historyTab, setHistoryTab] = useState<"prompt" | "all">("prompt")
   const [messages, setMessages] = useState<Message[]>([])
@@ -55,16 +56,21 @@ export default function ChatPage() {
   const { data: usingPlan } = useSWR(`using-quota`, () => getCurrentQuota())
   const [selectable, setSelectable] = useState(false)
   const [selectedMessages, setSelectedMessages] = useState<Message[]>([])
+  const [conversations, setConversations] = useState<{ prompt: Conversation[]; all: [] }>({ prompt: [], all: [] })
   let completionRequest = useRef<CompletionRequest>(null)
 
-  const {
-    data: conversations,
-    mutate: refreshConversations,
-    isLoading: isConversationsLoading,
-  } = useSWR(
-    () => (hasLogged ? `conversations:${historyTab === "all" ? "all" : prompt.id}` : null),
-    () => getConversations({ prompt: historyTab === "all" ? "" : prompt.id })
-  )
+  const loadConversations = async (tab = historyTab) => {
+    setIsPromptsLoading(true)
+    const { data } = await getConversations({ prompt: tab === "all" ? "" : (router.query.prompt_id as string) })
+    setConversations((conversations) => ({ ...conversations, [tab]: data }))
+    setIsPromptsLoading(false)
+  }
+
+  const loadPrompt = async () => {
+    PromptApi.get(router.query.prompt_id as string).then((res) => {
+      setPrompt(res)
+    })
+  }
 
   const startWaitResponse = async () => {
     const request = new CompletionRequest(conversation.id)
@@ -74,7 +80,7 @@ export default function ChatPage() {
 
     request.onStreaming(async (responseText, done) => {
       if (done) {
-        await refreshMessages()
+        await loadMessages()
       }
 
       setStreamContent(responseText)
@@ -85,7 +91,7 @@ export default function ChatPage() {
   }
 
   // 获取对话消息列表
-  const refreshMessages = async () => {
+  const loadMessages = async () => {
     if (!conversation) {
       return
     }
@@ -101,14 +107,14 @@ export default function ChatPage() {
 
   // 提交问题
   const handleUserSubmit = (input: string) => {
-    createMessage(conversation.id, { content: input }).then(refreshMessages).then(startWaitResponse)
+    createMessage(conversation.id, { content: input }).then(loadMessages).then(startWaitResponse)
   }
 
   // 停止生成回答
   const handleAbortAnswing = async () => {
     completionRequest.current.abort()
     await abortCompletion(conversation.id, streamContent.length)
-    await refreshMessages()
+    await loadMessages()
     setIsStreaming(false)
   }
 
@@ -126,13 +132,14 @@ export default function ChatPage() {
   const handleDeleteConversation = (conversation: Conversation) => {
     deleteConversation(conversation.id).then(() => {
       setConversation(null)
-      refreshConversations()
+      loadConversations()
     })
   }
 
   // 切换对话历史记录类型
   const handleChangeConversationHistoryTab = (tab: "prompt" | "all") => {
     setHistoryTab(tab)
+    loadConversations()
   }
 
   // 选择消息的结果
@@ -169,28 +176,30 @@ export default function ChatPage() {
 
   // 对话列表加载完成后，自动选择第一个对话
   useEffect(() => {
-    if (isConversationsLoading || !prompt || conversation) {
+    if (!prompt || conversation) {
       return
     }
 
-    if (conversations?.data.length) {
-      setConversation(conversations.data[0])
-    } else {
-      createConversation(prompt?.name || "新的聊天", prompt.id).then((res) => {
-        refreshConversations().then(() => {
-          setConversation(res)
+    loadConversations().then(() => {
+      if (conversations.prompt.length) {
+        setConversation(conversations.prompt[0])
+      } else {
+        createConversation(prompt?.name || "新的聊天", prompt.id).then((res) => {
+          loadConversations().then(() => {
+            setConversation(res)
+          })
         })
-      })
-    }
+      }
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversations])
+  }, [conversation, conversations, prompt])
 
   // 切换对话时，自动刷新消息
   useEffect(() => {
     if (!conversation) {
       return
     }
-    refreshMessages()
+    loadMessages()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversation])
 
@@ -202,13 +211,15 @@ export default function ChatPage() {
   // 根据路由参数，自动加载对应的场景
   useEffect(() => {
     if (router.query.prompt_id) {
-      PromptApi.get(router.query.prompt_id as string).then((res) => {
-        setPrompt(res)
+      loadPrompt().then(() => {
+        loadConversations("prompt")
+        loadConversations("all")
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query.prompt_id])
 
-  if (!hasLogged || !user || isConversationsLoading || !conversation) {
+  if (!hasLogged || !user || !conversation) {
     return <Loading className="min-h-screen" />
   }
 
@@ -223,7 +234,7 @@ export default function ChatPage() {
           <LogoButton />
           <div className="flex flex-1 gap-6 border-l p-2 md:p-4">
             <div className="flex flex-1 items-center gap-2 md:gap-4">
-              <BackButton />
+              <BackButton onClick={() => router.push("/prompts")} />
               <div className="max-w-[45vw] truncate text-lg ">{prompt?.name || "loading..."}</div>
             </div>
             <div className="flex shrink-0 items-center gap-2 text-gray-500">
@@ -287,10 +298,14 @@ export default function ChatPage() {
 
         <div className="border-t"></div>
 
-        <div className="flex flex-1 flex-col gap-4 overflow-y-auto">
-          <Label>对话历史</Label>
-          <Tabs onValueChange={handleChangeConversationHistoryTab} value={historyTab}>
-            <TabsList className="grid grid-cols-2 bg-primary-50">
+        <div className="flex flex-1 flex-col gap-4 overflow-hidden">
+          <Label className="shink-0">对话历史</Label>
+          <Tabs
+            onValueChange={handleChangeConversationHistoryTab}
+            value={historyTab}
+            className="flex flex-1 flex-col overflow-y-auto"
+          >
+            <TabsList className="grid shrink-0 grid-cols-2 bg-primary-50">
               <TabsTrigger value="prompt">
                 <div className="flex items-center gap-1">
                   <span>当前场景</span>
@@ -302,9 +317,24 @@ export default function ChatPage() {
                 </div>
               </TabsTrigger>
             </TabsList>
+            <TabsContent value="prompt" className="flex-1 overflow-y-auto">
+              {isPromptsLoading && conversations.prompt.length <= 0 && <Loading className="h-32" />}
+              <ConversationList
+                selectedId={conversation?.id}
+                conversations={conversations.prompt}
+                onSelect={handleSelectConversation}
+              />
+            </TabsContent>
+            <TabsContent value="all" className="flex-1 overflow-y-auto">
+              {isPromptsLoading && conversations.all.length <= 0 && <Loading className="h-32" />}
+              <ConversationList
+                selectedId={conversation?.id}
+                conversations={conversations.all}
+                onSelect={handleSelectConversation}
+              />
+            </TabsContent>
           </Tabs>
 
-          <ConversationList conversations={conversations?.data || []} onSelect={handleSelectConversation} />
           <CreateButton onClick={handleCreateConversation} />
         </div>
       </aside>
