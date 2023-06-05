@@ -15,10 +15,9 @@ import {
   truncateConversation,
 } from "@/api/conversations"
 import PromptApi, { Prompt } from "@/api/prompts"
+import { getCurrentQuota } from "@/api/users"
 import useAuth from "@/hooks/use-auth"
-import useLocalStorage from "@/hooks/use-localstorage"
 import useSettings from "@/hooks/use-settings"
-import { useBillingStore } from "@/store"
 import { isMobileScreen, isScreenSizeAbove } from "@/utils"
 import { PanelRightIcon } from "lucide-react"
 import { toast } from "react-hot-toast"
@@ -49,11 +48,11 @@ export default function ChatPage() {
   const { hasLogged, user, redirectToLogin } = useAuth()
   const [showSidebar, setShowSidebar] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
-  const [conversation, setConversation] = useLocalStorage<Conversation>("selectedConversation", null)
-  const [historyTab, setHistoryTab] = useLocalStorage<"prompt" | "all">("selectedHistoryTab", "prompt")
+  const [conversation, setConversation] = useState<Conversation>(null)
+  const [historyTab, setHistoryTab] = useState<"prompt" | "all">("prompt")
   const [messages, setMessages] = useState<Message[]>([])
   const [streamContent, setStreamContent] = useState("")
-  const [currentPlan] = useBillingStore((state) => [state.currentQuota])
+  const { data: usingPlan } = useSWR(`using-quota`, () => getCurrentQuota())
   const [selectable, setSelectable] = useState(false)
   const [selectedMessages, setSelectedMessages] = useState<Message[]>([])
   let completionRequest = useRef<CompletionRequest>(null)
@@ -151,7 +150,7 @@ export default function ChatPage() {
   }
 
   const handleCreateConversation = () => {
-    if (!currentPlan.is_available) {
+    if (!usingPlan) {
       toast.error("当前无可用套餐，请购买套餐!")
       location.href = "/pricing"
       return

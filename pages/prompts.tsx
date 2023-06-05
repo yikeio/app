@@ -8,7 +8,6 @@ import useLocalStorage from "@/hooks/use-localstorage"
 import { useQueryState } from "@/hooks/user-query-state"
 import { isScreenSize } from "@/utils"
 import { ArrowRightCircleIcon, BadgeCheckIcon, BotIcon, FlagIcon, FlameIcon } from "lucide-react"
-import useSWR from "swr"
 
 import EmptyState from "@/components/empty-state"
 import { Layout } from "@/components/layout"
@@ -19,43 +18,40 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 export default function PromptPage() {
   const [selectedTagIds, setSelectedTagIds] = useQueryState<Array<string | number>>("tag")
   const [tab, setTab] = useLocalStorage<TabType>("prompts.selected.tab", "featured")
-  const [prompts, setPrompts] = useState<Prompt[]>([])
+  const [prompts, setPrompts] = useState<{ all: Prompt[]; featured: Prompt[]; mine: Prompt[] }>({
+    all: [],
+    featured: [],
+    mine: [],
+  })
+  const [isLoading, setIsLoading] = useState(false)
 
-  const { data, mutate, error, isLoading } = useSWR([tab, selectedTagIds], ([tab, selectedTagIds]) =>
-    PromptApi.tab(tab, { tag: selectedTagIds })
-  )
-
-  if (error) {
-    console.error(error)
+  const loadPrompts = async () => {
+    setIsLoading(true)
+    const { data } = await PromptApi.tab(tab, { tag: selectedTagIds })
+    setPrompts((prompts) => ({ ...prompts, [tab]: data }))
+    setIsLoading(false)
   }
 
   const handleTabChanged = (tab: TabType) => {
     setTab(tab)
-    mutate()
+    loadPrompts()
   }
 
   const handleTagSelected = (values: Tag[]) => {
     setSelectedTagIds(values.map((v) => v.id))
-    mutate()
+    loadPrompts()
   }
 
   useEffect(() => {
-    if (data?.data) {
-      setPrompts(data.data)
-    }
-  }, [isLoading, data, mutate])
-
-  useEffect(() => {}, [tab, selectedTagIds])
-
-  if (isLoading) {
-    return <Loading className="min-h-screen" />
-  }
+    loadPrompts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Layout>
-      <div className="flex h-full flex-1 flex-col gap-6">
+      <div className="flex h-full flex-col gap-6">
         <div className="flex flex-col items-center gap-8 border-b p-6 xl:flex-row">
-          <h1 className="text-xl">选择一个场景，点击开始对话</h1>
+          <h1 className="text-xl">选择一个场景，开始对话</h1>
           <Tabs onValueChange={handleTabChanged} value={tab}>
             <TabsList className="bg-primary-50">
               <TabsTrigger value="featured">
@@ -78,6 +74,7 @@ export default function PromptPage() {
               </TabsTrigger>
             </TabsList>
           </Tabs>
+          {isLoading && <Loading className="h-10 w-10" />}
 
           <TagsSelector
             value={selectedTagIds}
@@ -86,10 +83,10 @@ export default function PromptPage() {
             showCount={isScreenSize("sm") || isScreenSize("md") ? 6 : 8}
           />
         </div>
-        {prompts.length <= 0 && <EmptyState className="flex-1" message="暂无相关场景" />}
-        {prompts.length > 0 && (
-          <div className="grid flex-1 grid-cols-1 justify-center gap-6 p-6 md:grid-cols-3 xl:grid-cols-4">
-            {prompts.map((prompt) => (
+        {prompts[tab].length <= 0 && <EmptyState className="flex-1" message="暂无相关场景" />}
+        {prompts[tab].length > 0 && (
+          <div className="grid flex-1 auto-rows-min grid-cols-1 justify-center gap-6 p-6 md:grid-cols-3 xl:grid-cols-4">
+            {prompts[tab].map((prompt) => (
               <Link
                 href={`/chat?prompt_id=${prompt.id}`}
                 className="group flex flex-col gap-6 rounded-xl border border-primary-200 bg-primary-50 p-4 hover:bg-primary-100 hover:shadow-sm xl:p-6"

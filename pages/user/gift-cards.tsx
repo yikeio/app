@@ -29,7 +29,7 @@ export default function UserGiftCardsPage() {
           <div>
             请输入礼品卡卡密以激活对应的额度，
             <br />
-            卡密格式为：12345678-9012-3456-7890-123456789012。
+            卡密格式为：<code>12345678-9012-3456-7890-123456789012。</code>
             <br />
             激活后可以在{" "}
             <Link href="/user/payments" className="font-bold text-black">
