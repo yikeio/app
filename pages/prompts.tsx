@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import PromptApi, { Prompt, TabType } from "@/api/prompts"
 import { Tag } from "@/api/tags"
@@ -25,27 +25,24 @@ export default function PromptPage() {
   })
   const [isLoading, setIsLoading] = useState(false)
 
-  const loadPrompts = async () => {
+  const loadPrompts = useCallback(async () => {
     setIsLoading(true)
     const { data } = await PromptApi.tab(tab, { tag: selectedTagIds })
     setPrompts((prompts) => ({ ...prompts, [tab]: data }))
     setIsLoading(false)
-  }
+  }, [selectedTagIds, tab])
 
   const handleTabChanged = (tab: TabType) => {
     setTab(tab)
-    loadPrompts()
   }
 
   const handleTagSelected = (values: Tag[]) => {
     setSelectedTagIds(values.map((v) => v.id))
-    loadPrompts()
   }
 
   useEffect(() => {
     loadPrompts()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [loadPrompts, selectedTagIds, tab])
 
   return (
     <Layout>

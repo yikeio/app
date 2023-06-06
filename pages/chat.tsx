@@ -46,7 +46,7 @@ export default function ChatPage() {
   const [isStreaming, setIsStreaming] = useState(false)
   const [isPromptsLoading, setIsPromptsLoading] = useState(true)
   const [isPromptsLoaded, setIsPromptsLoaded] = useState(false)
-  const [conversation, setConversation] = useState<Conversation>(null)
+  const [currentConversation, setCurrentConversation] = useState<Conversation>(null)
   const [historyTab, setHistoryTab] = useState<"prompt" | "all">("prompt")
   const [messages, setMessages] = useState<Message[]>([])
   const [streamContent, setStreamContent] = useState("")
@@ -83,8 +83,8 @@ export default function ChatPage() {
     setPrompt(res)
   }
 
-  const startWaitResponse = async () => {
-    const request = new CompletionRequest(conversation.id)
+  const startWaitResponse = async (conversationId: number) => {
+    const request = new CompletionRequest(conversationId)
     if (!completionRequest.current) {
       completionRequest.current = request
     }
@@ -92,7 +92,7 @@ export default function ChatPage() {
     request.onStreaming(async (responseText, done) => {
       if (done) {
         completionRequest.current = null
-        await loadMessages()
+        await loadMessages(conversationId)
         loadConversations(promptId)
       }
 
@@ -104,12 +104,8 @@ export default function ChatPage() {
   }
 
   // 获取对话消息列表
-  const loadMessages = async () => {
-    if (!conversation) {
-      return
-    }
-
-    const messages = await getAllMessages(conversation.id)
+  const loadMessages = async (conversationId: number) => {
+    const messages = await getAllMessages(conversationId)
     setMessages(messages)
   }
 
@@ -120,22 +116,38 @@ export default function ChatPage() {
 
   // 提交问题
   const handleUserSubmit = async (input: string) => {
-    await createMessage(conversation.id, { content: input })
-    await loadMessages()
+    await createMessage(currentConversation.id, { content: input })
+    await loadMessages(currentConversation.id)
     loadConversations(promptId)
-    await startWaitResponse()
+    await startWaitResponse(currentConversation.id)
   }
 
   // 停止生成回答
   const handleAbortAnswing = async () => {
     completionRequest.current?.abort()
-    await loadMessages()
+    await loadMessages(currentConversation.id)
     setIsStreaming(false)
   }
 
   // 切换对话
   const handleSelectConversation = (conversation: Conversation) => {
-    setConversation(conversation)
+    setCurrentConversation(conversation)
+  }
+
+  // 自动选择或创建对话
+  const selectOrCreateConversation = async () => {
+    if (currentConversation) {
+      return
+    }
+
+    let latest = conversations.prompt[0] || null
+
+    if (!latest) {
+      latest = await createConversation("新对话", promptId)
+      loadConversations(promptId)
+    }
+
+    setCurrentConversation(latest)
   }
 
   // 清空对话
@@ -148,14 +160,17 @@ export default function ChatPage() {
   // 删除对话
   const handleDeleteConversation = async (conversation: Conversation) => {
     await deleteConversation(conversation.id)
-    setConversation(null)
-    loadConversations(promptId)
+    await loadConversations(promptId)
+
+    if (conversation.id === currentConversation.id) {
+      setCurrentConversation(null)
+      setMessages([])
+    }
   }
 
   // 切换对话历史记录类型
   const handleChangeConversationHistoryTab = (tab: "prompt" | "all") => {
     setHistoryTab(tab)
-    loadConversations(promptId)
   }
 
   // 选择消息的结果
@@ -172,8 +187,9 @@ export default function ChatPage() {
     setSelectable(!selectable)
   }
 
-  const handleCreateConversation = () => {
-    createConversation("新对话")
+  const handleCreateConversation = async () => {
+    await createConversation("新对话", promptId)
+    loadConversations(promptId)
   }
 
   // 根据屏幕尺寸，自动显示/隐藏边栏
@@ -185,9 +201,15 @@ export default function ChatPage() {
   useEffect(() => {
     const init = async () => {
       if (promptId) {
-        await loadPrompt(promptId as unknown as number)
+        await loadPrompt(promptId)
       }
+
       await loadConversations(promptId)
+
+      // 如果有指定场景，但是没有对话，则自动创建一个对话
+      if (promptId && isPromptsLoaded && conversations.prompt.length <= 0) {
+        await createConversation("新对话", promptId)
+      }
     }
 
     init()
@@ -203,27 +225,16 @@ export default function ChatPage() {
 
   // 会话列表更新时，如果没有当前会话，则自动选择第一个会话
   useEffect(() => {
-    if (conversation || !isPromptsLoaded) {
+    if (!isPromptsLoaded) {
       return
     }
-
-    const setLatestConversation = async () => {
-      let latest = conversations.prompt[0] || conversations.all[0] || null
-
-      if (!latest) {
-        latest = await createConversation("新对话", promptId)
-      }
-
-      setConversation(latest)
-    }
-
-    setLatestConversation()
+    selectOrCreateConversation()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversation, conversations, isPromptsLoaded])
+  }, [currentConversation, conversations.prompt, isPromptsLoaded])
 
   // 切换对话时，自动刷新消息
   useEffect(() => {
-    if (!conversation) {
+    if (!currentConversation) {
       return
     }
 
@@ -231,11 +242,11 @@ export default function ChatPage() {
       handleAbortAnswing()
     }
 
-    loadMessages()
+    loadMessages(currentConversation.id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversation])
+  }, [currentConversation])
 
-  if (!hasLogged || !user || !conversation) {
+  if (!hasLogged || !user || !currentConversation) {
     return <Loading className="min-h-screen" />
   }
 
@@ -256,9 +267,9 @@ export default function ChatPage() {
             <div className="flex shrink-0 items-center gap-2 text-gray-500">
               {hasLogged && (
                 <>
-                  <ClearButton onClick={() => handleTruncateConversation(conversation)} />
+                  <ClearButton onClick={() => handleTruncateConversation(currentConversation)} />
                   <ExportButton onClick={toggleSelectable} />
-                  <DeleteButton onClick={() => handleDeleteConversation(conversation)} />
+                  <DeleteButton onClick={() => handleDeleteConversation(currentConversation)} />
 
                   <Button
                     variant="outline"
@@ -336,7 +347,7 @@ export default function ChatPage() {
             <TabsContent value="prompt" className="flex-1 overflow-y-auto">
               {isPromptsLoading && conversations.prompt.length <= 0 && <Loading className="h-32" />}
               <ConversationList
-                selectedId={conversation?.id}
+                selectedId={currentConversation?.id}
                 conversations={conversations.prompt}
                 onSelect={handleSelectConversation}
                 onDelete={handleDeleteConversation}
@@ -345,7 +356,7 @@ export default function ChatPage() {
             <TabsContent value="all" className="flex-1 overflow-y-auto">
               {isPromptsLoading && conversations.all.length <= 0 && <Loading className="h-32" />}
               <ConversationList
-                selectedId={conversation?.id}
+                selectedId={currentConversation?.id}
                 conversations={conversations.all}
                 onSelect={handleSelectConversation}
                 onDelete={handleDeleteConversation}

@@ -2,100 +2,38 @@ import Head from "@/components/head"
 
 export default function Terms() {
   return (
-    <>
-      <Head title="Terms &amp; Conditions" />
-      <strong>Terms &amp; Conditions</strong>
+    <div className="mx-auto flex h-full max-w-prose flex-col gap-4 overflow-y-auto py-6 xl:py-12">
+      <Head title="用户协议" />
+      <h1>用户协议</h1>
       <p>
-        By downloading or using the app, these terms will automatically apply to you – you should make sure therefore
-        that you read them carefully before using the app. You’re not allowed to copy or modify the app, any part of the
-        app, or our trademarks in any way. You’re not allowed to attempt to extract the source code of the app, and you
-        also shouldn’t try to translate the app into other languages or make derivative versions. The app itself, and
-        all the trademarks, copyright, database rights, and other intellectual property rights related to it, still
-        belong to kyrie.
+        一刻（以下简称“我们”）依据本协议为用户（以下简称“你”）提供<b>一刻 AI</b>服务。本协议对你和我们均具有法律约束力。
       </p>
-      <p>
-        kyrie is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve
-        the right to make changes to the app or to charge for its services, at any time and for any reason. We will
-        never charge you for the app or its services without making it very clear to you exactly what you’re paying for.
-      </p>
-      <p>
-        The yike app stores and processes personal data that you have provided to us, to provide my Service. It’s your
-        responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak
-        or root your phone, which is the process of removing software restrictions and limitations imposed by the
-        official operating system of your device. It could make your phone vulnerable to malware/viruses/malicious
-        programs, compromise your phone’s security features and it could mean that the yike app won’t work properly or
-        at all.
-      </p>
+
       <div>
-        <p>The app does use third-party services that declare their Terms and Conditions.</p>
-        <p>Link to Terms and Conditions of third-party service providers used by the app</p>
-        <ul>
-          <li>
-            <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">
-              Google Play Services
-            </a>
-          </li>
-        </ul>
+        <h4>一、本服务的功能</h4>
+        <p>你可以使用本服务提供的所有能力。</p>
       </div>
-      <p>
-        You should be aware that there are certain things that kyrie will not take responsibility for. Certain functions
-        of the app will require the app to have an active internet connection. The connection can be Wi-Fi or provided
-        by your mobile network provider, but kyrie cannot take responsibility for the app not working at full
-        functionality if you don’t have access to Wi-Fi, and you don’t have any of your data allowance left.
-      </p>
-      <p></p>
-      <p>
-        If you’re using the app outside of an area with Wi-Fi, you should remember that the terms of the agreement with
-        your mobile network provider will still apply. As a result, you may be charged by your mobile provider for the
-        cost of data for the duration of the connection while accessing the app, or other third-party charges. In using
-        the app, you’re accepting responsibility for any such charges, including roaming data charges if you use the app
-        outside of your home territory (i.e. region or country) without turning off data roaming. If you are not the
-        bill payer for the device on which you’re using the app, please be aware that we assume that you have received
-        permission from the bill payer for using the app.
-      </p>
-      <p>
-        Along the same lines, kyrie cannot always take responsibility for the way you use the app i.e. You need to make
-        sure that your device stays charged – if it runs out of battery and you can’t turn it on to avail the Service,
-        kyrie cannot accept responsibility.
-      </p>
-      <p>
-        With respect to kyrie’s responsibility for your use of the app, when you’re using the app, it’s important to
-        bear in mind that although we endeavor to ensure that it is updated and correct at all times, we do rely on
-        third parties to provide information to us so that we can make it available to you. kyrie accepts no liability
-        for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.
-      </p>
-      <p>
-        At some point, we may wish to update the app. The app is currently available on Android, iOS &amp; KaiOS – the
-        requirements for the system(and for any additional systems we decide to extend the availability of the app to)
-        may change, and you’ll need to download the updates if you want to keep using the app. kyrie does not promise
-        that it will always update the app so that it is relevant to you and/or works with the Android, iOS &amp; KaiOS
-        version that you have installed on your device. However, you promise to always accept updates to the application
-        when offered to you, We may also wish to stop providing the app, and may terminate use of it at any time without
-        giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and
-        licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from
-        your device.
-      </p>
-      <p>
-        <strong>Changes to This Terms and Conditions</strong>
-      </p>
-      <p>
-        I may update our Terms and Conditions from time to time. Thus, you are advised to review this page periodically
-        for any changes. I will notify you of any changes by posting the new Terms and Conditions on this page.
-      </p>
-      <p>These terms and conditions are effective as of 2023-04-22</p>
-      <p>
-        <strong>Contact Us</strong>
-      </p>
-      <p>
-        If you have any questions or suggestions about my Terms and Conditions, do not hesitate to contact me at
-        a154571896@gmail.com.
-      </p>
-      <p>
-        This Terms and Conditions page was generated by
-        <a href="https://app-privacy-policy-generator.nisrulz.com/" target="_blank" rel="noopener noreferrer">
-          App Privacy Policy Generator
-        </a>
-      </p>
-    </>
+
+      <div>
+        <h4>二、责任范围及限制</h4>
+        <p>
+          你使用本服务得到的结果仅供参考，实际情况以官方为准。由你输入的内容在本平台产生的任何内容如涉及违法违规，责任由你承担。
+        </p>
+      </div>
+
+      <div>
+        <h4>三、隐私保护</h4>
+        <p>
+          我们重视对你隐私的保护，你的个人隐私信息将根据<a href="/privacy">《隐私政策》</a>受到保护与规范，详情请参阅
+          <a href="/privacy">《隐私政策》</a>。
+        </p>
+      </div>
+
+      <div>
+        <h4>四、其他条款</h4>
+        <p>4.1 本协议所有条款的标题仅为阅读方便，本身并无实际涵义，不能作为本协议涵义解释的依据。</p>
+        <p>4.2 本协议条款无论因何种原因部分无效或不可执行，其余条款仍有效，对双方具有约束力。</p>
+      </div>
+    </div>
   )
 }

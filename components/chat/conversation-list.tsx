@@ -83,7 +83,7 @@ export function ConversationList({
             id={item.id}
             title={item.title}
             time={item.updated_at}
-            count={item.messages_count || 1}
+            count={item.messages_count || 0}
             key={item.id}
             selected={item.id === selected?.id}
             onClick={() => handleSelect(item)}
