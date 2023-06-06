@@ -56,7 +56,7 @@ export default function ChatPage() {
     prompt: [],
     all: [],
   })
-  const promptId = (router.query.prompt_id as unknown as number) || null
+  const promptId = Number(new URLSearchParams(router.asPath.split(/\?/)[1]).get("prompt_id"))
   let completionRequest = useRef<CompletionRequest>(null)
 
   const loadConversations = async (promptId: number) => {
@@ -64,10 +64,11 @@ export default function ChatPage() {
 
     const tabs = ["prompt", "all"]
 
-    tabs.forEach(async (tab) => {
+    for (let i = 0; i < tabs.length; i++) {
+      const tab = tabs[i]
       const { data } = await getConversations({ prompt: tab === "prompt" ? promptId : null })
       setConversations((conversations) => ({ ...conversations, [tab]: data }))
-    })
+    }
 
     setIsPromptsLoaded(true)
     setIsPromptsLoading(false)
@@ -92,6 +93,7 @@ export default function ChatPage() {
       if (done) {
         completionRequest.current = null
         await loadMessages()
+        loadConversations(promptId)
       }
 
       setStreamContent(responseText)
@@ -120,6 +122,7 @@ export default function ChatPage() {
   const handleUserSubmit = async (input: string) => {
     await createMessage(conversation.id, { content: input })
     await loadMessages()
+    loadConversations(promptId)
     await startWaitResponse()
   }
 
@@ -139,6 +142,7 @@ export default function ChatPage() {
   const handleTruncateConversation = async (conversation: Conversation) => {
     await truncateConversation(conversation.id)
     setMessages([])
+    loadConversations(promptId)
   }
 
   // 删除对话
@@ -183,12 +187,11 @@ export default function ChatPage() {
       if (promptId) {
         await loadPrompt(promptId as unknown as number)
       }
-
       await loadConversations(promptId)
     }
 
     init()
-  }, [promptId])
+  }, [])
 
   // 未登录时，跳转到登录页面
   useEffect(() => {
@@ -205,12 +208,10 @@ export default function ChatPage() {
     }
 
     const setLatestConversation = async () => {
-      let latest = null
+      let latest = conversations.prompt[0] || conversations.all[0] || null
 
-      if (promptId && conversations.prompt.length <= 0) {
+      if (!latest) {
         latest = await createConversation("新对话", promptId)
-      } else if (!promptId && conversations.all.length <= 0) {
-        latest = await createConversation("新对话")
       }
 
       setConversation(latest)

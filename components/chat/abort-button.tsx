@@ -9,7 +9,7 @@ export default function AbortButton({ onClick }: { onClick: () => void }) {
           <TooltipTrigger>
             <Button
               variant="destructive"
-              className="flex h-14 w-14 items-center gap-2 rounded-full border-4 border-white"
+              className="flex h-14 w-14 items-center gap-2 rounded-full border-4 border-primary-50/90"
               onClick={onClick}
             >
               <div className="h-3 w-3 bg-white"></div>
