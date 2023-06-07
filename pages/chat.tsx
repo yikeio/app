@@ -188,8 +188,10 @@ export default function ChatPage() {
   }
 
   const handleCreateConversation = async () => {
-    await createConversation("新对话", promptId)
-    loadConversations(promptId)
+    const conversation = await createConversation("新对话", promptId)
+    await loadConversations(promptId)
+
+    setCurrentConversation((promptId ? conversations.prompt : conversations.all).find((c) => c.id === conversation.id))
   }
 
   // 根据屏幕尺寸，自动显示/隐藏边栏

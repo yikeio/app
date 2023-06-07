@@ -24,6 +24,7 @@ export interface Message {
   tokens_count: number
   created_at: string
   updated_at: string
+  has_liked: boolean
 
   // 后端没有的属性
   isLoading?: boolean
@@ -60,6 +61,10 @@ export async function deleteConversation(conversationId: number): Promise<undefi
 
 export async function createMessage(conversationId: number, data: Partial<Message>) {
   return Request.postJson(`chat/conversations/${conversationId}/messages`, data)
+}
+
+export async function toggleLikeMessage(messageId: number) {
+  return Request.postJson(`chat/messages/${messageId}:toggle-like`)
 }
 
 export async function getMessages(

@@ -1,8 +1,9 @@
+import { useState } from "react"
 import dynamic from "next/dynamic"
-import { Message } from "@/api/conversations"
+import { Message, toggleLikeMessage } from "@/api/conversations"
 import LoadingIcon from "@/icons/loading.svg"
 import { copyToClipboard } from "@/utils"
-import { CopyIcon, HeartIcon, LanguagesIcon, Volume2Icon } from "lucide-react"
+import { CopyIcon, HeartIcon, HeartOffIcon, LanguagesIcon, Volume2Icon } from "lucide-react"
 
 import { cn, speak } from "@/lib/utils"
 
@@ -12,9 +13,13 @@ const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
 
 export default function MessageBody({ message, className = "" }: { message: Partial<Message>; className?: string }) {
   const isUser = message.role === "user"
+  const [hasLiked, setHasLiked] = useState(message.has_liked)
 
   const tanslate = (content: string) => {}
-  const toggleLike = (message: Message) => {}
+  const toggleLike = async (message: Message) => {
+    await toggleLikeMessage(message.id)
+    setHasLiked(!hasLiked)
+  }
 
   return (
     <div
@@ -64,13 +69,13 @@ export default function MessageBody({ message, className = "" }: { message: Part
             </a>
 
             <a
-              title="喜欢"
+              title={hasLiked ? "取消喜欢" : "喜欢"}
               className={cn("flex cursor-pointer items-center gap-1 hover:text-primary-500", {
                 "hover:text-primary-300": isUser,
               })}
               onClick={() => toggleLike(message as Message)}
             >
-              <HeartIcon size={20} />
+              {hasLiked ? <HeartOffIcon size={20} /> : <HeartIcon size={20} />}
             </a>
 
             <a
