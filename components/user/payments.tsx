@@ -1,17 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getPayments } from "@/api/users"
-import { useUserStore } from "@/store"
+import { User, getPayments } from "@/api/users"
 
 import { formatDatetime } from "@/lib/utils"
-import EmptyState from "@/components/empty-state"
-import { PaymentDialog } from "@/components/payment/dialog"
-import UserLayout from "./layout"
+import EmptyState from "../empty-state"
+import { PaymentDialog } from "../payment/dialog"
 
-export default function UserInvitationPage() {
+export default function UserPayments({ user }: { user: User }) {
   const [payments, setPayments] = useState([])
-  const [user] = useUserStore((state) => [state.user])
   const [paymentDetail, setPaymentDetail] = useState<Record<string, string>>({})
 
   useEffect(() => {
@@ -48,7 +45,7 @@ export default function UserInvitationPage() {
   }
 
   return (
-    <UserLayout>
+    <>
       <div className="p-4 md:p-8">
         <div className="mt-4 ">
           <div className="flex justify-between pb-4">
@@ -84,7 +81,7 @@ export default function UserInvitationPage() {
         </div>
       </div>
       {/* 支付过程弹窗 */}
-      <PaymentDialog paymentDetail={paymentDetail} onClose={() => setPaymentDetail({})}></PaymentDialog>
-    </UserLayout>
+      <PaymentDialog payment={paymentDetail} onClose={() => setPaymentDetail({})}></PaymentDialog>
+    </>
   )
 }

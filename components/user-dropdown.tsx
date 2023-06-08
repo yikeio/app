@@ -53,15 +53,15 @@ export default function UserDropdown({ user }: { user: User }) {
             <UserIcon className="mr-2 h-4 w-4" />
             <span>个人资料</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => router.push("/user/payments")}>
+          <DropdownMenuItem onSelect={() => router.push("/user?tab=payments")}>
             <CreditCard className="mr-2 h-4 w-4" />
             <span>我的订单</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => router.push("/invitations")}>
+          <DropdownMenuItem onSelect={() => router.push("/user?tab=invitations")}>
             <Users className="mr-2 h-4 w-4" />
             <span>我的邀请</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => router.push("/user/gift-cards")}>
+          <DropdownMenuItem onSelect={() => router.push("/gift-cards")}>
             <GiftIcon className="mr-2 h-4 w-4" />
             <span>礼品卡</span>
           </DropdownMenuItem>

@@ -2,13 +2,13 @@ import { useEffect } from "react"
 import { SubmitKey, useSettingsStore, useUserStore } from "@/store"
 import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react"
 
-import { UserAvatar } from "@/components/avatar"
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
 import { Label } from "@/components/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
+import { UserAvatar } from "@/components/user-avatar"
 
 function SettingItem(props: { title: string; subTitle?: string; children: JSX.Element }) {
   return (
