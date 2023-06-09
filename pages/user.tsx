@@ -18,7 +18,7 @@ import UserProfile from "@/components/user/profile"
 import UserStats from "@/components/user/stats"
 import UserCenterHeading from "../components/user/heading"
 
-export default function UserLayout(props) {
+export default function UserPage() {
   const router = useRouter()
   const { user } = useAuth()
   const [tab, setTab] = useQueryState("tab", { defaultValue: "stats" })
