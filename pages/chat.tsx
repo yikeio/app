@@ -85,9 +85,7 @@ export default function ChatPage() {
 
   const startWaitResponse = async (conversationId: number) => {
     const request = new CompletionRequest(conversationId)
-    if (!completionRequest.current) {
-      completionRequest.current = request
-    }
+    completionRequest.current = request
 
     request.onStreaming(async (responseText, done) => {
       if (done) {
@@ -127,6 +125,7 @@ export default function ChatPage() {
     completionRequest.current?.abort()
     await loadMessages(currentConversation.id)
     setIsStreaming(false)
+    completionRequest.current = null
   }
 
   // 切换对话
