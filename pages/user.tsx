@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useRouter } from "next/router"
 import useAuth from "@/hooks/use-auth"
 import { useQueryState } from "@/hooks/user-query-state"
@@ -21,6 +22,10 @@ export default function UserLayout(props) {
   const router = useRouter()
   const { user } = useAuth()
   const [tab, setTab] = useQueryState("tab", { defaultValue: "stats" })
+
+  useEffect(() => {
+    setTab((router.query.tab as unknown as string) || "stats")
+  }, [router.query.tab, setTab])
 
   if (!user) {
     return <Loading />
