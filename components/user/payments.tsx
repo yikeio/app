@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { User, getPayments } from "@/api/users"
+import PaymentApi from "@/api/payments"
+import { User } from "@/api/users"
 
 import { formatDatetime } from "@/lib/utils"
 import EmptyState from "../empty-state"
@@ -13,7 +14,7 @@ export default function UserPayments({ user }: { user: User }) {
 
   useEffect(() => {
     if (!user.id) return
-    getPayments().then((res) => {
+    PaymentApi.list().then((res) => {
       setPayments(res || [])
     })
   }, [user])

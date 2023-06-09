@@ -9,8 +9,8 @@ export interface Prompt {
   logo: string
   prompt_cn: string
   prompt_en: string
-  settings: Record<string, any>
-  sort_order: number
+  settings?: Record<string, any>
+  sort_order?: number
   created_at: string
   updated_at: string
   conversations_count?: number

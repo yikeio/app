@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { getSettings } from "@/api/users"
+import UserApi from "@/api/users"
 import useSWR from "swr"
 
 import useAuth from "./use-auth"
@@ -26,7 +26,7 @@ const DEFAULT_CONFIG: Settings = {
 
 export default function useSettings() {
   const { user } = useAuth()
-  const { data = DEFAULT_CONFIG, error, isLoading, mutate } = useSWR(`settings`, () => getSettings())
+  const { data = DEFAULT_CONFIG, error, isLoading, mutate } = useSWR(`settings`, () => UserApi.getSettings())
 
   const updateSetting = (key: string, value: any) => {
     updateSetting(key, value)

@@ -1,4 +1,3 @@
-import * as React from "react"
 import { Laptop2Icon, MoonIcon, SunDimIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 

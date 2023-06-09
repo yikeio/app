@@ -1,11 +1,10 @@
 import { useState } from "react"
 import dynamic from "next/dynamic"
-import { Message, toggleLikeMessage } from "@/api/conversations"
+import ConversationApi, { Message } from "@/api/conversations"
 import LoadingIcon from "@/icons/loading.svg"
-import { copyToClipboard } from "@/utils"
 import { CopyIcon, HeartIcon, HeartOffIcon, LanguagesIcon, Volume2Icon } from "lucide-react"
 
-import { cn, speak } from "@/lib/utils"
+import { cn, copyToClipboard, speak } from "@/lib/utils"
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon width={24} height={24} />,
@@ -17,7 +16,7 @@ export default function MessageBody({ message, className = "" }: { message: Part
 
   const tanslate = (content: string) => {}
   const toggleLike = async (message: Message) => {
-    await toggleLikeMessage(message.id)
+    await ConversationApi.toggleLikeMessage(message.id)
     setHasLiked(!hasLiked)
   }
 

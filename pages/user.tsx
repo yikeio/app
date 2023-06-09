@@ -24,8 +24,12 @@ export default function UserPage() {
   const [tab, setTab] = useQueryState("tab", { defaultValue: "stats" })
 
   useEffect(() => {
+    if (!router.query.tab || router.query.tab === tab) {
+      return
+    }
     setTab((router.query.tab as unknown as string) || "stats")
-  }, [router.query.tab, setTab])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query.tab])
 
   if (!user) {
     return <Loading />

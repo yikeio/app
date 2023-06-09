@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { sendVerificationCode } from "@/api/users"
+import UserApi from "@/api/users"
 import useAuth from "@/hooks/use-auth"
 import toast from "react-hot-toast"
 
@@ -51,7 +51,7 @@ export default function Login() {
     setTime(60)
 
     try {
-      await sendVerificationCode(phoneNumber, "login")
+      await UserApi.sendVerificationCode(phoneNumber, "login")
     } catch (e) {
       console.error(e)
     }

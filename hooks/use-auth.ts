@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { AuthToken, getToken, getTokenViaSms } from "@/api/auth"
-import { User, getAuthUser } from "@/api/users"
+import UserApi, { User } from "@/api/users"
 import Cookies from "js-cookie"
 
 export default function useAuth() {
@@ -14,12 +14,14 @@ export default function useAuth() {
     window.location.href = "/auth/login"
   }
 
-  const userHasLogged = () => {
-    return !!Cookies.get(AUTH_TOKEN_KEY)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const authToken = (): AuthToken => {
+    return Cookies.get(AUTH_TOKEN_KEY)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getUser = async (): Promise<User> => {
-    if (!userHasLogged()) {
+    if (!hasLogged) {
       return null
     }
 
@@ -35,7 +37,7 @@ export default function useAuth() {
   }
 
   const refreshAuthUser = async (): Promise<User> => {
-    const res = await getAuthUser()
+    const res = await UserApi.getAuthUser()
 
     localStorage.setItem(AUTH_USER_KEY, JSON.stringify(res))
     setUser(res)
@@ -83,8 +85,11 @@ export default function useAuth() {
   }
 
   useEffect(() => {
+    if (!authToken) {
+      return
+    }
     getUser()
-    setHasLogged(userHasLogged())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return {
@@ -95,5 +100,6 @@ export default function useAuth() {
     handleOauthCallback,
     handleLoginViaSms,
     refreshAuthUser,
+    authToken: authToken(),
   }
 }

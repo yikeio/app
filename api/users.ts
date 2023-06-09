@@ -26,53 +26,59 @@ export interface User {
   updated_at?: string
 }
 
-export async function getAuthUser(): Promise<User> {
-  const token = Cookies.get("auth.token")
+export default class UserApi {
+  static async getAuthUser(): Promise<User> {
+    const token = Cookies.get("auth.token")
 
-  if (!token) {
-    window.location.href = "/auth/login"
-    return Promise.reject("未登录")
+    if (!token) {
+      window.location.href = "/auth/login"
+      return Promise.reject("未登录")
+    }
+
+    return Request.getJson("user")
   }
 
-  return Request.getJson("user")
-}
+  static async activate({ inviteCode }: { id: number; inviteCode: string }) {
+    return Request.postJson(`user:activate`, {
+      referral_code: inviteCode,
+    })
+  }
 
-export async function activateUser({ inviteCode }: { id: number; inviteCode: string }) {
-  return Request.postJson(`user:activate`, {
-    referral_code: inviteCode,
-  })
-}
+  static async getStats() {
+    return Request.getJson(`user:stats`)
+  }
 
-export async function sendVerificationCode(phoneNumber: string, scene: string) {
-  return Request.postJson("sms/verification-codes:send", { scene, phone_number: `+86:${phoneNumber}` })
-}
+  static async sendVerificationCode(phoneNumber: string, scene: string) {
+    return Request.postJson("sms/verification-codes:send", { scene, phone_number: `+86:${phoneNumber}` })
+  }
 
-export async function getQuotas() {
-  return Request.getJson(`quotas`)
-}
+  static async getQuotas() {
+    return Request.getJson(`quotas`)
+  }
 
-export async function getCurrentQuota() {
-  return Request.getJson(`quota`)
-}
+  static async getCurrentQuota() {
+    return Request.getJson(`quota`)
+  }
 
-export async function getLeaderboards() {
-  return Request.getJson(`leaderboards`)
-}
+  static async getLeaderboards() {
+    return Request.getJson(`leaderboards`)
+  }
 
-export async function getSettings() {
-  return Request.getJson(`settings`)
-}
+  static async getSettings() {
+    return Request.getJson(`settings`)
+  }
 
-export async function getReferrals() {
-  return Request.getJson(`referrals`)
-}
+  static async updateSetting(key: string, value: any) {
+    return Request.putJson(`settings/${key}`, {
+      value: value,
+    })
+  }
 
-export async function getPayments() {
-  return Request.getJson(`payments`)
-}
+  static async getReferrals() {
+    return Request.getJson(`referrals`)
+  }
 
-export async function updateSettings(key: string, value: any) {
-  return Request.putJson(`settings/${key}`, {
-    value: value,
-  })
+  static async getUsingQuota() {
+    return Request.getJson(`quota`)
+  }
 }

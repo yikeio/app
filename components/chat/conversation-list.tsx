@@ -1,9 +1,8 @@
 import { useState } from "react"
 import { Conversation } from "@/api/conversations"
-import { isMobileScreen } from "@/utils"
 import { TrashIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+import { cn, isMobileScreen } from "@/lib/utils"
 import EmptyState from "../empty-state"
 
 export function ConversationItem(props: {
@@ -57,7 +56,7 @@ export function ConversationList({
   onSelect?: (conversation: Conversation) => void
   onDelete?: (conversation: Conversation) => void
 }) {
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [isLoadingMore] = useState(false)
   const [selected, setSelected] = useState<Conversation | null>(
     selectedId ? conversations.find((item) => item.id === selectedId) : null
   )

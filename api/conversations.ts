@@ -31,79 +31,77 @@ export interface Message {
   isStreaming: boolean
 }
 
-export async function getConversations(options?: {
-  prompt?: number | string
-  page?: number
-  pageSize?: number
-  sorts?: string
-}) {
-  const { prompt = "", page = 1, pageSize = 15, sorts = "last_active_at" } = options || {}
-  return Request.getJson(
-    `chat/conversations${qs.stringify({ prompt, page, pageSize, sorts }, { addQueryPrefix: true })}`
-  )
-}
-
-export async function getConversation(conversationId: number): Promise<Conversation> {
-  return Request.getJson(`chat/conversations/${conversationId}`)
-}
-
-export async function createConversation(title: string = "", promptId?: number | string): Promise<Conversation> {
-  return Request.postJson("chat/conversations", { title, prompt_id: promptId })
-}
-
-export async function updateConversation(conversationId: number, data: Partial<Conversation>): Promise<Conversation> {
-  return Request.patchJson(`chat/conversations/${conversationId}`, data)
-}
-
-export async function deleteConversation(conversationId: number): Promise<undefined> {
-  return Request.deleteJson(`chat/conversations/${conversationId}`)
-}
-
-export async function createMessage(conversationId: number, data: Partial<Message>) {
-  return Request.postJson(`chat/conversations/${conversationId}/messages`, data)
-}
-
-export async function toggleLikeMessage(messageId: number) {
-  return Request.postJson(`chat/messages/${messageId}:toggle-like`)
-}
-
-export async function getMessages(
-  conversationId: number,
-  options?: { page?: number; pageSize?: number; sorts?: string }
-) {
-  const { page = 1, pageSize = 15, sorts = "id:desc" } = options || {}
-  return Request.getJson(
-    `chat/conversations/${conversationId}/messages?page=${page}&per_page=${pageSize}&sorts=${sorts}`
-  )
-}
-
-export async function getAllMessages(conversationId: number) {
-  const messages: Message[] = []
-  let page = 1
-  let response = await getMessages(conversationId, { page })
-  messages.push(...response.data)
-  while (response.data.length > 0) {
-    page++
-    response = await getMessages(conversationId, { page })
-    messages.push(...response.data)
+export default class ConversationApi {
+  static async list(options?: { prompt?: number | string; page?: number; pageSize?: number; sorts?: string }) {
+    const { prompt = "", page = 1, pageSize = 15, sorts = "last_active_at" } = options || {}
+    return Request.getJson(
+      `chat/conversations${qs.stringify({ prompt, page, pageSize, sorts }, { addQueryPrefix: true })}`
+    )
   }
-  return messages
-}
 
-export async function createCompletion(conversationId: number, signal?: AbortSignal) {
-  return Request.post(`chat/conversations/${conversationId}/completions`, [], {
-    signal,
-  })
-}
+  static async get(conversationId: number): Promise<Conversation> {
+    return Request.getJson(`chat/conversations/${conversationId}`)
+  }
 
-export async function abortCompletion(conversationId: number, messageLength: number) {
-  return Request.post(`chat/conversations/${conversationId}/completions:abort`, {
-    abort_at_length: messageLength,
-  })
-}
+  static async create(title: string = "", promptId?: number | string): Promise<Conversation> {
+    return Request.postJson("chat/conversations", { title, prompt_id: promptId })
+  }
 
-export async function truncateConversation(conversationId: number) {
-  return Request.post(`chat/conversations/${conversationId}:truncate`)
+  static async update(conversationId: number, data: Partial<Conversation>): Promise<Conversation> {
+    return Request.patchJson(`chat/conversations/${conversationId}`, data)
+  }
+
+  static async delete(conversationId: number): Promise<undefined> {
+    return Request.deleteJson(`chat/conversations/${conversationId}`)
+  }
+
+  static async truncate(conversationId: number) {
+    return Request.post(`chat/conversations/${conversationId}:truncate`)
+  }
+
+  static async createMessage(conversationId: number, data: Partial<Message>) {
+    return Request.postJson(`chat/conversations/${conversationId}/messages`, data)
+  }
+
+  static async toggleLikeMessage(messageId: number) {
+    return Request.postJson(`chat/messages/${messageId}:toggle-like`)
+  }
+
+  static async getMessages(
+    conversationId: number,
+    options?: { page?: number; pageSize?: number; sorts?: string }
+  ): Promise<{ data: Message[]; per_page: number; page: number }> {
+    const { page = 1, pageSize = 15, sorts = "created_at" } = options || {}
+    return Request.getJson(
+      `chat/conversations/${conversationId}/messages${qs.stringify(
+        { page, pageSize, sorts },
+        { addQueryPrefix: true }
+      )}`
+    )
+  }
+
+  static async getAllMessages(conversationId: number): Promise<Message[]> {
+    const messages: Message[] = []
+
+    let page = 1
+    let response = await ConversationApi.getMessages(conversationId, { page })
+
+    messages.push(...response.data)
+
+    while (response.data.length > 0) {
+      page++
+      response = await ConversationApi.getMessages(conversationId, { page })
+      messages.push(...response.data)
+    }
+
+    return messages
+  }
+
+  static async createCompletion(conversationId: number, signal?: AbortSignal) {
+    return Request.post(`chat/conversations/${conversationId}/completions`, [], {
+      signal,
+    })
+  }
 }
 
 export type CompletionRequestCallback = (responseText: string, done: boolean, response: Response) => void
@@ -124,7 +122,7 @@ export class CompletionRequest {
       throw new Error("Callback is not set")
     }
     try {
-      const response = await createCompletion(this.conversationId, this.controller.signal)
+      const response = await ConversationApi.createCompletion(this.conversationId, this.controller.signal)
 
       const reader = response.body?.getReader()
       const decoder = new TextDecoder()

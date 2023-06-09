@@ -2,24 +2,13 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
-import {
-  CompletionRequest,
-  Conversation,
-  Message,
-  createConversation,
-  createMessage,
-  deleteConversation,
-  getAllMessages,
-  getConversations,
-  truncateConversation,
-} from "@/api/conversations"
+import ConversationApi, { CompletionRequest, Conversation, Message } from "@/api/conversations"
 import PromptApi, { Prompt } from "@/api/prompts"
 import useAuth from "@/hooks/use-auth"
 import useSettings from "@/hooks/use-settings"
-import { isMobileScreen, isScreenSizeAbove } from "@/utils"
 import { PanelRightIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+import { cn, isMobileScreen, isScreenSizeAbove } from "@/lib/utils"
 import AbortButton from "@/components/chat/abort-button"
 import ClearButton from "@/components/chat/clear-button"
 import { ConversationList } from "@/components/chat/conversation-list"
@@ -66,7 +55,7 @@ export default function ChatPage() {
 
     for (let i = 0; i < tabs.length; i++) {
       const tab = tabs[i]
-      const { data } = await getConversations({ prompt: tab === "prompt" ? promptId : null })
+      const { data } = await ConversationApi.list({ prompt: tab === "prompt" ? promptId : null })
       setConversations((conversations) => ({ ...conversations, [tab]: data }))
     }
 
@@ -103,7 +92,7 @@ export default function ChatPage() {
 
   // 获取对话消息列表
   const loadMessages = async (conversationId: number) => {
-    const messages = await getAllMessages(conversationId)
+    const messages = await ConversationApi.getAllMessages(conversationId)
     setMessages(messages)
   }
 
@@ -114,7 +103,7 @@ export default function ChatPage() {
 
   // 提交问题
   const handleUserSubmit = async (input: string) => {
-    await createMessage(currentConversation.id, { content: input })
+    await ConversationApi.createMessage(currentConversation.id, { content: input })
     await loadMessages(currentConversation.id)
     loadConversations(promptId)
     await startWaitResponse(currentConversation.id)
@@ -142,7 +131,7 @@ export default function ChatPage() {
     let latest = conversations.prompt[0] || null
 
     if (!latest) {
-      latest = await createConversation("新对话", promptId)
+      latest = await ConversationApi.create("新对话", promptId)
       loadConversations(promptId)
     }
 
@@ -151,14 +140,14 @@ export default function ChatPage() {
 
   // 清空对话
   const handleTruncateConversation = async (conversation: Conversation) => {
-    await truncateConversation(conversation.id)
+    await ConversationApi.truncate(conversation.id)
     setMessages([])
     loadConversations(promptId)
   }
 
   // 删除对话
   const handleDeleteConversation = async (conversation: Conversation) => {
-    await deleteConversation(conversation.id)
+    await ConversationApi.delete(conversation.id)
     await loadConversations(promptId)
 
     if (conversation.id === currentConversation.id) {
@@ -187,7 +176,7 @@ export default function ChatPage() {
   }
 
   const handleCreateConversation = async () => {
-    const conversation = await createConversation("新对话", promptId)
+    const conversation = await ConversationApi.create("新对话", promptId)
     await loadConversations(promptId)
 
     setCurrentConversation((promptId ? conversations.prompt : conversations.all).find((c) => c.id === conversation.id))
@@ -209,7 +198,7 @@ export default function ChatPage() {
 
       // 如果有指定场景，但是没有对话，则自动创建一个对话
       if (promptId && isPromptsLoaded && conversations.prompt.length <= 0) {
-        await createConversation("新对话", promptId)
+        await ConversationApi.create("新对话", promptId)
       }
     }
 

@@ -1,5 +1,4 @@
 import { useRef } from "react"
-import { copyToClipboard } from "@/utils"
 import { Copy } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import RehypeHighlight from "rehype-highlight"
@@ -7,6 +6,8 @@ import RehypeKatex from "rehype-katex"
 import RemarkBreaks from "remark-breaks"
 import RemarkGfm from "remark-gfm"
 import RemarkMath from "remark-math"
+
+import { copyToClipboard } from "@/lib/utils"
 
 export function PreCode(props: { children: any }) {
   const ref = useRef<HTMLPreElement>(null)

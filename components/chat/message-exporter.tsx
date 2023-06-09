@@ -4,22 +4,17 @@ import { useId, useRef, useState } from "react"
 import Image from "next/image"
 import { Message } from "@/api/conversations"
 import { User } from "@/api/users"
-import { isMobileScreen } from "@/utils"
 import * as Portal from "@radix-ui/react-portal"
 import { toJpeg } from "html-to-image"
 import { ImageIcon, XIcon } from "lucide-react"
 import QRCode from "react-qr-code"
 
-import { cn } from "@/lib/utils"
+import { cn, isMobileScreen } from "@/lib/utils"
 import Loading from "../loading"
 import { Button } from "../ui/button"
 import { Dialog, DialogContent } from "../ui/dialog"
 import { Markdown } from "./markdown"
 
-/**
- * 1. 设置一个 z-index: -999 的 dom，用于渲染聊天记录和转 canvas
- * 2. 设置一个 canvas，转完之后渲染 1 转出的 canvas
- */
 export default function MessageExporter({
   messages,
   user,

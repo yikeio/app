@@ -2,7 +2,6 @@ import { ReactNode } from "react"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import useAuth from "@/hooks/use-auth"
-import classNames from "classnames"
 import { CogIcon, CreditCardIcon, FlaskConicalIcon, GiftIcon, MessageSquare, TerminalSquareIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -11,7 +10,7 @@ import UserDropdown from "./user-dropdown"
 
 export function Navbar(props) {
   const router = useRouter()
-  const { user, hasLogged } = useAuth()
+  const { user } = useAuth()
 
   const NavItem = (item: { href?: string; name: string; icon: ReactNode; className?: string }) => {
     return (
@@ -35,8 +34,8 @@ export function Navbar(props) {
 
   return (
     <nav
-      className={classNames(
-        "fixed bottom-0 left-0 z-50 w-full lg:relative lg:w-60 transition-all bg-primary-50 flex lg:flex-col items-center lg:items-start justify-center lg:justify-start flex-shrink-0 lg:h-screen gap-6 md:gap-4 px-2 md:px-6 py-4 lg:py-8 border-t md:border-r border-r-slate-200 lg:border-t-0 border-primary-200  dark:border-b-slate-700 dark:bg-slate-900 ",
+      className={cn(
+        "fixed bottom-0 left-0 z-50 flex w-full shrink-0 items-center justify-center gap-6 border-t border-primary-200 border-r-slate-200 bg-primary-50 px-2 py-4 transition-all dark:border-b-slate-700 dark:bg-slate-900 md:gap-4 md:border-r md:px-6 lg:relative lg:h-screen lg:w-60 lg:flex-col lg:items-start lg:justify-start  lg:border-t-0 lg:py-8 ",
         props.className
       )}
     >
@@ -53,13 +52,17 @@ export function Navbar(props) {
         <NavItem href="/prompts" name="对话" icon={<MessageSquare size={22} />} />
         <NavItem href="/invitations" name="邀请" icon={<GiftIcon size={22} />} />
         <NavItem href="/pricing" name="价格" icon={<CreditCardIcon size={22} />} />
-        <NavItem href="/developers" name="开发者" icon={<TerminalSquareIcon size={22} />} />
-        <NavItem href="/settings" className="hidden lg:flex" name="设置" icon={<CogIcon size={22} />} />
-        <NavItem href="/discover" name="实验室" icon={<FlaskConicalIcon size={22} />} />
+        {user && (
+          <>
+            <NavItem href="/developers" name="开发者" icon={<TerminalSquareIcon size={22} />} />
+            <NavItem href="/settings" className="hidden lg:flex" name="设置" icon={<CogIcon size={22} />} />
+            <NavItem href="/discover" name="实验室" icon={<FlaskConicalIcon size={22} />} />
+          </>
+        )}
 
         <div className="hidden flex-1 lg:block"></div>
 
-        {hasLogged && user && <UserDropdown user={user} />}
+        {user && <UserDropdown user={user} />}
       </div>
     </nav>
   )

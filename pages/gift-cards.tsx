@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { activateGiftCard } from "@/api/gift-cards"
+import GiftCardApi from "@/api/gift-cards"
 import { toast } from "react-hot-toast"
 
 import { Layout } from "@/components/layout"
@@ -13,7 +13,7 @@ export default function UserGiftCardsPage() {
   const [code, setCode] = useState("")
 
   const handleActivate = () => {
-    activateGiftCard({ code }).then((res) => {
+    GiftCardApi.activate(code).then((res) => {
       toast.success("激活成功")
       setCode("")
     })

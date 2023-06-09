@@ -1,8 +1,7 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
-import classNames from "classnames"
 
-import { buttonVariants } from "./ui/button"
+import { cn } from "@/lib/utils"
 
 export default function MenuItem({ menu: { icon, label, href } }) {
   const Icon = icon
@@ -13,7 +12,7 @@ export default function MenuItem({ menu: { icon, label, href } }) {
   return (
     <Link
       href={href}
-      className={classNames(
+      className={cn(
         baseClassNames,
         currentPath === href ? "text-primray bg-secondary text-secondary-foreground" : "text-gray-600"
       )}

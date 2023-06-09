@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import { activateUser } from "@/api/users"
+import UserApi from "@/api/users"
 import useAuth from "@/hooks/use-auth"
+import useLocalStorage from "@/hooks/use-localstorage"
 import Cookies from "js-cookie"
 import { toast } from "react-hot-toast"
 
@@ -9,7 +10,8 @@ import { Input } from "@/components/ui/input"
 
 export default function ActivatePage() {
   const [inviteCode, setInviteCode] = useState("")
-  const { user, hasLogged, refreshAuthUser } = useAuth()
+  const { user, refreshAuthUser } = useAuth()
+  const [referrer, setReferrer] = useLocalStorage<string>("referrer", null)
 
   const redirectToIntend = () => {
     if (window.history.length > 0) {
@@ -22,22 +24,22 @@ export default function ActivatePage() {
   async function handleActivate() {
     if (!inviteCode) return toast.error("请输入邀请码")
     try {
-      await activateUser({ id: user.id, inviteCode })
+      await UserApi.activate({ id: user.id, inviteCode })
       toast.success("激活成功")
       redirectToIntend()
     } catch (e) {}
   }
 
-  async function tryActivate(referrer: string) {
+  async function tryActivate() {
     try {
-      await activateUser({ id: user.id, inviteCode: referrer })
+      await UserApi.activate({ id: user.id, inviteCode: referrer })
       refreshAuthUser()
       redirectToIntend()
     } catch (e) {
       setInviteCode(referrer)
       toast.error("账号未激活，请先激活!")
     } finally {
-      Cookies.remove("referrer")
+      setReferrer(null)
     }
   }
 
@@ -45,17 +47,16 @@ export default function ActivatePage() {
     if (!user) {
       return
     }
-    if (user.state === "unactivated") {
-      const referrer = Cookies.get("referrer")
+    if (user.state === "unactivated" && referrer) {
       const token = Cookies.get("auth.token")
 
       // 登录了没激活，但是本地存储有邀请码，尝试激活
       if (user.id && token && referrer) {
-        tryActivate(referrer)
+        tryActivate()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
+  }, [user, referrer])
 
   return (
     <div className="flex h-screen flex-1 items-center justify-center">

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { Tag, getAllTags } from "@/api/tags"
+import { useState } from "react"
+import TagApi, { Tag } from "@/api/tags"
 import { MoreHorizontalIcon } from "lucide-react"
 import useSWR from "swr"
 
@@ -20,7 +20,7 @@ export default function TagsSelector({
   align?: "center" | "start" | "end"
   onValueChange?: (selectedTags: Tag[]) => void
 }) {
-  const { data: tags, error, isLoading } = useSWR(`tags`, getAllTags, { refreshInterval: 120 * 1000 })
+  const { data: tags, isLoading } = useSWR(`tags`, TagApi.getAll, { refreshInterval: 120 * 1000 })
 
   const [selectedTags, setSelectedTags] = useState([])
 

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import useLocalStorage from "@/hooks/use-localstorage"
-import { SubmitKey } from "@/store"
-import { ArrowRightIcon, SendIcon } from "lucide-react"
+import { SubmitKey } from "@/hooks/use-settings"
+import { ArrowRightIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"

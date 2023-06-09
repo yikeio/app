@@ -6,9 +6,9 @@ import PromptApi, { Prompt, TabType } from "@/api/prompts"
 import { Tag } from "@/api/tags"
 import useLocalStorage from "@/hooks/use-localstorage"
 import { useQueryState } from "@/hooks/user-query-state"
-import { isScreenSize } from "@/utils"
 import { ArrowRightCircleIcon, BadgeCheckIcon, BotIcon, FlagIcon, FlameIcon } from "lucide-react"
 
+import { isScreenSize } from "@/lib/utils"
 import EmptyState from "@/components/empty-state"
 import { Layout } from "@/components/layout"
 import Loading from "@/components/loading"
@@ -30,6 +30,7 @@ export default function PromptPage() {
     const { data } = await PromptApi.tab(tab, { tag: selectedTagIds })
     setPrompts((prompts) => ({ ...prompts, [tab]: data }))
     setIsLoading(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTagIds, tab])
 
   const handleTabChanged = (tab: TabType) => {
