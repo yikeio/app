@@ -20,6 +20,7 @@ export interface User {
   state: "activated" | "unactivated" | "banned"
   referrer?: User
   referral_url: string
+  has_paid: boolean
   paid_total: number
   created_at?: string
   updated_at?: string

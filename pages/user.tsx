@@ -46,19 +46,19 @@ export default function UserLayout(props) {
               <TabsTrigger value="chats">对话历史</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="stats">
+            <TabsContent value="stats" className="py-6">
               <UserStats user={user} />
             </TabsContent>
-            <TabsContent value="profile">
+            <TabsContent value="profile" className="py-6">
               <UserProfile user={user} />
             </TabsContent>
-            <TabsContent value="payments">
+            <TabsContent value="payments" className="py-6">
               <UserPayments user={user} />
             </TabsContent>
-            <TabsContent value="invitations">
+            <TabsContent value="invitations" className="py-6">
               <UserInvitations user={user} />
             </TabsContent>
-            <TabsContent value="chats">
+            <TabsContent value="chats" className="py-6">
               <UserChats user={user} />
             </TabsContent>
           </Tabs>

@@ -28,8 +28,8 @@ export default function useSettings() {
   const { user } = useAuth()
   const { data = DEFAULT_CONFIG, error, isLoading, mutate } = useSWR(`settings`, () => getSettings())
 
-  const updateSettings = (key: string, value: any) => {
-    updateSettings(key, value)
+  const updateSetting = (key: string, value: any) => {
+    updateSetting(key, value)
     mutate()
   }
 
@@ -42,6 +42,6 @@ export default function useSettings() {
     isLoading,
     error,
     refresh: mutate,
-    updateSettings,
+    updateSetting,
   }
 }

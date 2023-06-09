@@ -14,15 +14,15 @@ h1 {
 }
 
 h2 {
-  @apply pb-2 mt-10 text-2xl font-semibold tracking-tight transition-colors scroll-m-20 first:mt-0;
+  @apply pb-2 text-2xl font-semibold tracking-tight transition-colors scroll-m-20 first:mt-0;
 }
 
 h3 {
-  @apply mt-8 text-xl font-semibold tracking-tight scroll-m-20;
+  @apply text-xl font-semibold tracking-tight scroll-m-20;
 }
 
 h4 {
-  @apply mb-4 text-lg font-semibold scroll-m-20;
+  @apply text-lg font-semibold scroll-m-20;
 }
 
 p {
@@ -30,7 +30,7 @@ p {
 }
 
 blockquote {
-  @apply pl-6 mt-6 italic border-l-2;
+  @apply pl-16 italic border-l-2;
 }
 
 table {

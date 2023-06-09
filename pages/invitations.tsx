@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { getLeaderboards, getReferrals } from "@/api/users"
 import useAuth from "@/hooks/use-auth"
 import { copyToClipboard } from "@/utils"
-import { Gift } from "lucide-react"
+import { Gift, GiftIcon } from "lucide-react"
 
 import { formatDatetime } from "@/lib/utils"
 import EmptyState from "@/components/empty-state"
@@ -24,7 +24,7 @@ function FeatureHero({ code }) {
       <img src="/background/gradient.svg" alt="" className="absolute inset-0 max-w-none" />
       <div className="absolute inset-0 bg-[url(/background/grid.svg)] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
       <div className="absolute bottom-0 right-0 -mb-24 -mr-24 opacity-10 md:opacity-50">
-        <Gift size={300} className="text-primary-500" />
+        <GiftIcon size={300} className="text-primary-500" />
       </div>
 
       <div className="relative flex flex-col gap-4 p-2 md:gap-6 md:p-4 xl:p-12">
