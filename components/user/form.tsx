@@ -24,11 +24,11 @@ export default function UserForm({ user, onSaved = () => null }: { user: User; o
     <div className="flex flex-col gap-4">
       <h3>更新资料</h3>
       <div className="flex flex-col gap-2">
-        <label className="block text-sm font-medium text-gray-700">用户名</label>
+        <label className="block text-sm font-medium text-muted-foreground">用户名</label>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
       </div>
       <div className="flex flex-col gap-2">
-        <label className="block text-sm font-medium text-gray-700">头像</label>
+        <label className="block text-sm font-medium text-muted-foreground">头像</label>
         <div className="flex items-center gap-4">
           <UserAvatar url={avatar} name={name} className="h-20 w-20" />
         </div>

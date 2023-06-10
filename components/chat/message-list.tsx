@@ -78,7 +78,7 @@ export function MessageList({
             <div
               key={message.id}
               className={cn(messageItemWrapperClassNames, {
-                "bg-primary-200/60": hasBeenSelected(message),
+                "bg-primary-200/60 dark:bg-muted": hasBeenSelected(message),
                 "pl-10": selectable,
                 "md:justify-end": message.role === "user",
               })}

@@ -27,13 +27,16 @@ export default function MessageBody({ message, className = "" }: { message: Part
       })}
     >
       <div
-        className={cn(`relative flex flex-col gap-4 rounded-xl border p-3 text-gray-800 md:p-4 lg:rounded-[24px]`, {
-          "rounded-br-none lg:rounded-br-none border-primary bg-primary text-primary-100/90": isUser,
-          "rounded-bl-none lg:rounded-bl-none bg-primary-50": !isUser,
-        })}
+        className={cn(
+          `relative flex flex-col gap-4 rounded-xl border p-3 text-foreground/90 md:p-4 lg:rounded-[24px]`,
+          {
+            "rounded-br-none lg:rounded-br-none border-primary bg-primary text-primary-100/90": isUser,
+            "rounded-bl-none lg:rounded-bl-none bg-primary-50 dark:bg-muted": !isUser,
+          }
+        )}
       >
         {(message.isLoading || message.isStreaming) && (
-          <LoadingIcon className="absolute -mt-6 rounded border bg-white px-1 py-0.5" />
+          <LoadingIcon className="absolute -mt-6 rounded border bg-white px-1 py-0.5 dark:bg-muted" />
         )}
         {
           <div className="markdown-body break-words before:hidden after:hidden">
@@ -43,7 +46,7 @@ export default function MessageBody({ message, className = "" }: { message: Part
 
         {!message.isStreaming && (
           <div
-            className={cn("flex items-center gap-4 text-xs text-gray-400", {
+            className={cn("flex items-center gap-4 text-xs text-muted-foreground", {
               "text-primary-400": isUser,
             })}
           >

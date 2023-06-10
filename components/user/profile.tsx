@@ -2,16 +2,26 @@ import { ReactNode } from "react"
 import { User } from "@/api/users"
 import { CopyIcon } from "lucide-react"
 
-import { copyToClipboard, formatDatetime } from "@/lib/utils"
+import { cn, copyToClipboard, formatDatetime } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { Card } from "../ui/card"
 import UserReferralLink from "./referral-link"
 
-const Item = ({ label, children, copiable = false }: { label: string; children: ReactNode; copiable?: boolean }) => {
+const Item = ({
+  label,
+  children,
+  copiable = false,
+  className = "",
+}: {
+  label: string
+  children: ReactNode
+  copiable?: boolean
+  className?: string
+}) => {
   return (
-    <div className="flex items-center gap-6">
-      <label className="w-full max-w-[100px] text-right text-gray-400">{label}</label>
-      <div className="flex flex-1 items-center">
+    <div className={cn("flex items-center gap-6", className)}>
+      <label className="text-muted-forground w-full max-w-[80px] text-right lg:max-w-[100px]">{label}</label>
+      <div className="flex flex-1 items-center text-foreground">
         {children}
         {copiable && (
           <Button variant="link" size="sm" onClick={() => copyToClipboard(children as string)}>
@@ -33,10 +43,10 @@ export default function UserProfile({ user }: { user: User }) {
       <Item label="Email">{user.email || "无"}</Item>
       <Item label="手机号">{user.phone_number || "无"}</Item>
       <Item label="推荐人">{user.referrer?.name || "无"}</Item>
-      <Item label="推荐码">
+      <Item label="注册时间">{formatDatetime(user.created_at)}</Item>
+      <Item label="推荐码" className="flex-col items-start">
         <UserReferralLink user={user} />
       </Item>
-      <Item label="注册时间">{formatDatetime(user.created_at)}</Item>
     </Card>
   )
 }

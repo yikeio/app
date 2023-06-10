@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast"
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
 import Loading from "@/components/loading"
+import { ThemeSelector } from "@/components/theme-selector"
 import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -14,8 +15,8 @@ function SettingItem(props: { title: string; subTitle?: string; children: JSX.El
   return (
     <div className="flex flex-wrap justify-between gap-4 py-6 md:items-center">
       <div>
-        <Label className="text-gray-700">{props.title}</Label>
-        {props.subTitle && <div className="text-sm text-gray-400">{props.subTitle}</div>}
+        <Label className="text-foreground">{props.title}</Label>
+        {props.subTitle && <div className="text-sm text-muted-foreground">{props.subTitle}</div>}
       </div>
       {props.children}
     </div>
@@ -51,8 +52,11 @@ export default function Setting() {
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold">设置</div>
           </div>
-          <Card className="mt-4 flex-1 space-y-6 rounded-lg border bg-white p-3 shadow-sm md:p-6">
+          <Card className="mt-4 flex-1 space-y-6 rounded-lg border bg-white p-3 shadow-sm dark:bg-background md:p-6">
             <div className="flex flex-col divide-y rounded-lg">
+              <SettingItem title="主题">
+                <ThemeSelector />
+              </SettingItem>
               <SettingItem title="发送键">
                 <div className="w-32">
                   <Select

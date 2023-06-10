@@ -13,7 +13,7 @@ export default function UserStats({ user }: { user: User }) {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded border bg-white/80 text-xs text-gray-500 shadow-sm">
+        <div className="rounded border bg-white/80 text-xs text-muted-foreground shadow-sm">
           <div className="border-b p-1 font-bold">{label}</div>
           <div className="p-1">
             <div>{`消息数: ${payload[0].value}`}</div>
@@ -75,7 +75,7 @@ export default function UserStats({ user }: { user: User }) {
             <p className="text-xs text-muted-foreground">
               <Link href="/invitations" className="flex items-center gap-1">
                 <GiftIcon size={14} className="text-primary" />
-                邀请好友，你和朋友都会获得奖励，
+                邀请好友，你和朋友都会获得奖励！
               </Link>
             </p>
           </CardContent>

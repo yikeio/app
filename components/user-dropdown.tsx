@@ -38,7 +38,7 @@ export default function UserDropdown({ user }: { user: User }) {
       <DropdownMenuTrigger asChild>
         <div className="mt-auto flex cursor-pointer items-center gap-4 p-2 lg:relative lg:w-full lg:place-self-end lg:border-t lg:pt-6">
           <div className="hidden lg:block">
-            <UserCell user={user} className="h-8 w-8 text-gray-600" />
+            <UserCell user={user} className="h-8 w-8 text-foreground" />
           </div>
           <div className="ml-auto">
             <MoreHorizontalIcon size={20} />
@@ -91,7 +91,7 @@ export default function UserDropdown({ user }: { user: User }) {
           <span>API</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-destructive" onSelect={handleLogout}>
+        <DropdownMenuItem className="text-destructive dark:text-red-600" onSelect={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>注销登录</span>
         </DropdownMenuItem>

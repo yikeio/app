@@ -11,7 +11,7 @@ export default function UserReferralLink({ user }: { user: User }) {
     <div className="inline-flex items-center gap-2">
       <Input
         type="text"
-        className="w-64 border-primary-300 bg-primary-200/60 px-3 py-1"
+        className="w-64 border-primary-300 bg-primary-200/60 px-3 py-1 dark:border-slate-700 dark:bg-background"
         value={referUrl}
         onClick={(e) => (e.target as HTMLInputElement).select()}
       />

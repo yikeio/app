@@ -55,14 +55,18 @@ export default function TagsSelector({
     return selectedTags.includes(tag)
   }
 
+  const tagBaseClassNames =
+    "rounded-full border bg-primary-50 px-4 py-1 text-sm text-primary-500 dark:bg-muted cursor-pointer"
+  const tagActiveClassNames = "border-primary-600 text-primary-600"
+
   return (
     <div className={cn("inline-flex flex-wrap items-center gap-4", className)}>
       {visibleTags.map((tag) => (
         <a
           key={tag.id}
           onClick={() => toggleSelectTag(tag)}
-          className={cn("rounded-full border bg-primary-50 px-4 py-1 text-sm text-primary-500", {
-            "border-primary-600 text-primary-600": hasBeenSelected(tag),
+          className={cn(tagBaseClassNames, {
+            [tagActiveClassNames]: hasBeenSelected(tag),
           })}
         >
           {tag.name}
@@ -89,8 +93,8 @@ export default function TagsSelector({
                 <a
                   key={`popover-tag-${tag.id}`}
                   onClick={() => toggleSelectTag(tag)}
-                  className={cn("rounded-full border bg-primary-50 px-4 py-1 text-sm text-primary-500", {
-                    "border-primary-600 text-primary-600": hasBeenSelected(tag),
+                  className={cn(tagBaseClassNames, {
+                    [tagActiveClassNames]: hasBeenSelected(tag),
                   })}
                 >
                   {tag.name}

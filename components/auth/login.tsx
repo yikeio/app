@@ -81,7 +81,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col gap-6 bg-primary-50/70 p-6">
+    <div className="flex flex-col gap-6 bg-primary-50/70 p-6 dark:bg-muted">
       <div className="flex items-center">
         <Image src="/logo.svg" alt="" height={48} width={48} />
       </div>
@@ -92,7 +92,7 @@ export default function Login() {
       </div>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-0.5">
-          <Label htmlFor="phone-number-input" className="mb-1 block text-sm font-medium text-gray-900 dark:text-white">
+          <Label htmlFor="phone-number-input" className="mb-1 block text-sm font-medium text-muted-foreground">
             手机号
           </Label>
           <div className="relative">
@@ -100,7 +100,7 @@ export default function Login() {
             <Input
               type="text"
               id="phone-number-input"
-              className="block w-full bg-white pl-12"
+              className="block w-full bg-white pl-12 dark:bg-background"
               placeholder="请输入手机号"
               maxLength={11}
               autoFocus={true}
@@ -110,14 +110,14 @@ export default function Login() {
           </div>
         </div>
         <div className="relative flex flex-col gap-0.5">
-          <Label htmlFor="verify-code-input" className="mb-1 block text-sm font-medium text-gray-900 dark:text-white">
+          <Label htmlFor="verify-code-input" className="mb-1 block text-sm font-medium text-muted-foreground">
             验证码
           </Label>
           <div className="relative">
             <Input
               type="text"
               id="verify-code-input"
-              className="w-full rounded-md bg-white pr-24"
+              className="w-full rounded-md bg-white pr-24 dark:bg-background"
               placeholder="请输入验证码"
               maxLength={6}
               value={code}

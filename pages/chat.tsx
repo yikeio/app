@@ -247,14 +247,14 @@ export default function ChatPage() {
           "-ml-72": showSidebar,
         })}
       >
-        <header className="sticky top-0 z-40 flex shrink-0 items-center justify-between overflow-hidden border-b bg-white">
+        <header className="sticky top-0 z-40 flex shrink-0 items-center justify-between overflow-hidden border-b bg-white dark:bg-muted">
           <LogoButton />
           <div className="flex flex-1 gap-6 border-l p-2 md:p-4">
             <div className="flex flex-1 items-center gap-2 md:gap-4">
               <BackButton onClick={() => router.push("/prompts")} />
               <div className="max-w-[45vw] truncate text-lg ">{prompt?.name || "loading..."}</div>
             </div>
-            <div className="flex shrink-0 items-center gap-2 text-gray-500">
+            <div className="flex shrink-0 items-center gap-2 text-muted-foreground">
               {hasLogged && (
                 <>
                   <ClearButton onClick={() => handleTruncateConversation(currentConversation)} />
@@ -263,9 +263,12 @@ export default function ChatPage() {
 
                   <Button
                     variant="outline"
-                    className={cn("flex h-8 w-8 items-center justify-center p-1 hover:bg-primary-100", {
-                      "border-primary-300 bg-primary-100": isMobileScreen() && showSidebar,
-                    })}
+                    className={cn(
+                      "flex h-8 w-8 items-center justify-center p-1 hover:bg-primary-100 dark:hover:bg-muted",
+                      {
+                        "border-primary-300 bg-primary-100 dark:bg-muted": isMobileScreen() && showSidebar,
+                      }
+                    )}
                     title="打开/关闭边栏"
                     onClick={handleToggleSidebar}
                   >
@@ -289,7 +292,7 @@ export default function ChatPage() {
         </div>
 
         {/* 底部输入框 */}
-        <footer className="sticky bottom-0 z-10 bg-white p-4 md:p-6 xl:p-12">
+        <footer className="sticky bottom-0 z-10 bg-white p-4 dark:bg-muted md:p-6 xl:p-12">
           {!selectable && (
             <div className="flex flex-col gap-4">
               {isStreaming && <AbortButton onClick={handleAbortAnswing} />}
@@ -305,7 +308,7 @@ export default function ChatPage() {
       {/* 信息边栏 */}
       <aside
         className={cn(
-          "sticky top-0 mr-0 flex h-full w-72 shrink-0 flex-col gap-6 overflow-hidden border-l bg-white p-6 text-gray-700 transition-all delay-75",
+          "sticky top-0 mr-0 flex h-full w-72 shrink-0 flex-col gap-6 overflow-hidden border-l bg-white p-6 text-gray-700 transition-all delay-75 dark:bg-background",
           {
             "-mr-72": !showSidebar,
           }
@@ -316,13 +319,13 @@ export default function ChatPage() {
         <div className="border-t"></div>
 
         <div className="flex flex-1 flex-col gap-4 overflow-hidden">
-          <Label className="shink-0">对话历史</Label>
+          <Label className="shink-0 text-muted-foreground">对话历史</Label>
           <Tabs
             onValueChange={handleChangeConversationHistoryTab}
             value={historyTab}
             className="flex flex-1 flex-col overflow-y-auto"
           >
-            <TabsList className="grid shrink-0 grid-cols-2 bg-primary-50">
+            <TabsList className="grid shrink-0 grid-cols-2 bg-primary-50 dark:bg-muted">
               <TabsTrigger value="prompt">
                 <div className="flex items-center gap-1">
                   <span>当前场景</span>

@@ -22,28 +22,33 @@ export default function UserPayments({ user }: { user: User }) {
 
   return (
     <>
-      <Card className="rounded-lg border bg-white p-6 shadow-sm">
-        <div className="flex items-center text-sm font-bold text-gray-500">
-          <div className="w-1/4 px-4 py-2">订单号</div>
-          <div className="w-1/4 px-4 py-2">内容</div>
-          <div className="w-1/4 px-4 py-2">金额</div>
-          <div className="w-1/4 px-4 py-2">创建时间</div>
-          <div className="w-1/4 px-4 py-2">状态</div>
-        </div>
+      <Card className="text-muted-forground overflow-x-auto rounded-lg border p-6 shadow-sm">
+        <table className="my-0 w-full min-w-max text-left text-sm">
+          <thead className="text-sm font-bold uppercase">
+            <tr>
+              <td className="border-none">订单号</td>
+              <td className="border-none">内容</td>
+              <td className="border-none">金额</td>
+              <td className="border-none">创建时间</td>
+              <td className="border-none">状态</td>
+            </tr>
+          </thead>
+          <tbody>
+            {payments.map((payment) => (
+              <tr key={payment.id} className="border-t text-sm">
+                <td className="border-none px-4 py-3">{payment.number}</td>
+                <td className="border-none px-4 py-3">{payment.title}</td>
+                <td className="border-none px-4 py-3">￥{payment.amount}</td>
+                <td className="border-none px-4 py-3">{formatDatetime(payment.created_at)}</td>
+                <td className="border-none px-4 py-3">
+                  <PaymentState payment={payment} onClickToPay={() => setPayment(payment)} />
+                </td>
+                <td className="border-none px-4 py-3">{formatDatetime(payment.created_at)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         {payments.length <= 0 && <EmptyState className="min-h-[200px]" />}
-        <div>
-          {payments.map((payment) => (
-            <div key={payment.id} className="flex items-center border-t text-sm text-gray-500">
-              <div className="w-1/4 px-4 py-3">{payment.number}</div>
-              <div className="w-1/4 px-4 py-3">{payment.title}</div>
-              <div className="w-1/4 px-4 py-3">￥{payment.amount}</div>
-              <div className="w-1/4 px-4 py-3">{formatDatetime(payment.created_at)}</div>
-              <div className="w-1/4 px-4 py-3">
-                <PaymentState payment={payment} onClickToPay={() => setPayment(payment)} />
-              </div>
-            </div>
-          ))}
-        </div>
       </Card>
       {/* 支付过程弹窗 */}
       {payment && <PaymentDialog payment={payment} onClose={() => setPayment(null)}></PaymentDialog>}

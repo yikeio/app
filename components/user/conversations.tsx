@@ -7,7 +7,7 @@ import EmptyState from "../empty-state"
 import Loading from "../loading"
 import { Card } from "../ui/card"
 
-export default function UserChats({ user }: { user: User }) {
+export default function UserConversations({ user }: { user: User }) {
   const { data: conversations, isLoading } = useSWR("/api/conversations:users", ConversationApi.list)
 
   if (isLoading) {
@@ -15,9 +15,9 @@ export default function UserChats({ user }: { user: User }) {
   }
 
   return (
-    <Card className="rounded-lg border bg-white p-6 shadow-sm">
-      <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
-        <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
+    <Card className="text-muted-forground overflow-x-auto rounded-lg border p-6 shadow-sm">
+      <table className="my-0 w-full min-w-max text-left text-sm ">
+        <thead className="text-sm font-bold uppercase">
           <tr>
             <td className="border-none">标题</td>
             <td className="border-none">场景</td>
@@ -29,7 +29,7 @@ export default function UserChats({ user }: { user: User }) {
         </thead>
         <tbody>
           {conversations.data?.map((item: Conversation) => (
-            <tr key={item.id} className="border-t text-sm text-gray-500">
+            <tr key={item.id} className="border-t text-sm">
               <td className="border-none px-4 py-3">{item.title}</td>
               <td className="border-none px-4 py-3">{item.prompt?.name || "-"}</td>
               <td className="border-none px-4 py-3">{item.messages_count}</td>

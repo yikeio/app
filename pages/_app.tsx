@@ -22,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [searchParams])
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+    <ThemeProvider attribute="class" enableSystem>
       <SWRConfig
         value={{
           refreshInterval: 120 * 1000,

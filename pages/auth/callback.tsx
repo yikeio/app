@@ -30,7 +30,7 @@ export default function OauthCallback() {
   return (
     <>
       <div className="flex h-screen items-center justify-center">
-        <div className="mb-[20vh] flex w-[80vw] flex-col items-center justify-center gap-6 rounded-lg border border-gray-300 bg-primary-50/50 p-6 text-gray-600 shadow md:w-[50vw]">
+        <div className="mb-[20vh] flex w-[80vw] flex-col items-center justify-center gap-6 rounded-lg border bg-muted  p-6 text-foreground shadow md:w-[50vw]">
           {state === "loading" && (
             <>
               <div>登录中...</div>

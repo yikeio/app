@@ -63,7 +63,7 @@ export default function ActivatePage() {
       <div className="flex max-w-full flex-col gap-4 overflow-hidden rounded-lg border p-6">
         <header>
           <h2>请输入邀请码</h2>
-          <p className="text-gray-500">当前为内测期间，你需要输入邀请码才能使用</p>
+          <p className="text-muted">当前为内测期间，你需要输入邀请码才能使用</p>
         </header>
         <Input
           type="text"

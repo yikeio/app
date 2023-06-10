@@ -69,7 +69,7 @@ export default function ChatInput({
     <form className={cn("relative flex items-start justify-center gap-2")} onSubmit={(e) => e.preventDefault()}>
       <Textarea
         ref={textAreaRef}
-        className="h-10 max-h-64 min-h-[40px] w-full flex-1 resize-none rounded-[24px] bg-primary-50 px-6"
+        className="h-10 max-h-64 min-h-[40px] w-full flex-1 resize-none rounded-[24px] bg-primary-50 px-6 dark:bg-muted"
         placeholder={`输入消息，${submitKey} 发送`}
         onChange={(e) => setInput(e.currentTarget.value)}
         value={input}
