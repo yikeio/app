@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { clearInterval } from "timers"
 import * as React from "react"
 import PaymentApi from "@/api/payments"
 
@@ -44,7 +45,7 @@ export function PaymentDialog({ payment, onClose }) {
         {state === 1 ? (
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-2xl font-bold">请扫码支付</h1>
-            <img src={payment.context.qrcode} alt="" className="h-32 w-32" />
+            <img src={payment.context?.qrcode} alt="" className="h-32 w-32" />
             <div>请使用微信扫码支付</div>
           </div>
         ) : (

@@ -1,11 +1,15 @@
 import qs from "qs"
 
 import Request from "@/lib/request"
+import { Prompt } from "./prompts"
+import { User } from "./users"
 
 export interface Conversation {
   id: number
   creator_id: number
   title: string
+  creator?: User
+  prompt?: Prompt
   messages_count: number
   tokens_count: number
   first_active_at: string

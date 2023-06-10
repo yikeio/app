@@ -1,88 +1,52 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import PaymentApi from "@/api/payments"
+import { useState } from "react"
+import PaymentApi, { Payment } from "@/api/payments"
 import { User } from "@/api/users"
+import useSWR from "swr"
 
 import { formatDatetime } from "@/lib/utils"
 import EmptyState from "../empty-state"
+import Loading from "../loading"
 import { PaymentDialog } from "../payment/dialog"
+import PaymentState from "../payment/state"
+import { Card } from "../ui/card"
 
 export default function UserPayments({ user }: { user: User }) {
-  const [payments, setPayments] = useState([])
-  const [paymentDetail, setPaymentDetail] = useState<Record<string, string>>({})
+  const [payment, setPayment] = useState<Payment>(null)
+  const { data: payments, isLoading } = useSWR("/api/payments", PaymentApi.list)
 
-  useEffect(() => {
-    if (!user.id) return
-    PaymentApi.list().then((res) => {
-      setPayments(res || [])
-    })
-  }, [user])
-
-  const paymentState = (payment) => {
-    const className = "inline-block px-1 text-xs border rounded "
-    switch (payment.state) {
-      case "pending":
-        return (
-          <>
-            <span className={className + "text-orange-500 bg-orange-100 border-orange-200"}>待支付</span>
-            <button
-              className="ml-6 inline-block rounded bg-slate-900 p-1 text-xs text-white hover:bg-slate-700 dark:bg-primary-50"
-              onClick={() => {
-                setPaymentDetail(payment)
-              }}
-            >
-              立即支付
-            </button>
-          </>
-        )
-      case "expired":
-        return <span className={className + "text-red-500 bg-red-100 border-red-200"}>已过期</span>
-      case "paid":
-        return <span className={className + "text-green-500 bg-green-100 border-green-200"}>已支付</span>
-      default:
-        return <span className={className}>未知</span>
-    }
+  if (isLoading) {
+    return <Loading />
   }
 
   return (
     <>
-      <div className="p-4 md:p-8">
-        <div className="mt-4 ">
-          <div className="flex justify-between pb-4">
-            <div className="flex items-center gap-4">
-              <h2 className="py-0">我的订单</h2>
-              {payments.length && <div className="text-sm text-gray-500">共 {payments.length} 笔支付订单</div>}
-            </div>
-            <div>
-              <a href="/pricing" className="text-blue-500">
-                购买额度
-              </a>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-white p-6 shadow-sm">
-            <div className="flex items-center text-sm font-bold text-gray-500">
-              <div className="w-1/4 px-4 py-2">订单号</div>
-              <div className="w-1/4 px-4 py-2">内容</div>
-              <div className="w-1/4 px-4 py-2">创建时间</div>
-              <div className="w-1/4 px-4 py-2">状态</div>
-            </div>
-            {payments.length <= 0 && <EmptyState className="min-h-[200px]" />}
-            <div>
-              {payments.map((payment) => (
-                <div key={payment.id} className="flex items-center border-t text-sm text-gray-500">
-                  <div className="w-1/4 px-4 py-3">{payment.number}</div>
-                  <div className="w-1/4 px-4 py-3">{payment.title}</div>
-                  <div className="w-1/4 px-4 py-3">{formatDatetime(payment.created_at)}</div>
-                  <div className="w-1/4 px-4 py-3">{paymentState(payment)}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+      <Card className="rounded-lg border bg-white p-6 shadow-sm">
+        <div className="flex items-center text-sm font-bold text-gray-500">
+          <div className="w-1/4 px-4 py-2">订单号</div>
+          <div className="w-1/4 px-4 py-2">内容</div>
+          <div className="w-1/4 px-4 py-2">金额</div>
+          <div className="w-1/4 px-4 py-2">创建时间</div>
+          <div className="w-1/4 px-4 py-2">状态</div>
         </div>
-      </div>
+        {payments.length <= 0 && <EmptyState className="min-h-[200px]" />}
+        <div>
+          {payments.map((payment) => (
+            <div key={payment.id} className="flex items-center border-t text-sm text-gray-500">
+              <div className="w-1/4 px-4 py-3">{payment.number}</div>
+              <div className="w-1/4 px-4 py-3">{payment.title}</div>
+              <div className="w-1/4 px-4 py-3">￥{payment.amount}</div>
+              <div className="w-1/4 px-4 py-3">{formatDatetime(payment.created_at)}</div>
+              <div className="w-1/4 px-4 py-3">
+                <PaymentState payment={payment} onClickToPay={() => setPayment(payment)} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
       {/* 支付过程弹窗 */}
-      <PaymentDialog payment={paymentDetail} onClose={() => setPaymentDetail({})}></PaymentDialog>
+      {payment && <PaymentDialog payment={payment} onClose={() => setPayment(null)}></PaymentDialog>}
     </>
   )
 }

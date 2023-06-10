@@ -1,9 +1,11 @@
-import { useEffect } from "react"
-import useAuth from "@/hooks/use-auth"
+import { useEffect, useState } from "react"
 import useSettings, { SubmitKey } from "@/hooks/use-settings"
+import { toast } from "react-hot-toast"
 
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
+import Loading from "@/components/loading"
+import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
@@ -21,30 +23,42 @@ function SettingItem(props: { title: string; subTitle?: string; children: JSX.El
 }
 
 export default function Setting() {
-  const { settings, updateSetting } = useSettings()
-  const { user } = useAuth()
+  const { settings: serverSettings, isLoading, updateSetting } = useSettings()
+  const [settings, setSettings] = useState<Record<string, string | number>>(serverSettings)
+
+  const handleUpdateItem = async (key: string, value: string | number) => {
+    setSettings({ ...settings, [key]: value })
+    await updateSetting(key, value)
+    toast.success("设置已保存")
+  }
 
   useEffect(() => {
-    if (!user) return
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
+    if (isLoading) {
+      return
+    }
+    setSettings(serverSettings)
+  }, [isLoading, serverSettings])
+
+  if (!settings) {
+    return <Loading />
+  }
 
   return (
     <Layout>
       <Head title="设置" />
       <div className="flex-1">
-        <section className="mx-auto max-w-5xl p-4 md:p-8">
+        <section className="max-w-5xl p-4 md:p-8">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold">设置</div>
           </div>
-          <div className="mt-4 flex-1 space-y-6 rounded-lg border bg-white p-3 shadow-sm md:p-6">
+          <Card className="mt-4 flex-1 space-y-6 rounded-lg border bg-white p-3 shadow-sm md:p-6">
             <div className="flex flex-col divide-y rounded-lg">
               <SettingItem title="发送键">
                 <div className="w-32">
                   <Select
-                    value={settings.chat_submit_key}
-                    onValueChange={(key) => {
-                      updateSetting("chat_submit_key", key)
+                    value={settings.chat_submit_key as string}
+                    onValueChange={(value) => {
+                      handleUpdateItem("chat_submit_key", value)
                     }}
                   >
                     <SelectTrigger>
@@ -61,31 +75,40 @@ export default function Setting() {
                 </div>
               </SettingItem>
 
-              <SettingItem title="附带历史消息数" subTitle="每次请求携带的历史消息数">
-                <Slider
-                  title={`${settings.chat_contexts_count}px`}
-                  defaultValue={[settings.chat_contexts_count]}
-                  min={0}
-                  max={10}
-                  step={1}
-                  className="w-64"
-                  onValueChange={(value) => updateSetting("chat_contexts_count", value[0])}
-                ></Slider>
+              <SettingItem
+                title="附带历史消息数"
+                subTitle="每次请求携带的历史消息数，数量越多回答越精准，但使用的 token 也将会越多"
+              >
+                <div className="flex items-center gap-4">
+                  <Slider
+                    title={`${settings.chat_contexts_count}px`}
+                    defaultValue={[settings.chat_contexts_count as number]}
+                    min={0}
+                    max={10}
+                    step={1}
+                    className="w-64"
+                    onValueChange={(value) => handleUpdateItem("chat_contexts_count", value[0])}
+                  ></Slider>
+                  {settings.chat_contexts_count}
+                </div>
               </SettingItem>
 
               <SettingItem title="字体大小" subTitle="聊天内容的字体大小">
-                <Slider
-                  title={`${settings.chat_font_size ?? 14}px`}
-                  defaultValue={[settings.chat_font_size]}
-                  min={12}
-                  max={18}
-                  step={1}
-                  className="w-64"
-                  onValueChange={(value) => updateSetting("chat_font_size", value[0])}
-                ></Slider>
+                <div className="flex items-center gap-4">
+                  <Slider
+                    title={`${settings.chat_font_size ?? 14}px`}
+                    defaultValue={[settings.chat_font_size as number]}
+                    min={12}
+                    max={18}
+                    step={1}
+                    className="w-64"
+                    onValueChange={(value) => handleUpdateItem("chat_font_size", value[0])}
+                  ></Slider>
+                  {settings.chat_font_size}px
+                </div>
               </SettingItem>
             </div>
-          </div>
+          </Card>
         </section>
       </div>
     </Layout>

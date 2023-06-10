@@ -8,7 +8,7 @@ import Divider from "@/components/divider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import OAuthLoginButtons from "./auth/oauth-buttons"
+import OAuthLoginButtons from "./oauth-buttons"
 
 function redirectToIntend() {
   if (window.history.length > 0) {

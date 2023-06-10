@@ -24,7 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
-import UserCell from "./user-cell"
+import UserCell from "./user/cell"
 
 export default function UserDropdown({ user }: { user: User }) {
   const auth = useAuth()

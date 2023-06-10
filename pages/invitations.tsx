@@ -2,21 +2,20 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react"
-import UserApi from "@/api/users"
+import UserApi, { User } from "@/api/users"
 import useAuth from "@/hooks/use-auth"
 import { ArrowRightIcon, Gift, GiftIcon } from "lucide-react"
 
-import { copyToClipboard, formatDatetime } from "@/lib/utils"
 import EmptyState from "@/components/empty-state"
 import { Layout } from "@/components/layout"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import UserCell from "@/components/user-cell"
+import UserCell from "@/components/user/cell"
+import UserInvitations from "@/components/user/invitations"
+import UserReferralLink from "@/components/user/referral-link"
 
-function FeatureHero({ code = null }: { code?: string }) {
+function FeatureHero({ user = null }: { user?: User }) {
   const { redirectToLogin } = useAuth()
-  const referUrl = code ? `${window?.location.origin}/?referrer=${code}` : null
 
   return (
     <div className="relative overflow-hidden rounded-lg border bg-white shadow-sm">
@@ -60,24 +59,14 @@ function FeatureHero({ code = null }: { code?: string }) {
           </div>
         </div>
 
-        {code && (
+        {user && (
           <div className="flex flex-col gap-2">
             <div className="text-gray-700">我的专属邀请链接：</div>
-            <div className="inline-flex items-center gap-2">
-              <Input
-                type="text"
-                className="w-64 border-primary-300 bg-primary-200/60 px-3 py-1"
-                value={referUrl}
-                onClick={(e) => (e.target as HTMLInputElement).select()}
-              />
-              <Button className="block" onClick={() => copyToClipboard(referUrl)}>
-                复制
-              </Button>
-            </div>
+            <UserReferralLink user={user} />
           </div>
         )}
 
-        {!code && (
+        {!user && (
           <>
             <Button className="flex w-fit items-center gap-4" onClick={redirectToLogin}>
               <ArrowRightIcon size={16} />
@@ -91,7 +80,6 @@ function FeatureHero({ code = null }: { code?: string }) {
 }
 
 export default function UserInvitationPage() {
-  const [referrals, setReferrals] = useState([])
   const [leaderboards, setLeaderboards] = useState([])
   const { user } = useAuth()
 
@@ -99,10 +87,6 @@ export default function UserInvitationPage() {
     if (!user) {
       return
     }
-    UserApi.getReferrals().then((res) => {
-      setReferrals(res)
-    })
-
     UserApi.getLeaderboards().then((res) => {
       setLeaderboards(res)
     })
@@ -111,13 +95,13 @@ export default function UserInvitationPage() {
   return (
     <Layout>
       <div className="h-full overflow-auto p-4 md:p-8">
-        <FeatureHero code={user?.referral_code} />
+        <FeatureHero user={user} />
         {user && (
           <div className="mt-4">
             <Tabs defaultValue="leaderboard">
               <TabsList className="grid grid-cols-2 bg-primary-50 md:inline-grid">
                 <TabsTrigger value="leaderboard">排行榜</TabsTrigger>
-                <TabsTrigger value="invitations">我的邀请记录（{referrals.length}）</TabsTrigger>
+                <TabsTrigger value="invitations">我的邀请记录</TabsTrigger>
               </TabsList>
 
               <TabsContent value="leaderboard" className="rounded-lg border bg-white p-6 shadow-sm">
@@ -145,26 +129,8 @@ export default function UserInvitationPage() {
                 {leaderboards.length >= 100 && <div className="text-sm text-gray-400">* 仅显示榜单前 100 名用户</div>}
               </TabsContent>
 
-              <TabsContent value="invitations" className="rounded-lg border bg-white p-6 shadow-sm">
-                <table className="my-0 w-full text-left text-sm text-gray-500 dark:text-gray-400">
-                  <thead className="text-sm font-bold uppercase text-gray-600 dark:text-gray-400">
-                    <tr>
-                      <td className="border-none">用户</td>
-                      <td className="border-none">注册时间</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {referrals.map((referral) => (
-                      <tr key={referral.id} className="border-t text-sm text-gray-500">
-                        <td className="border-none px-4 py-3">
-                          <UserCell user={referral} />
-                        </td>
-                        <td className="border-none px-4 py-3">{formatDatetime(referral.created_at)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {referrals.length <= 0 && <EmptyState className="min-h-[100px]" />}
+              <TabsContent value="invitations">
+                <UserInvitations user={user} />
               </TabsContent>
             </Tabs>
           </div>

@@ -1,34 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="480px" height="480px" viewBox="0 0 480 480" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Group 2</title>
-    <defs>
-        <circle id="path-1" cx="240" cy="240" r="240"></circle>
-    </defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-2" transform="translate(240.000000, 240.411255) rotate(45.000000) translate(-240.000000, -240.411255) translate(0.000000, 0.411255)">
-            <mask id="mask-2" fill="white">
-                <use xlink:href="#path-1"></use>
-            </mask>
-            <g id="Mask"></g>
-            <g mask="url(#mask-2)">
-                <g transform="translate(-85.000000, -56.000000)">
-                    <rect id="Rectangle" fill="rgba(109, 40, 217, 1)" x="296" y="390" width="60" height="200"></rect>
-                    <path d="M324,179 C390.27417,179 444,232.72583 444,299 C444,365.27417 390.27417,419 324,419 C257.72583,419 204,365.27417 204,299 C204,232.72583 257.72583,179 324,179 Z M325,236 C291.862915,236 265,262.862915 265,296 C265,329.137085 291.862915,356 325,356 C358.137085,356 385,329.137085 385,296 C385,262.862915 358.137085,236 325,236 Z" id="Combined-Shape" fill="rgba(109, 40, 217, 1)"></path>
-                    <circle id="Oval" fill="rgba(109, 40, 217, 1)" cx="325" cy="60" r="60"></circle>
-                    <g id="Group" stroke-width="1" fill="none" transform="translate(325.000000, 300.000000) rotate(45.000000) translate(-325.000000, -300.000000) translate(240.000000, -25.000000)">
-                        <circle id="Oval-Copy-3" fill="rgba(109, 40, 217, 1)" transform="translate(85.000000, 85.000000) rotate(45.000000) translate(-85.000000, -85.000000) " cx="85" cy="85" r="60"></circle>
-                        <circle id="Oval-Copy-2" fill="rgba(109, 40, 217, 1)" transform="translate(85.000000, 565.000000) rotate(45.000000) translate(-85.000000, -565.000000) " cx="85" cy="565" r="60"></circle>
-                    </g>
-                    <g id="Group-Copy" stroke-width="1" fill="none" transform="translate(325.000000, 300.000000) rotate(90.000000) translate(-325.000000, -300.000000) translate(240.000000, -25.000000)">
-                        <circle id="Oval-Copy-3" fill="rgba(109, 40, 217, 1)" transform="translate(85.000000, 85.000000) rotate(45.000000) translate(-85.000000, -85.000000) " cx="85" cy="85" r="60"></circle>
-                        <circle id="Oval-Copy-2" fill="rgba(109, 40, 217, 1)" transform="translate(85.000000, 565.000000) rotate(45.000000) translate(-85.000000, -565.000000) " cx="85" cy="565" r="60"></circle>
-                    </g>
-                    <g id="Group-Copy-2" stroke-width="1" fill="none" transform="translate(325.000000, 300.000000) rotate(135.000000) translate(-325.000000, -300.000000) translate(240.000000, -25.000000)">
-                        <circle id="Oval-Copy-3" fill="rgba(109, 40, 217, 1)" transform="translate(85.000000, 85.000000) rotate(45.000000) translate(-85.000000, -85.000000) " cx="85" cy="85" r="60"></circle>
-                        <circle id="Oval-Copy-2" fill="rgba(109, 40, 217, 1)" transform="translate(85.000000, 565.000000) rotate(45.000000) translate(-85.000000, -565.000000) " cx="85" cy="565" r="60"></circle>
-                    </g>
-                </g>
-            </g>
-        </g>
-    </g>
+<svg width="480" height="480" viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2_43)">
+<g clip-path="url(#clip1_2_43)">
+<mask id="mask0_2_43" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="-200" y="-200" width="878" height="878">
+<g clip-path="url(#clip2_2_43)">
+<rect x="285.962" y="326.974" width="60" height="200" transform="rotate(-45 285.962 326.974)" fill="#00AB6B"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M326.267 327.681C373.13 280.818 373.13 204.839 326.267 157.976C279.404 111.113 203.424 111.113 156.561 157.976C109.699 204.839 109.699 280.818 156.561 327.681C203.424 374.544 279.404 374.544 326.267 327.681ZM282.426 282.426C305.858 258.995 305.858 221.005 282.426 197.574C258.995 174.142 221.005 174.142 197.574 197.574C174.142 221.005 174.142 258.995 197.574 282.426C221.005 305.858 258.995 305.858 282.426 282.426Z" fill="#00AB6B"/>
+<circle cx="73.1228" cy="73.1228" r="60" transform="rotate(-45 73.1228 73.1228)" fill="#00AB6B"/>
+<circle cx="242.828" cy="2.82843" r="60" transform="rotate(45 242.828 2.82843)" fill="#00AB6B"/>
+<circle cx="242.828" cy="482.828" r="60" transform="rotate(45 242.828 482.828)" fill="#00AB6B"/>
+<g clip-path="url(#clip3_2_43)">
+<circle cx="412.534" cy="73.1228" r="60" transform="rotate(90 412.534 73.1228)" fill="#00AB6B"/>
+<circle cx="73.1229" cy="412.534" r="60" transform="rotate(90 73.1229 412.534)" fill="#00AB6B"/>
+</g>
+<g clip-path="url(#clip4_2_43)">
+<circle cx="482.828" cy="242.828" r="60" transform="rotate(135 482.828 242.828)" fill="#00AB6B"/>
+<circle cx="2.82847" cy="242.828" r="60" transform="rotate(135 2.82847 242.828)" fill="#00AB6B"/>
+</g>
+</g>
+</mask>
+<g mask="url(#mask0_2_43)">
+<circle cx="240" cy="240" r="240" transform="rotate(-45 240 240)" fill="#8B5CF6"/>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_2_43">
+<rect width="480" height="480" fill="white"/>
+</clipPath>
+<clipPath id="clip1_2_43">
+<rect width="480" height="480" fill="white" transform="translate(-99.4113 240) rotate(-45)"/>
+</clipPath>
+<clipPath id="clip2_2_43">
+<rect width="650" height="590" fill="white" transform="translate(-199.113 260.506) rotate(-45)"/>
+</clipPath>
+<clipPath id="clip3_2_43">
+<rect width="170" height="650" fill="white" transform="translate(412.534 -47.0853) rotate(45)"/>
+</clipPath>
+<clipPath id="clip4_2_43">
+<rect width="170" height="650" fill="white" transform="matrix(0 1 -1 0 567.828 157.828)"/>
+</clipPath>
+</defs>
 </svg>

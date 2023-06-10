@@ -1,5 +1,6 @@
+import Link from "next/link"
 import UserApi, { User } from "@/api/users"
-import { BracesIcon, MessageSquareIcon, MessagesSquareIcon, UsersIcon } from "lucide-react"
+import { BracesIcon, GiftIcon, MessageSquareIcon, MessagesSquareIcon, UsersIcon } from "lucide-react"
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import useSWR from "swr"
 
@@ -7,14 +8,14 @@ import Loading from "../loading"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 
 export default function UserStats({ user }: { user: User }) {
-  const { data, isLoading, mutate } = useSWR("/user/stats", UserApi.getStats)
+  const { data, isLoading } = useSWR("/user/stats", UserApi.getStats)
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded bg-white bg-opacity-80 p-4 text-xs text-gray-500 shadow-sm">
-          <div className="border-b p-2 font-bold">{label}</div>
-          <div className="p-2">
+        <div className="rounded border bg-white/80 text-xs text-gray-500 shadow-sm">
+          <div className="border-b p-1 font-bold">{label}</div>
+          <div className="p-1">
             <div>{`消息数: ${payload[0].value}`}</div>
             <div>{`消耗 tokens: ${payload[1].value}`}</div>
           </div>
@@ -71,7 +72,12 @@ export default function UserStats({ user }: { user: User }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{data.invitations}</div>
-            <p className="text-xs text-muted-foreground"></p>
+            <p className="text-xs text-muted-foreground">
+              <Link href="/invitations" className="flex items-center gap-1">
+                <GiftIcon size={14} className="text-primary" />
+                邀请好友，你和朋友都会获得奖励，
+              </Link>
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -101,8 +107,8 @@ export default function UserStats({ user }: { user: User }) {
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip content={CustomTooltip} />
-              <Area type="monotone" dataKey="messages_count" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)" />
-              <Area type="monotone" dataKey="tokens_count" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
+              <Area type="monotone" dataKey="messages_count" stroke="#6D28D9" fillOpacity={1} fill="url(#colorUv)" />
+              <Area type="monotone" dataKey="tokens_count" stroke="#3B82F6" fillOpacity={1} fill="url(#colorPv)" />
             </AreaChart>
           </ResponsiveContainer>
         </CardContent>

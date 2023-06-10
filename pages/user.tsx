@@ -15,6 +15,7 @@ import UserChats from "@/components/user/chats"
 import UserInvitations from "@/components/user/invitations"
 import UserPayments from "@/components/user/payments"
 import UserProfile from "@/components/user/profile"
+import UserReferralLink from "@/components/user/referral-link"
 import UserStats from "@/components/user/stats"
 import UserCenterHeading from "../components/user/heading"
 
@@ -65,6 +66,7 @@ export default function UserPage() {
               <UserPayments user={user} />
             </TabsContent>
             <TabsContent value="invitations" className="py-6">
+              <UserReferralLink user={user} />
               <UserInvitations user={user} />
             </TabsContent>
             <TabsContent value="chats" className="py-6">

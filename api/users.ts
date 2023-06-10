@@ -38,6 +38,10 @@ export default class UserApi {
     return Request.getJson("user")
   }
 
+  static async update(data: Partial<User>): Promise<User> {
+    return Request.patchJson("user", data)
+  }
+
   static async activate({ inviteCode }: { id: number; inviteCode: string }) {
     return Request.postJson(`user:activate`, {
       referral_code: inviteCode,
@@ -68,7 +72,7 @@ export default class UserApi {
     return Request.getJson(`settings`)
   }
 
-  static async updateSetting(key: string, value: any) {
+  static async updateSettingItem(key: string, value: any) {
     return Request.putJson(`settings/${key}`, {
       value: value,
     })
