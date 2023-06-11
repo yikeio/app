@@ -8,7 +8,9 @@ export default function HomeDownload() {
       <a name="download"></a>
       <div className="flex flex-col gap-6 text-center lg:text-left">
         <h2>支持主流浏览器</h2>
-        <div>您可以非常方便的在各个设备上直接使用，旨在随时随地享受 AI 带来的生产力提升。</div>
+        <div className="text-muted-foreground">
+          您可以非常方便的在各个设备上直接使用，旨在随时随地享受 AI 带来的生产力提升。
+        </div>
       </div>
       <div>
         <div className="grid grid-cols-3 gap-3 lg:gap-6">

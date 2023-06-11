@@ -25,7 +25,7 @@ export default function PricingTable({ onClick }: { onClick: (item: any) => void
             )}
           >
             {item.is_popular && (
-              <span className="absolute right-0 top-0 rounded-bl bg-indigo-500 px-3 py-1 text-xs tracking-widest text-white">
+              <span className="absolute right-0 top-0 rounded-bl bg-primary px-3 py-1 text-xs tracking-widest text-white">
                 POPULAR
               </span>
             )}

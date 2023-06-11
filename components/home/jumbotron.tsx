@@ -46,15 +46,15 @@ export default function HomeJumbotron() {
       <p className="mx-auto max-w-3xl text-center text-lg text-muted-foreground">
         预置上千种场景，无论你有什么样的需求，在一刻，都可以找到答案。
       </p>
-      <div className="flex items-center justify-center gap-6">
+      <div className="flex items-center justify-center gap-6 lg:gap-12">
         <Link
-          className="rounded-full bg-primary-500 px-10 py-3 tracking-wider text-white hover:bg-primary-700"
+          className="rounded-full border-2 border-primary-300 bg-primary-500 px-10 py-3 tracking-wider text-white hover:bg-primary-700"
           href="/prompts"
         >
           开始体验
         </Link>
         <Link
-          className="rounded-full bg-primary-500 px-10 py-3 tracking-wider text-white hover:bg-primary-700"
+          className="rounded-full border-2 border-primary-300 bg-primary-500 px-10 py-3 tracking-wider text-white hover:bg-primary-700"
           href="#download"
         >
           立即下载

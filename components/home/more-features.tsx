@@ -19,7 +19,7 @@ export default function HomeMoreFeatures() {
     <div className="flex flex-col gap-20 rounded-xl ">
       <div className="flex flex-col gap-6 text-center">
         <h2 className="text-3xl lg:text-5xl">更多功能</h2>
-        <div>我们正在持续完善打磨产品，努力提供一个更完善的生产力工具。</div>
+        <div className="text-muted-foreground">我们正在持续完善打磨产品，努力提供一个更完善的生产力工具。</div>
       </div>
       <div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -28,7 +28,9 @@ export default function HomeMoreFeatures() {
               key={feature.name}
               className="flex flex-col items-center justify-center gap-4 rounded-xl border p-6 hover:shadow-sm"
             >
-              <div className="flex items-center justify-center rounded border p-4">{feature.icon}</div>
+              <div className="flex items-center justify-center rounded-full border border-primary p-4 text-primary">
+                {feature.icon}
+              </div>
               <div className="flex flex-col gap-4 text-center">
                 <div className="font-bold">{feature.name}</div>
                 <div className="text-sm text-muted-foreground">{feature.description}</div>

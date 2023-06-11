@@ -7,7 +7,7 @@ export default function HomeChatFeatures() {
     <div className="flex flex-col gap-20 rounded-xl">
       <div className="flex flex-col gap-6 text-center">
         <h2 className="text-3xl lg:text-5xl">沉浸式交互体验</h2>
-        <div>全新设计的沉浸式 UI 界面，让你更专注于内容，减少不必要的干扰 </div>
+        <div className="text-muted-foreground">全新设计的沉浸式 UI 界面，让你更专注于内容，减少不必要的干扰 </div>
       </div>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-6 rounded-xl bg-gradient-to-r from-violet-800 via-violet-600/80 to-violet-900 p-6 lg:flex-row lg:gap-12 lg:p-12">
