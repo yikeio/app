@@ -48,16 +48,10 @@ export default function HomeJumbotron() {
       </p>
       <div className="flex items-center justify-center gap-6 lg:gap-12">
         <Link
-          className="rounded-full border-2 border-primary-300 bg-primary-500 px-10 py-3 tracking-wider text-white hover:bg-primary-700"
+          className="rounded-full border-2 border-primary-300 bg-gradient-to-r from-primary-600 to-primary-500 px-10 py-3 tracking-wider text-white shadow transition-all duration-500 ease-in-out hover:from-50%"
           href="/prompts"
         >
           开始体验
-        </Link>
-        <Link
-          className="rounded-full border-2 border-primary-300 bg-primary-500 px-10 py-3 tracking-wider text-white hover:bg-primary-700"
-          href="#download"
-        >
-          立即下载
         </Link>
       </div>
     </div>
