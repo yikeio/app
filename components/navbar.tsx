@@ -2,10 +2,19 @@ import { ReactNode } from "react"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import useAuth from "@/hooks/use-auth"
-import { CogIcon, CreditCardIcon, FlaskConicalIcon, GiftIcon, MessageSquare, TerminalSquareIcon } from "lucide-react"
+import {
+  CogIcon,
+  CreditCardIcon,
+  FlaskConicalIcon,
+  GiftIcon,
+  MessageSquare,
+  SparklesIcon,
+  TerminalSquareIcon,
+} from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import ShareModal from "./share-modal"
 import UserDropdown from "./user-dropdown"
 
 export function Navbar(props) {
@@ -40,15 +49,22 @@ export function Navbar(props) {
         props.className
       )}
     >
-      <Button
-        variant="ghost"
-        size="sm"
-        className="hidden w-full items-center justify-start gap-4 text-slate-700 hover:bg-primary-200  hover:text-primary-700 dark:text-slate-400 dark:hover:bg-background lg:flex"
-        onClick={() => router.push("/")}
-      >
-        <Image src="/logo.svg" height={24} width={24} alt="logo" />
-        <div className="hidden text-xl leading-none md:block">一刻 AI</div>
-      </Button>
+      <div className="hidden items-center gap-4 lg:flex">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full items-center justify-start gap-4 text-slate-700 hover:bg-primary-200  hover:text-primary-700 dark:text-slate-400 dark:hover:bg-background"
+          onClick={() => router.push("/")}
+        >
+          <Image src="/logo.svg" height={24} width={24} alt="logo" />
+          <div className="hidden text-xl leading-none md:block">一刻</div>
+        </Button>
+        <ShareModal className="w-full justify-start ">
+          <Button variant="ghost" size="sm">
+            <SparklesIcon size={14} className="text-primary-600" />
+          </Button>
+        </ShareModal>
+      </div>
       <div className="flex w-full flex-1 justify-center gap-2 lg:flex-col lg:justify-start lg:py-4">
         <NavItem href="/prompts" name="对话" icon={<MessageSquare size={22} />} />
         <NavItem href="/invitations" name="邀请" icon={<GiftIcon size={22} />} />

@@ -44,7 +44,7 @@ export default function UserProfile({ user }: { user: User }) {
       <Item label="手机号">{user.phone_number || "无"}</Item>
       <Item label="推荐人">{user.referrer?.name || "无"}</Item>
       <Item label="注册时间">{formatDatetime(user.created_at)}</Item>
-      <Item label="推荐码" className="flex-col items-start">
+      <Item label="推荐码" className="flex-col items-start md:flex-row md:items-center">
         <UserReferralLink user={user} />
       </Item>
     </Card>

@@ -32,7 +32,7 @@ export default function UserCenterHeading({ className = "", user }: { user: User
         </div>
         <div>
           <Dialog open={formVisible} onOpenChange={setFormVisible}>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button variant="outline" className="flex items-center gap-2">
                 <Edit2Icon size={14} />
                 编辑资料

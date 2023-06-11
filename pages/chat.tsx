@@ -7,6 +7,7 @@ import PromptApi, { Prompt } from "@/api/prompts"
 import useAuth from "@/hooks/use-auth"
 import useSettings from "@/hooks/use-settings"
 import { PanelRightIcon } from "lucide-react"
+import { toast } from "react-hot-toast"
 
 import { cn, isMobileScreen, isScreenSizeAbove } from "@/lib/utils"
 import AbortButton from "@/components/chat/abort-button"
@@ -143,11 +144,13 @@ export default function ChatPage() {
     await ConversationApi.truncate(conversation.id)
     setMessages([])
     loadConversations(promptId)
+    toast.success("已清空当前会话记录")
   }
 
   // 删除对话
   const handleDeleteConversation = async (conversation: Conversation) => {
     await ConversationApi.delete(conversation.id)
+    toast.success("已删除")
     await loadConversations(promptId)
 
     if (conversation.id === currentConversation.id) {
@@ -170,6 +173,8 @@ export default function ChatPage() {
   const toggleSelectable = () => {
     if (selectable) {
       setSelectedMessages([])
+    } else if (messages.length <= 0) {
+      toast.error("当前对话没有消息可以导出")
     }
 
     setSelectable(!selectable)
