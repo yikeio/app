@@ -10,7 +10,7 @@ export default function HomeChatFeatures() {
         <div className="text-muted-foreground">全新设计的沉浸式 UI 界面，让你更专注于内容，减少不必要的干扰 </div>
       </div>
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col items-center gap-6 rounded-xl bg-gradient-to-r from-violet-800 via-violet-600/80 to-violet-900 p-6 lg:flex-row lg:gap-12 lg:p-12">
+        <div className="flex flex-col items-center gap-6 rounded-xl bg-gradient-to-r from-primary-600/50 from-10% via-primary-300/50 to-primary-700/50 p-6 lg:flex-row lg:gap-12 lg:p-12">
           <div className="overflow-hidden rounded-lg border lg:w-1/2">
             <img src="/home/features/chat-1.png" alt="Chat" />
           </div>
@@ -18,7 +18,7 @@ export default function HomeChatFeatures() {
             <h3 className="flex items-center gap-3">
               <Laptop2Icon /> 干净的聊天界面
             </h3>
-            <div className="text-gray-300">
+            <div className="text-gray-700 dark:text-gray-300">
               移除或简化不重要的信息模块，让用户专注于内容本身，以获得更好的交互体验。
             </div>
             <div>
