@@ -35,9 +35,9 @@ export default function HomeJumbotron() {
   return (
     <div className="relative mx-auto flex max-w-5xl flex-col gap-10">
       <h1 className="mx-auto flex flex-col gap-4 text-3xl font-extrabold leading-none tracking-tight text-foreground md:text-5xl lg:flex-row lg:items-center lg:gap-0 lg:text-6xl ">
-        <div>一刻，</div>
+        <div>只需一刻，</div>
         <div className="flex items-center">
-          <div>它可以帮你</div>
+          <div>帮你</div>
           <div className="inline-block min-w-[200px] text-left lg:min-w-[300px]">
             <span ref={el} className="text-primary-600 "></span>
           </div>
