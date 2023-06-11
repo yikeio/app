@@ -26,7 +26,7 @@ export default function HomeMoreFeatures() {
           {features.map((feature) => (
             <div
               key={feature.name}
-              className="flex flex-col items-center justify-center gap-4 rounded-xl border p-6 hover:shadow-sm"
+              className="flex flex-col items-center justify-center gap-4 rounded-xl border border-primary-200 bg-primary-100 p-6 hover:border-primary-300 hover:shadow-sm dark:border-primary dark:bg-muted dark:hover:border-primary-500"
             >
               <div className="flex items-center justify-center rounded-full border border-primary p-4 text-primary">
                 {feature.icon}
