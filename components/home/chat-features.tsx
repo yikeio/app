@@ -11,7 +11,7 @@ export default function HomeChatFeatures() {
       </div>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-6 rounded-xl bg-gradient-to-r from-primary-600/50 from-10% via-primary-300/50 to-primary-700/50 p-6 lg:flex-row lg:gap-12 lg:p-12">
-          <div className="overflow-hidden rounded-lg border lg:w-1/2">
+          <div className="overflow-hidden rounded-lg border border-primary lg:w-1/2">
             <img src="/home/features/chat-1.png" alt="Chat" />
           </div>
           <div className="flex flex-col gap-6">
