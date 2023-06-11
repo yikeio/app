@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import PromptApi, { Prompt, TabType } from "@/api/prompts"
 import { Tag } from "@/api/tags"
+import useAuth from "@/hooks/use-auth"
 import useLocalStorage from "@/hooks/use-localstorage"
 import { useQueryState } from "@/hooks/user-query-state"
 import { ArrowRightCircleIcon, BadgeCheckIcon, BotIcon, FlagIcon, FlameIcon } from "lucide-react"
@@ -14,8 +15,10 @@ import { Layout } from "@/components/layout"
 import Loading from "@/components/loading"
 import TagsSelector from "@/components/tags-selector"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import WelcomeModal from "@/components/user/welcome-modal"
 
 export default function PromptPage() {
+  const { user } = useAuth()
   const [selectedTagIds, setSelectedTagIds] = useQueryState<Array<string | number>>("tag")
   const [tab, setTab] = useLocalStorage<TabType>("prompts.selected.tab", "featured")
   const [prompts, setPrompts] = useState<{ all: Prompt[]; featured: Prompt[]; mine: Prompt[] }>({
@@ -47,6 +50,7 @@ export default function PromptPage() {
 
   return (
     <Layout>
+      {user && <WelcomeModal user={user} />}
       <div className="flex h-full flex-col">
         <div className="flex flex-col items-center gap-8 border-b p-6 xl:flex-row">
           <h1 className="text-xl">选择一个场景，开始对话</h1>
