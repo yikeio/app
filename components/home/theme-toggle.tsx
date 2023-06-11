@@ -7,7 +7,7 @@ export function HomeThemeToggle() {
   const { theme, setTheme } = useTheme()
 
   return (
-    <>
+    <div className="flex items-center gap-4">
       <a onClick={() => setTheme("light")} className={cn({ "text-primary-500": theme === "light" })}>
         <SunDimIcon size={20} />
         <span className="sr-only">浅色</span>
@@ -16,6 +16,6 @@ export function HomeThemeToggle() {
         <MoonIcon size={20} />
         <span className="sr-only">深色</span>
       </a>
-    </>
+    </div>
   )
 }
