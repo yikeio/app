@@ -96,7 +96,7 @@ export default function UserInvitationPage() {
 
   return (
     <Layout>
-      <div className="h-full overflow-auto p-4 md:p-8">
+      <div className="h-full overflow-auto p-4 sm:p-6 md:p-8">
         <FeatureHero user={user} />
         {user && (
           <div className="mt-4">

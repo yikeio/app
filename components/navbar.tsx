@@ -46,11 +46,11 @@ export function Navbar(props) {
   return (
     <nav
       className={cn(
-        "fixed bottom-0 left-0 z-50 flex w-full shrink-0 items-center justify-center gap-6 border-r border-t bg-primary-50 px-2 py-4 transition-all dark:bg-muted md:gap-4 md:border-r md:px-6 lg:relative lg:h-screen lg:w-60 lg:flex-col lg:items-start lg:justify-start lg:border-t-0 lg:py-8 ",
+        "fixed bottom-0 left-0 z-50 flex w-full shrink-0 items-center justify-center gap-6 border-r border-t bg-primary-50 px-2 py-4 transition-all dark:bg-muted md:gap-4 md:border-r md:px-6 lg:relative lg:h-screen lg:w-60 lg:flex-col lg:items-start lg:justify-start lg:gap-8 lg:border-t-0 lg:py-8 ",
         props.className
       )}
     >
-      <div className="hidden items-center gap-4 lg:flex">
+      <div className="hidden items-center justify-between gap-8 lg:flex">
         <Button
           variant="ghost"
           size="sm"
@@ -60,13 +60,13 @@ export function Navbar(props) {
           <Image src="/logo.svg" height={24} width={24} alt="logo" />
           <div className="hidden text-xl leading-none md:block">一刻</div>
         </Button>
-        <ShareModal className="w-full justify-start ">
+        <ShareModal>
           <Button variant="ghost" size="sm">
             <SparklesIcon size={14} className="text-primary-600" />
           </Button>
         </ShareModal>
       </div>
-      <div className="flex w-full flex-1 justify-center gap-2 lg:flex-col lg:justify-start lg:py-4">
+      <div className="flex w-full flex-1 justify-center gap-2 lg:flex-col lg:justify-start">
         <NavItem href="/prompts" name="对话" icon={<MessageSquare size={22} />} />
         <NavItem href="/invitations" name="邀请" icon={<GiftIcon size={22} />} />
         <NavItem href="/pricing" name="购买" icon={<CreditCardIcon size={22} />} />
