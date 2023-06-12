@@ -29,7 +29,7 @@ export default function HomeMoreFeatures() {
     },
   ]
   return (
-    <div className="flex flex-col gap-20 rounded-xl ">
+    <div id="more-features" className="flex flex-col gap-20 rounded-xl py-6 lg:py-12">
       <div className="flex flex-col gap-6 text-center">
         <h2 className="text-3xl lg:text-5xl">更多功能</h2>
         <div className="text-muted-foreground">我们正在持续完善打磨产品，努力提供一个更完善的生产力工具。</div>

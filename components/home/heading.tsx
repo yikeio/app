@@ -22,7 +22,7 @@ export default function HomeHeading() {
   )
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between" id="heading">
       <Link className="inline-flex items-center justify-start gap-2 p-4  text-slate-700 dark:text-white " href="/">
         <Image src="/logo.svg" height={24} width={24} alt="logo" />
         <div className="text-xl leading-none ">一刻</div>

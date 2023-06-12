@@ -4,7 +4,7 @@ import { Button } from "../ui/button"
 
 export default function HomeChatFeatures() {
   return (
-    <div className="flex flex-col gap-20 rounded-xl">
+    <div id="chat-features" className="flex flex-col gap-20 rounded-xl">
       <div className="flex flex-col gap-6 text-center">
         <h2 className="text-3xl lg:text-5xl">沉浸式交互体验</h2>
         <div className="text-muted-foreground">全新设计的沉浸式 UI 界面，让你更专注于内容，减少不必要的干扰 </div>

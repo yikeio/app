@@ -1,6 +1,6 @@
 export default function HomeFooter() {
   return (
-    <footer>
+    <footer id="footer" className="py-6 lg:py-12">
       <div className="mx-auto max-w-screen-xl">
         <div className="flex flex-col items-center justify-center lg:flex-row lg:justify-between">
           <div className="mb-6 md:mb-0">

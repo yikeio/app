@@ -75,6 +75,8 @@ export default function useAuth() {
       expires: new Date(token.expires_at),
     })
 
+    setHasLogged(true)
+
     return token
   }
 
