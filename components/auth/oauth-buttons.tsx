@@ -14,12 +14,22 @@ export default function OAuthLoginButtons() {
 
   return (
     <div className="flex flex-col items-center gap-2 md:flex-row">
-      <Button className="w-full" variant="outline" size="sm" onClick={() => handleRedirect("github")}>
-        <GitHubIcon className="mr-2 h-5 w-5" /> <span className="text-foreground">GitHub</span>
+      <Button
+        className="w-full text-foreground hover:text-accent-foreground"
+        variant="outline"
+        size="sm"
+        onClick={() => handleRedirect("github")}
+      >
+        <GitHubIcon className="mr-2 h-5 w-5" /> <span>GitHub</span>
       </Button>
 
-      <Button className="w-full" variant="outline" size="sm" onClick={() => handleRedirect("google")}>
-        <GoogleIcon className="mr-2 h-5 w-5" /> <span className="text-foreground">Google</span>
+      <Button
+        className="w-full text-foreground hover:text-accent-foreground"
+        variant="outline"
+        size="sm"
+        onClick={() => handleRedirect("google")}
+      >
+        <GoogleIcon className="mr-2 h-5 w-5" /> <span>Google</span>
       </Button>
     </div>
   )
