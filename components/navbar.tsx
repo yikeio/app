@@ -10,6 +10,7 @@ import {
   MessageSquare,
   SparklesIcon,
   TerminalSquareIcon,
+  UserIcon,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -68,12 +69,18 @@ export function Navbar(props) {
       <div className="flex w-full flex-1 justify-center gap-2 lg:flex-col lg:justify-start lg:py-4">
         <NavItem href="/prompts" name="对话" icon={<MessageSquare size={22} />} />
         <NavItem href="/invitations" name="邀请" icon={<GiftIcon size={22} />} />
-        <NavItem href="/pricing" name="价格" icon={<CreditCardIcon size={22} />} />
+        <NavItem href="/pricing" name="购买" icon={<CreditCardIcon size={22} />} />
         {user && (
           <>
-            <NavItem href="/developers" name="开发者" icon={<TerminalSquareIcon size={22} />} />
+            <NavItem href="/user" name="个人中心" icon={<UserIcon size={22} />} />
+            <NavItem
+              href="/developers"
+              className="hidden lg:flex"
+              name="开发者"
+              icon={<TerminalSquareIcon size={22} />}
+            />
             <NavItem href="/settings" className="hidden lg:flex" name="设置" icon={<CogIcon size={22} />} />
-            <NavItem href="/discover" name="实验室" icon={<FlaskConicalIcon size={22} />} />
+            <NavItem href="/discover" className="hidden lg:flex" name="实验室" icon={<FlaskConicalIcon size={22} />} />
           </>
         )}
 
