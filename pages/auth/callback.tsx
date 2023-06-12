@@ -17,7 +17,7 @@ export default function OauthCallback() {
         .handleOauthCallback(query.get("code") as string, query.get("state") as string)
         .then(() => {
           setState("success")
-          window.location.replace("/")
+          window.location.replace("/prompts")
         })
         .catch((error) => {
           setError(error.message)

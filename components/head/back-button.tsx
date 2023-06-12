@@ -17,7 +17,7 @@ export default function BackButton({ onClick = null }: { onClick?: () => void })
     <Button
       variant="outline"
       size="sm"
-      className="flex h-8 w-8 items-center justify-center p-1 text-muted-foreground"
+      className="flex h-8 w-8 items-center justify-center p-1 text-muted-foreground hover:bg-muted "
       title="返回"
       onClick={onClick}
     >

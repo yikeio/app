@@ -14,7 +14,7 @@ export default function DeleteButton({ onClick }: { onClick: () => void }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex h-8 w-8 items-center justify-center p-1 hover:bg-primary-100">
+        <Button variant="outline" className="flex h-8 w-8 items-center justify-center p-1 hover:bg-muted ">
           <Trash2Icon className="h-4 w-4" />
         </Button>
       </DialogTrigger>

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import useLocalStorage from "@/hooks/use-localstorage"
 import { SubmitKey } from "@/hooks/use-settings"
 import { ArrowRightIcon } from "lucide-react"
@@ -16,6 +16,7 @@ export default function ChatInput({
   onSubmit: (input: string) => void | Promise<any>
   submitKey?: SubmitKey
 }) {
+  const [submiting, setSubmiting] = useState(false)
   const [input, setInput] = useLocalStorage<string>("chat.input.value", "")
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -42,11 +43,15 @@ export default function ChatInput({
     }
 
     try {
-      onSubmit(input)
+      setSubmiting(true)
       setInput("")
+      await onSubmit(input)
     } catch (error) {
       console.error(error)
+      setInput(input)
     }
+
+    setSubmiting(false)
   }
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -75,14 +80,14 @@ export default function ChatInput({
         value={input}
         autoFocus={true}
         rows={1}
-        disabled={isStreaming}
+        disabled={isStreaming || submiting}
         onKeyDown={handleInputKeyDown}
       />
 
       <Button
         className="flex h-10 w-10 items-center justify-center gap-2 rounded-full p-0 text-primary-100"
         onClick={handleSubmit}
-        disabled={input.length <= 0 || isStreaming}
+        disabled={input.length <= 0 || isStreaming || submiting}
       >
         <ArrowRightIcon size={18} />
       </Button>

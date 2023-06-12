@@ -15,7 +15,7 @@ export default function OAuthLoginButtons() {
   return (
     <div className="flex flex-col items-center gap-2 md:flex-row">
       <Button
-        className="w-full text-foreground hover:text-accent-foreground"
+        className="w-full text-foreground hover:bg-muted hover:text-accent-foreground"
         variant="outline"
         size="sm"
         onClick={() => handleRedirect("github")}
@@ -24,7 +24,7 @@ export default function OAuthLoginButtons() {
       </Button>
 
       <Button
-        className="w-full text-foreground hover:text-accent-foreground"
+        className="w-full text-foreground hover:bg-muted hover:text-accent-foreground"
         variant="outline"
         size="sm"
         onClick={() => handleRedirect("google")}
