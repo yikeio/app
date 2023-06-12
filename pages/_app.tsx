@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast"
 import { SWRConfig } from "swr"
 
 import Request from "@/lib/request"
+import Head from "@/components/head"
 import "@/styles/globals.scss"
 import { useEffect } from "react"
 import { useSearchParams } from "next/navigation"
@@ -33,6 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
         }}
       >
         <NextNProgress />
+        <Head />
         <Component {...pageProps} />
         <Toaster />
       </SWRConfig>

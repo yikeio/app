@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { MoonIcon, SunDimIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -5,6 +6,13 @@ import { cn } from "@/lib/utils"
 
 export function HomeThemeToggle() {
   const { theme, setTheme } = useTheme()
+
+  useEffect(() => {
+    if (!theme) {
+      setTheme("system")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [theme])
 
   return (
     <div className="flex items-center gap-4">
