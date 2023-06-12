@@ -1,5 +1,7 @@
 import { Payment } from "@/api/payments"
 
+import { Button } from "../ui/button"
+
 export default function PaymentState({
   payment,
   onClickToPay,
@@ -13,12 +15,9 @@ export default function PaymentState({
       return (
         <>
           <span className={className + "text-orange-500 bg-orange-100 border-orange-200"}>待支付</span>
-          <button
-            className="ml-6 inline-block rounded bg-slate-900 p-1 text-xs text-white hover:bg-slate-700 dark:bg-primary-50"
-            onClick={() => onClickToPay(payment)}
-          >
+          <Button variant="link" className="text-xs" size="sm" onClick={() => onClickToPay(payment)}>
             立即支付
-          </button>
+          </Button>
         </>
       )
     case "expired":

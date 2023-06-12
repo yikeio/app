@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { clearInterval } from "timers"
 import * as React from "react"
 import PaymentApi from "@/api/payments"
 
@@ -14,7 +13,7 @@ export function PaymentDialog({ payment, onClose }) {
     if (payment) {
       setState(1)
       loopQueryPayment(payment.id)
-    } else {
+    } else if (timer) {
       clearInterval(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -29,6 +28,9 @@ export function PaymentDialog({ payment, onClose }) {
         if (res.state === "paid") {
           setState(2)
           clearInterval(timer)
+          setTimeout(() => {
+            onClose()
+          }, 3000)
         }
       })
     }, 3000)
@@ -41,7 +43,7 @@ export function PaymentDialog({ payment, onClose }) {
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-xs">
         {state === 1 ? (
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-2xl font-bold">请扫码支付</h1>
@@ -49,7 +51,7 @@ export function PaymentDialog({ payment, onClose }) {
             <div>请使用微信扫码支付</div>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-6">
+          <div className="flex min-h-[200px] flex-col items-center justify-center gap-6">
             <h1 className="text-2xl font-bold">支付成功</h1>
             <svg
               className="h-16 w-16 text-green-600"
