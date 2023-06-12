@@ -208,6 +208,7 @@ export default function ChatPage() {
     }
 
     init()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 未登录时，跳转到登录页面
