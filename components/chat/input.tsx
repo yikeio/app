@@ -37,12 +37,12 @@ export default function ChatInput({
   }
 
   const handleSubmit = async () => {
-    if (isStreaming || input.length <= 0) {
+    if (isStreaming || input.trim().length <= 0) {
       return
     }
 
     try {
-      await onSubmit(input)
+      onSubmit(input)
       setInput("")
     } catch (error) {
       console.error(error)

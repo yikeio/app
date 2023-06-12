@@ -64,6 +64,10 @@ export default class ConversationApi {
   }
 
   static async createMessage(conversationId: number, data: Partial<Message>) {
+    if (data.content.trim().length < 0) {
+      return
+    }
+
     return Request.postJson(`chat/conversations/${conversationId}/messages`, data)
   }
 
