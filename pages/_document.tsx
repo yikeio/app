@@ -1,10 +1,12 @@
 import { Head, Html, Main, NextScript } from "next/document"
 
+import { cn } from "@/lib/utils"
+
 export default function Document() {
   return (
-    <Html lang="en">
+    <Html lang="zh-CN" suppressHydrationWarning>
       <Head />
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className={cn("min-h-screen bg-background font-sans antialiased")}>
         <Main />
         <NextScript />
       </body>

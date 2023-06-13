@@ -7,7 +7,9 @@ import NextNProgress from "nextjs-progressbar"
 import { Toaster } from "react-hot-toast"
 import { SWRConfig } from "swr"
 
+import { fontSans } from "@/lib/fonts"
 import Request from "@/lib/request"
+import { cn } from "@/lib/utils"
 import Head from "@/components/head"
 import "@/styles/globals.scss"
 import { useEffect } from "react"
@@ -36,9 +38,9 @@ export default function App({ Component, pageProps }: AppProps) {
           fetcher: (resource, init) => Request.request(resource, init).then((res) => res),
         }}
       >
-        <NextNProgress />
         <Head />
-        <Component {...pageProps} />
+        <NextNProgress />
+        <Component {...pageProps} className={cn(fontSans.className)} />
         <Toaster />
       </SWRConfig>
     </ThemeProvider>

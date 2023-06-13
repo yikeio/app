@@ -3,7 +3,7 @@ import NextHead from "next/head"
 export default function Head({ title = "" }) {
   return (
     <NextHead>
-      <title>{title.length ? title + " - " : ""}一刻 AI 助手</title>
+      <title>{(title.length ? title + " - " : "") + "一刻 AI 助手"}</title>
       <meta name="description" content="一刻 AI 助手是一个基于 AI 的智能助手，可以帮助你更好的管理你的生活。" />
       <meta
         name="viewport"
