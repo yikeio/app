@@ -69,6 +69,7 @@ export default function useAuth() {
     hasLogged,
     user,
     logout,
+    isLoading,
     redirectToLogin,
     handleOauthCallback,
     handleLoginViaSms,
