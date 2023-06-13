@@ -141,6 +141,7 @@ export default function ChatPage() {
 
   // 清空对话
   const handleTruncateConversation = async (conversation: Conversation) => {
+    await handleAbortAnswing()
     await ConversationApi.truncate(conversation.id)
     setMessages([])
     loadConversations(promptId)

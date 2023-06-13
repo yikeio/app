@@ -1,12 +1,16 @@
 import { ClassValue, clsx } from "clsx"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
+import timezone from "dayjs/plugin/timezone"
 import { twMerge } from "tailwind-merge"
 
 import "dayjs/locale/zh-cn"
 import { toast } from "react-hot-toast"
 
 dayjs.locale("zh-cn") // 全局使用
+dayjs.extend(timezone)
+
+dayjs.tz.setDefault("Asia/Shanghai")
 
 dayjs.extend(relativeTime)
 
