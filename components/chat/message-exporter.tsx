@@ -11,8 +11,8 @@ import QRCode from "react-qr-code"
 
 import { cn, isMobileScreen } from "@/lib/utils"
 import Loading from "../loading"
+import { AlertDialog, AlertDialogContent } from "../ui/alert-dialog"
 import { Button } from "../ui/button"
-import { Dialog, DialogContent } from "../ui/dialog"
 import { Markdown } from "./markdown"
 
 export default function MessageExporter({
@@ -28,7 +28,7 @@ export default function MessageExporter({
   const canvasRef = useRef<HTMLImageElement>(null)
   const chatRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState<boolean>(false)
-  const [show, setShow] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false)
 
   const referralUrl = user.referral_url
 
@@ -39,11 +39,16 @@ export default function MessageExporter({
 
   const handleDrawImage = () => {
     setLoading(true)
-    setShow(true)
+    setOpen(true)
 
     drawImage(chatRef.current).finally(() => {
       setLoading(false)
     })
+  }
+
+  const handleFinish = () => {
+    setOpen(false)
+    onCancel()
   }
 
   return (
@@ -62,19 +67,22 @@ export default function MessageExporter({
         </div>
       </div>
 
-      <Dialog open={show} onOpenChange={(v) => setShow(v)}>
-        <DialogContent>
-          <div className="flex min-h-[200px] flex-col items-center justify-center">
+      <AlertDialog open={open} onOpenChange={(v) => setOpen(v)}>
+        <AlertDialogContent>
+          <div className="flex min-h-[200px] flex-col items-center justify-center gap-6">
             {loading && <Loading />}
 
             <Image ref={canvasRef} src="" alt="" className="max-h-[80vh] max-w-full"></Image>
 
-            <p className="rounded-full bg-primary-300/40 px-4 py-1 text-center text-xs text-foreground dark:bg-muted">
+            <div className="rounded-full bg-primary-300/40 px-4 py-1 text-center text-xs text-foreground dark:bg-muted">
               {isMobileScreen() ? "长按图片分享或保存到本地" : "右键复制图片或保存到本地"}
-            </p>
+            </div>
+            <Button className="w-full max-w-sm" variant="secondary" onClick={handleFinish}>
+              完成
+            </Button>
           </div>
-        </DialogContent>
-      </Dialog>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Portal.Root ref={chatRef} key={messagesId} className="max-w-xl bg-white opacity-0 dark:bg-background">
         <div className="flex flex-col gap-6 px-4 py-6">

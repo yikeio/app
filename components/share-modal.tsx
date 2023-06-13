@@ -7,7 +7,13 @@ import TwitterIcon from "@/icons/twitter.svg"
 import { MailIcon, Share2Icon } from "lucide-react"
 
 import { cn, copyToClipboard } from "@/lib/utils"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
 
@@ -33,11 +39,11 @@ export default function ShareModal({
   }, [])
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-xl">
-        <DialogHeader>
-          <DialogTitle>将一刻分享给你的朋友</DialogTitle>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      <AlertDialogContent className="sm:max-w-xl">
+        <AlertDialogHeader>
+          <AlertDialogTitle>将一刻分享给你的朋友</AlertDialogTitle>
           <div className="flex flex-col gap-6">
             <div>
               一刻在成长过程中离不开大家的支持和助力。如果觉得一刻对你有帮助，请多多分享，将好的产品带给更多的朋友。🫡 💓
@@ -92,8 +98,8 @@ export default function ShareModal({
               </div>
             </div>
           </div>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogHeader>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }

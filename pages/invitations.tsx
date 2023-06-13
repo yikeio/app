@@ -106,13 +106,13 @@ export default function UserInvitationPage() {
                 <TabsTrigger value="invitations">我的邀请记录</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="leaderboard" className="rounded-lg border p-6 shadow-sm">
-                <table className="my-0 w-full text-left text-sm ">
+              <TabsContent value="leaderboard" className="overflow-x-auto rounded-lg border p-6 shadow-sm">
+                <table className="my-0 w-full min-w-max text-left text-sm">
                   <thead className="text-sm font-bold uppercase ">
                     <tr>
-                      <td className="w-14 border-none md:w-auto">排名</td>
+                      <td className="w-20 border-none">排名</td>
                       <td className="border-none">用户</td>
-                      <td className="w-12 border-none md:w-auto">已邀请用户数</td>
+                      <td className="border-none">已邀请用户数</td>
                     </tr>
                   </thead>
                   <tbody>
@@ -133,7 +133,7 @@ export default function UserInvitationPage() {
                 )}
               </TabsContent>
 
-              <TabsContent value="invitations">
+              <TabsContent value="invitations" className="overflow-x-auto">
                 <UserInvitations user={user} />
               </TabsContent>
             </Tabs>
