@@ -6,8 +6,8 @@ export interface User {
   id: number
   name: string
   avatar?: string
-  root_referrer_id?: number
-  referrer_id?: number
+  root_referrer_id?: string
+  referrer_id?: string
   level: number
   referrer_path?: string
   referral_code?: string

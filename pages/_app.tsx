@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app"
 import useLocalStorage from "@/hooks/use-localstorage"
+import UseReferrer from "@/hooks/use-referrer"
 import useScrollToLocation from "@/hooks/use-scroll-to-location"
 import { ThemeProvider } from "next-themes"
 import NextNProgress from "nextjs-progressbar"
@@ -17,6 +18,8 @@ export default function App({ Component, pageProps }: AppProps) {
   const [referrer, setReferrer] = useLocalStorage<string>("referrer", null)
 
   useScrollToLocation()
+
+  UseReferrer()
 
   useEffect(() => {
     if (searchParams.has("referrer") && !referrer) {
