@@ -218,7 +218,7 @@ export default function ChatPage() {
       redirectToLogin()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasLogged])
+  }, [])
 
   // 会话列表更新时，如果没有当前会话，则自动选择第一个会话
   useEffect(() => {

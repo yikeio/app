@@ -46,7 +46,7 @@ export default function ShareModal({
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(featureDescription + " " + url)}`}
                 target="_blank"
-                className="flex items-center gap-2 rounded border p-2"
+                className="flex items-center gap-2 rounded border p-2 hover:bg-muted"
                 rel="noreferrer"
                 title="Twitter"
               >
@@ -55,7 +55,7 @@ export default function ShareModal({
               <a
                 href={`https://www.facebook.com/sharer/sharer.php?u=${url}`}
                 target="_blank"
-                className="flex items-center gap-2 rounded border p-2"
+                className="flex items-center gap-2 rounded border p-2 hover:bg-muted"
                 rel="noreferrer"
                 title="Facebook"
               >
@@ -64,7 +64,7 @@ export default function ShareModal({
               <a
                 href={`https://t.me/share/url?url=${url}&text=${encodeURIComponent(featureDescription)}`}
                 target="_blank"
-                className="flex items-center gap-2 rounded border p-2"
+                className="flex items-center gap-2 rounded border p-2 hover:bg-muted"
                 rel="noreferrer"
                 title="Telegram"
               >
@@ -73,7 +73,7 @@ export default function ShareModal({
               <a
                 href={`mailto:?subject=${title}&body=${encodeURIComponent(featureDescription + " " + url)}`}
                 target="_blank"
-                className="flex items-center gap-2 rounded border p-2"
+                className="flex items-center gap-2 rounded border p-2 hover:bg-muted"
                 rel="noreferrer"
                 title="Email"
               >
