@@ -13,7 +13,7 @@ export default function OAuthLoginButtons() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-2 md:flex-row">
+    <div className="flex flex-row items-center gap-2">
       <Button
         className="w-full text-foreground hover:bg-muted hover:text-accent-foreground"
         variant="outline"

@@ -6,7 +6,7 @@ import PromptApi, { Prompt, TabType } from "@/api/prompts"
 import { Tag } from "@/api/tags"
 import useAuth from "@/hooks/use-auth"
 import useLocalStorage from "@/hooks/use-localstorage"
-import { useQueryState } from "@/hooks/user-query-state"
+import { useQueryState } from "@/hooks/use-query-state"
 import { ArrowRightCircleIcon, BadgeCheckIcon, BotIcon, FlagIcon, FlameIcon } from "lucide-react"
 
 import { isScreenSize } from "@/lib/utils"

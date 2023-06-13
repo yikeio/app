@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 import useAuth from "@/hooks/use-auth"
-import { useQueryState } from "@/hooks/user-query-state"
+import { useQueryState } from "@/hooks/use-query-state"
 import { TabsContent } from "@radix-ui/react-tabs"
 
 import Head from "@/components/head"
