@@ -33,7 +33,7 @@ export default function HomeJumbotron() {
   }, [])
 
   return (
-    <div id="jumbotron" className="relative mx-auto flex max-w-5xl flex-col gap-10 py-6 lg:py-12">
+    <div id="jumbotron" className="relative mx-auto flex max-w-5xl flex-col gap-10 pt-6 lg:pt-12">
       <h1 className="mx-auto flex flex-col gap-4 text-3xl font-extrabold leading-none tracking-tight text-foreground md:text-5xl lg:flex-row lg:items-center lg:gap-0 lg:text-6xl ">
         <div>只需一刻，</div>
         <div className="flex items-center">
