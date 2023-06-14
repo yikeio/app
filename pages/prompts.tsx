@@ -51,7 +51,7 @@ export default function PromptPage() {
   return (
     <Layout>
       {user && <WelcomeModal user={user} />}
-      <div className="flex h-full flex-col">
+      <div className="flex flex-col">
         <div className="flex flex-col items-center gap-8 border-b p-6 xl:flex-row">
           <h1 className="text-xl">选择一个场景，开始对话</h1>
           <Tabs onValueChange={handleTabChanged} value={tab}>
@@ -91,20 +91,22 @@ export default function PromptPage() {
             {prompts[tab].map((prompt) => (
               <Link
                 href={`/chat?prompt_id=${prompt.id}`}
-                className="group flex flex-col gap-6 rounded-xl border border-primary-600/20 bg-primary-50 p-4 hover:bg-primary-100 hover:shadow-sm dark:border-primary-600/30 dark:bg-muted dark:hover:border-primary-600 xl:p-6"
+                className="group flex justify-between gap-2 rounded-xl border border-primary-600/20 bg-primary-50 p-4 hover:bg-primary-100 hover:shadow-sm dark:border-primary-600/30 dark:bg-muted dark:hover:border-primary-600 md:flex-col md:justify-start lg:gap-4 xl:p-6"
                 key={prompt.id}
               >
                 <div className="flex items-center justify-between">
-                  <div className="">{prompt.name}</div>
-                  <div className="text-primary-400">
+                  <div className="truncate">{prompt.name}</div>
+                  <div className="hidden text-primary-400  md:flex">
                     <ArrowRightCircleIcon size={24} strokeWidth={1.5} />
                   </div>
                 </div>
-                <div className="flex items-end justify-between">
+                <div className="flex items-center gap-6 md:items-end md:justify-between">
                   <div className="flex items-end gap-1 text-muted-foreground">
                     <FlameIcon size={16} /> <span className="text-xs leading-none">{prompt.conversations_count}</span>
                   </div>
-                  <span className="text-4xl group-hover:scale-110 xl:text-5xl">{prompt.logo || "🤖"}</span>
+                  <span className="text-xl group-hover:scale-110 md:-mb-2 lg:text-4xl xl:text-5xl">
+                    {prompt.logo || "🤖"}
+                  </span>
                 </div>
               </Link>
             ))}
