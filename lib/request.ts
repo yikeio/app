@@ -84,18 +84,14 @@ export default class Request {
 
           if (response.status === 401) {
             Cookies.remove("auth.token")
-            toast.error("请登录")
-            setTimeout(() => {
-              window.location.href = "/auth/login"
-            }, 1000)
-            reject(response)
+            toast.error("请登录", { id: "auth.login" })
           }
 
           if (response.status > 401) {
             if (response.status === 403) {
               response.json().then((result: any) => {
                 if (result.context?.state || null) {
-                  toast.error(result.message)
+                  toast.error(result.message, { id: "auth.error" })
                   switch (result["context"]["state"]) {
                     case "unactivated":
                       return (window.location.href = "/auth/activate")
@@ -116,7 +112,7 @@ export default class Request {
         })
         .catch((error) => {
           console.error(error)
-          toast.error("网络错误")
+          toast.error("网络错误", { id: "network.error" })
           reject({ result: "网络错误", status: 500 })
         })
     })

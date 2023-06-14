@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/router"
 import PaymentApi, { Payment } from "@/api/payments"
 import useAuth from "@/hooks/use-auth"
@@ -32,18 +32,18 @@ export default function PricingPage() {
   }
 
   // 获取用户未付款的订单先展示
-  const getUnpaidPayments = async () => {
-    const payments = await PaymentApi.list()
-    const latestPayment = payments.filter((item: Record<string, string>) => item.state === "pending")[0]
+  // const getUnpaidPayments = async () => {
+  //   const payments = await PaymentApi.list()
+  //   const latestPayment = payments.filter((item: Record<string, string>) => item.state === "pending")[0]
 
-    if (latestPayment) {
-      setPayment(latestPayment)
-    }
-  }
+  //   if (latestPayment) {
+  //     setPayment(latestPayment)
+  //   }
+  // }
 
-  useEffect(() => {
-    user && getUnpaidPayments()
-  }, [user])
+  // useEffect(() => {
+  //   user && getUnpaidPayments()
+  // }, [user])
 
   return (
     <Layout>
