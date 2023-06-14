@@ -259,7 +259,7 @@ export default function ChatPage() {
           <div className="flex flex-1 gap-6 border-l p-2 md:p-4">
             <div className="flex flex-1 items-center gap-2 md:gap-4">
               <BackButton onClick={() => router.push("/prompts")} />
-              <div className="max-w-[45vw] truncate text-lg ">{prompt?.name || "loading..."}</div>
+              <div className="max-w-[35vw] truncate text-lg md:max-w-[45vw] ">{prompt?.name || "loading..."}</div>
             </div>
             <div className="flex shrink-0 items-center gap-2 text-muted-foreground">
               {hasLogged && (
