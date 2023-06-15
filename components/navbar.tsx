@@ -60,7 +60,7 @@ export function Navbar(props) {
           <Image src="/logo.svg" height={24} width={24} alt="logo" />
           <div className="hidden text-xl leading-none md:block">一刻</div>
         </Button>
-        <ShareModal>
+        <ShareModal user={user}>
           <Button variant="ghost" size="sm">
             <SparklesIcon size={14} className="text-primary-600" />
           </Button>
@@ -87,6 +87,7 @@ export function Navbar(props) {
         <div className="hidden flex-1 lg:block"></div>
 
         {user && <UserDropdown user={user} />}
+        {!user && <Button onClick={() => router.push("/auth/login")}>立即登录</Button>}
       </div>
     </nav>
   )

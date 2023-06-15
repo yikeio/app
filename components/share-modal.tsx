@@ -1,14 +1,16 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { User } from "@/api/users"
 import FacebookIcon from "@/icons/facebook.svg"
 import TelegramIcon from "@/icons/telegram.svg"
 import TwitterIcon from "@/icons/twitter.svg"
-import { MailIcon, Share2Icon } from "lucide-react"
+import { MailIcon, Share2Icon, XIcon } from "lucide-react"
 
 import { cn, copyToClipboard } from "@/lib/utils"
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -18,9 +20,11 @@ import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
 
 export default function ShareModal({
+  user = null,
   children = undefined,
   className = "",
 }: {
+  user?: User
   children?: React.ReactNode
   className?: string
 }) {
@@ -35,15 +39,20 @@ export default function ShareModal({
 
   const [url, setUrl] = useState("")
   useEffect(() => {
-    setUrl(window.location.origin)
-  }, [])
+    setUrl(user ? user.referral_url : window.location.origin)
+  }, [user])
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent className="sm:max-w-xl">
         <AlertDialogHeader>
-          <AlertDialogTitle>将一刻分享给你的朋友</AlertDialogTitle>
+          <div className="flex items-start justify-between">
+            <AlertDialogTitle>将一刻分享给你的朋友</AlertDialogTitle>
+            <AlertDialogCancel className="h-6 w-6 p-1 text-3xl">
+              <XIcon />
+            </AlertDialogCancel>
+          </div>
           <div className="flex flex-col gap-6">
             <div>
               一刻在成长过程中离不开大家的支持和助力。如果觉得一刻对你有帮助，请多多分享，将好的产品带给更多的朋友。🫡 💓
