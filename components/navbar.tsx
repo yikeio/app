@@ -69,7 +69,7 @@ export function Navbar(props) {
       <div className="flex w-full flex-1 justify-center gap-2 lg:flex-col lg:justify-start">
         <NavItem href="/prompts" name="对话" icon={<MessageSquare size={22} />} />
         <NavItem href="/invitations" name="邀请" icon={<GiftIcon size={22} />} />
-        <NavItem href="/pricing" name="购买" icon={<CreditCardIcon size={22} />} />
+        <NavItem href="/pricing" name="充值" icon={<CreditCardIcon size={22} />} />
         {user && (
           <>
             <NavItem href="/user" name="个人中心" icon={<UserIcon size={22} />} />
