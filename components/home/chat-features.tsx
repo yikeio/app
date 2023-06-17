@@ -1,8 +1,11 @@
 import { Laptop2Icon } from "lucide-react"
+import { useTheme } from "next-themes"
 
 import { Button } from "../ui/button"
 
 export default function HomeChatFeatures() {
+  const { theme } = useTheme()
+
   return (
     <div id="chat-features" className="flex flex-col gap-20 rounded-xl">
       <div className="flex flex-col gap-6 text-center">
@@ -12,7 +15,7 @@ export default function HomeChatFeatures() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-6 rounded-xl bg-gradient-to-r from-primary-600/50 from-10% via-primary-300/50 to-primary-700/50 p-6 lg:flex-row lg:gap-12 lg:p-12">
           <div className="overflow-hidden rounded-lg border border-primary lg:w-1/2">
-            <img src="/home/features/chat-1.png" alt="Chat" />
+            <img src={`/home/features/chat-1-${theme === "light" ? "light" : "dark"}.png`} alt="Chat" />
           </div>
           <div className="flex flex-col gap-6">
             <h3 className="flex items-center gap-3">
