@@ -87,7 +87,11 @@ export function Navbar(props) {
         <div className="hidden flex-1 lg:block"></div>
 
         {user && <UserDropdown user={user} />}
-        {!user && <Button onClick={() => router.push("/auth/login")}>立即登录</Button>}
+        {!user && (
+          <Button className="hidden lg:block" onClick={() => router.push("/auth/login")}>
+            立即登录
+          </Button>
+        )}
       </div>
     </nav>
   )
