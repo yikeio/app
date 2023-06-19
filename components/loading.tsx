@@ -5,7 +5,7 @@ export default function Loading({ className = "" }) {
     <div className={cn(className, "flex h-full items-center justify-center")}>
       <svg
         aria-hidden="true"
-        className="h-8 w-8 animate-spin fill-blue-600 text-muted-foreground "
+        className="h-8 w-8 animate-spin fill-blue-300 text-muted"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -19,7 +19,7 @@ export default function Loading({ className = "" }) {
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only text-muted-foreground">Loading...</span>
     </div>
   )
 }
