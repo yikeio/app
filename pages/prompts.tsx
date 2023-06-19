@@ -5,11 +5,11 @@ import Link from "next/link"
 import PromptApi, { Prompt, TabType } from "@/api/prompts"
 import { Tag } from "@/api/tags"
 import useAuth from "@/hooks/use-auth"
+import useDefaultPage from "@/hooks/use-default-page"
 import useLocalStorage from "@/hooks/use-localstorage"
 import { useQueryState } from "@/hooks/use-query-state"
 import { ArrowRightCircleIcon, BadgeCheckIcon, BotIcon, FlagIcon, FlameIcon } from "lucide-react"
 
-import { isScreenSize } from "@/lib/utils"
 import EmptyState from "@/components/empty-state"
 import { Layout } from "@/components/layout"
 import Loading from "@/components/loading"
@@ -27,6 +27,7 @@ export default function PromptPage() {
     mine: [],
   })
   const [isLoading, setIsLoading] = useState(false)
+  const { setDefaultPage } = useDefaultPage()
 
   const loadPrompts = useCallback(async () => {
     setIsLoading(true)
@@ -47,6 +48,10 @@ export default function PromptPage() {
   useEffect(() => {
     loadPrompts()
   }, [loadPrompts, selectedTagIds, tab])
+
+  useEffect(() => {
+    setDefaultPage("/prompts")
+  }, [tab])
 
   return (
     <Layout>
@@ -78,12 +83,7 @@ export default function PromptPage() {
           </Tabs>
           {isLoading && <Loading className="h-10 w-10" />}
 
-          <TagsSelector
-            value={selectedTagIds}
-            className="xl:ml-auto"
-            onValueChange={handleTagSelected}
-            showCount={isScreenSize("sm") || isScreenSize("md") ? 6 : 8}
-          />
+          <TagsSelector value={selectedTagIds} className="xl:ml-auto" onValueChange={handleTagSelected} showCount={6} />
         </div>
         {prompts[tab].length <= 0 && <EmptyState className="flex-1" message="暂无相关场景" />}
         {prompts[tab].length > 0 && (

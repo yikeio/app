@@ -22,6 +22,10 @@ export function Navbar(props) {
   const router = useRouter()
   const { user } = useAuth()
 
+  const handleRedirectToHome = () => {
+    window.location.href = "/?redirect=false"
+  }
+
   const NavItem = (item: { href?: string; name: string; icon: ReactNode; className?: string }) => {
     return (
       <Button
@@ -55,7 +59,7 @@ export function Navbar(props) {
           variant="ghost"
           size="sm"
           className="w-full items-center justify-start gap-4 text-slate-700 hover:bg-primary-200  hover:text-primary-700 dark:text-slate-400 dark:hover:bg-background"
-          onClick={() => router.push("/")}
+          onClick={handleRedirectToHome}
         >
           <Image src="/logo.svg" height={24} width={24} alt="logo" />
           <div className="hidden text-xl leading-none md:block">一刻</div>
