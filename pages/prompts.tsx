@@ -58,7 +58,7 @@ export default function PromptPage() {
       {user && <WelcomeModal user={user} />}
       <div className="flex flex-col">
         <div className="flex flex-col items-center gap-8 border-b p-6 xl:flex-row">
-          <h1 className="text-xl">选择一个场景，开始对话</h1>
+          <h1 className="text-xl">选择一个场景，开始探索</h1>
           <Tabs onValueChange={handleTabChanged} value={tab}>
             <TabsList className="bg-primary-50 dark:bg-muted">
               <TabsTrigger value="featured">
@@ -83,7 +83,12 @@ export default function PromptPage() {
           </Tabs>
           {isLoading && <Loading className="h-10 w-10" />}
 
-          <TagsSelector value={selectedTagIds} className="xl:ml-auto" onValueChange={handleTagSelected} showCount={6} />
+          <TagsSelector
+            value={selectedTagIds}
+            className="hidden xl:inline-flex ml-auto"
+            onValueChange={handleTagSelected}
+            showCount={6}
+          />
         </div>
         {prompts[tab].length <= 0 && <EmptyState className="flex-1" message="暂无相关场景" />}
         {prompts[tab].length > 0 && (

@@ -51,7 +51,7 @@ export default function PricingPage() {
 
       <div className="container mx-auto flex flex-col gap-6 px-5 py-6 lg:gap-12 lg:px-8 lg:py-24">
         <div className="flex w-full flex-col text-center">
-          <h1 className="title-font text-forground mb-2 text-3xl font-medium sm:text-4xl">购买</h1>
+          <h1 className="title-font text-forground mb-2 text-3xl font-medium sm:text-4xl">充值</h1>
           <div className="text-muted-forground mx-auto text-base leading-relaxed lg:w-2/3">
             按照您的使用习惯，选择合适您的付费套餐
           </div>
