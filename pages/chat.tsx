@@ -77,6 +77,8 @@ export default function ChatPage() {
     const request = new CompletionRequest(conversationId)
     completionRequest.current = request
 
+    setIsStreaming(true)
+
     request.onStreaming(async (responseText, done) => {
       if (done) {
         completionRequest.current = null

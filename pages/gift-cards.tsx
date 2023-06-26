@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import GiftCardApi from "@/api/gift-cards"
 import { toast } from "react-hot-toast"
@@ -18,6 +18,14 @@ export default function UserGiftCardsPage() {
       setCode("")
     })
   }
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get("code")
+    if (code) {
+      setCode(code)
+    }
+  }, [])
 
   return (
     <Layout>
@@ -40,7 +48,7 @@ export default function UserGiftCardsPage() {
           <div className="flex flex-col items-center gap-4 md:flex-row">
             <Input
               value={code}
-              className="w-96 max-w-full bg-white"
+              className="w-96 max-w-full"
               onChange={(e) => setCode(e.target.value)}
               placeholder="12345678-9012-3456-7890-123456789012"
             />
