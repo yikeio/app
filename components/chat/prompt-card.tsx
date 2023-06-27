@@ -9,7 +9,7 @@ export default function PromptCard({ prompt }: { prompt: Prompt }) {
       <div className="text-xl text-foreground">{prompt.name}</div>
       <div className="flex flex-col gap-4">
         <div className="text-muted-foreground">{prompt.description}</div>
-        <div className="text-center text-sm text-primary-500">使用人数： 59281 人</div>
+        <div className="text-center text-sm text-primary-500">使用人数： {prompt.conversations_count}</div>
       </div>
     </div>
   )

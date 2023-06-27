@@ -35,11 +35,19 @@ export default function MessageBody({ message, className = "" }: { message: Part
           }
         )}
       >
-        {(message.isLoading || message.isStreaming) && (
+        {message.isStreaming && (
           <LoadingIcon className="absolute -mt-6 rounded border bg-white px-1 py-0.5 dark:bg-muted" />
         )}
         {
-          <div className="markdown-body break-words before:hidden after:hidden">
+          <div
+            className={cn("markdown-body text-sm md:text-base prose break-words before:hidden after:hidden", {
+              "prose-invert": isUser,
+              "dark:prose-invert": isUser,
+            })}
+          >
+            {message.isStreaming && message.content.length <= 0 && (
+              <span className="animate-pulse cursor-default mt-1 duration-700 text-gray-600">▍</span>
+            )}
             <Markdown content={message.content} />
           </div>
         }

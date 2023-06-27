@@ -36,7 +36,24 @@ export function Markdown(props: { content: string }) {
     <ReactMarkdown
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
       rehypePlugins={[RehypeKatex, [RehypeHighlight, { detect: true, ignoreMissing: true }]]}
-      components={{ pre: PreCode }}
+      components={{
+        pre: PreCode,
+        table({ children }) {
+          return (
+            <table className="border-collapse border border-primary-300 px-3 py-1 dark:border-white">{children}</table>
+          )
+        },
+        th({ children }) {
+          return (
+            <th className="break-words border border-primary-300 bg-primary-400 px-3 py-1 text-white dark:border-white">
+              {children}
+            </th>
+          )
+        },
+        td({ children }) {
+          return <td className="break-words border border-primary-300 px-3 py-1 dark:border-white">{children}</td>
+        },
+      }}
     >
       {props.content}
     </ReactMarkdown>

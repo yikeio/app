@@ -23,7 +23,7 @@ export default function UserCenterHeading({ className = "", user }: { user: User
           <UserAvatar user={user} className="h-20 w-20 border text-2xl" />
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1">
-              <h3 className="m-0 text-foreground">{user.name || user.id}</h3>
+              <h3 className="m-0 font-bold text-foreground">{user.name || user.id}</h3>
               {user.has_paid && <BadgeCheckIcon size={22} className="text-green-500" />}
             </div>
             <div>{user.email || user.phone_number}</div>

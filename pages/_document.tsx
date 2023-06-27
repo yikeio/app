@@ -6,7 +6,7 @@ export default function Document() {
   return (
     <Html lang="zh-CN" suppressHydrationWarning>
       <Head />
-      <body className={cn("min-h-screen bg-background font-sans antialiased")}>
+      <body className={cn("min-h-screen bg-background font-sans")}>
         <Main />
         <NextScript />
       </body>

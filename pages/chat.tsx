@@ -78,15 +78,18 @@ export default function ChatPage() {
     completionRequest.current = request
 
     setIsStreaming(true)
+    setStreamContent("")
 
     request.onStreaming(async (responseText, done) => {
       if (done) {
         completionRequest.current = null
         await loadMessages(conversationId)
         loadConversations(promptId)
+        setStreamContent("")
+      } else {
+        setStreamContent(responseText)
       }
 
-      setStreamContent(responseText)
       setIsStreaming(!done)
     })
 
