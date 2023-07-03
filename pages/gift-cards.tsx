@@ -20,10 +20,16 @@ export default function UserGiftCardsPage() {
   }
 
   useEffect(() => {
+    if (code.length > 36) {
+      setCode(code.slice(0, 36))
+    }
+  }, [code])
+
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const code = params.get("code")
     if (code) {
-      setCode(code)
+      setCode(code.trim())
     }
   }, [])
 

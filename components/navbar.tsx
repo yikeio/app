@@ -15,6 +15,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import GroupQrcode from "./group-qrcode"
 import ShareModal from "./share-modal"
 import UserDropdown from "./user-dropdown"
 
@@ -89,6 +90,10 @@ export function Navbar(props) {
         )}
 
         <div className="hidden flex-1 lg:block"></div>
+
+        <div className="hidden lg:block p-6">
+          <GroupQrcode />
+        </div>
 
         {user && <UserDropdown user={user} />}
         {!user && (

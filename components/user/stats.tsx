@@ -4,6 +4,7 @@ import { BracesIcon, GiftIcon, MessageSquareIcon, MessagesSquareIcon, UsersIcon 
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import useSWR from "swr"
 
+import GroupQrcode from "../group-qrcode"
 import Loading from "../loading"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 
@@ -113,6 +114,10 @@ export default function UserStats({ user }: { user: User }) {
           </ResponsiveContainer>
         </CardContent>
       </Card>
+
+      <div className="lg:hidden p-6">
+        <GroupQrcode />
+      </div>
     </div>
   )
 }
