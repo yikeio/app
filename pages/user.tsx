@@ -15,6 +15,7 @@ import UserInvitations from "@/components/user/invitations"
 import UserPayments from "@/components/user/payments"
 import UserProfile from "@/components/user/profile"
 import UserReferralLink from "@/components/user/referral-link"
+import UserRewards from "@/components/user/rewards"
 import UserStats from "@/components/user/stats"
 import UserCenterHeading from "../components/user/heading"
 
@@ -42,11 +43,12 @@ export default function UserPage() {
         <div className="flex flex-col gap-6 p-4 py-8 lg:p-12">
           <UserCenterHeading user={user} />
           <Tabs className="w-full" defaultValue={tab} value={tab} onValueChange={setTab}>
-            <TabsList className="grid grid-cols-5 bg-primary-50 dark:bg-muted md:inline-grid">
+            <TabsList className="grid grid-cols-6 bg-primary-50 dark:bg-muted md:inline-grid">
               <TabsTrigger value="stats">数据统计</TabsTrigger>
               <TabsTrigger value="profile">个人资料</TabsTrigger>
               <TabsTrigger value="payments">我的订单</TabsTrigger>
               <TabsTrigger value="invitations">我的邀请</TabsTrigger>
+              <TabsTrigger value="rewards">我的奖励</TabsTrigger>
               <TabsTrigger value="chats">对话历史</TabsTrigger>
             </TabsList>
 
@@ -64,6 +66,9 @@ export default function UserPage() {
                 <UserReferralLink user={user} />
                 <UserInvitations user={user} />
               </div>
+            </TabsContent>
+            <TabsContent value="rewards" className="py-6">
+              <UserRewards user={user} />
             </TabsContent>
             <TabsContent value="chats" className="py-6">
               <UserConversations user={user} />

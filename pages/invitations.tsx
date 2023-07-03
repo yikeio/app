@@ -1,18 +1,17 @@
 "use client"
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from "react"
-import UserApi, { User } from "@/api/users"
+import { User } from "@/api/users"
 import useAuth from "@/hooks/use-auth"
 import { ArrowRightIcon, Gift, GiftIcon } from "lucide-react"
 
-import EmptyState from "@/components/empty-state"
 import { Layout } from "@/components/layout"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import UserCell from "@/components/user/cell"
 import UserInvitations from "@/components/user/invitations"
+import UserLeaderboard from "@/components/user/leaderboard"
 import UserReferralLink from "@/components/user/referral-link"
+import UserRewards from "@/components/user/rewards"
 
 function FeatureHero({ user = null }: { user?: User }) {
   const { redirectToLogin } = useAuth()
@@ -82,18 +81,7 @@ function FeatureHero({ user = null }: { user?: User }) {
 }
 
 export default function UserInvitationPage() {
-  const [leaderboards, setLeaderboards] = useState([])
   const { user } = useAuth()
-
-  useEffect(() => {
-    if (!user) {
-      return
-    }
-    UserApi.getLeaderboards().then((res) => {
-      setLeaderboards(res)
-    })
-  }, [user])
-
   return (
     <Layout>
       <div className="h-full overflow-auto p-4 sm:p-6 md:p-8">
@@ -101,40 +89,22 @@ export default function UserInvitationPage() {
         {user && (
           <div className="mt-4">
             <Tabs defaultValue="leaderboard">
-              <TabsList className="grid grid-cols-2 bg-primary-50 dark:bg-muted md:inline-grid">
+              <TabsList className="grid grid-cols-3 bg-primary-50 dark:bg-muted md:inline-grid">
                 <TabsTrigger value="leaderboard">排行榜</TabsTrigger>
-                <TabsTrigger value="invitations">我的邀请记录</TabsTrigger>
+                <TabsTrigger value="invitations">我的邀请</TabsTrigger>
+                <TabsTrigger value="rewards">我的奖励</TabsTrigger>
               </TabsList>
 
               <TabsContent value="leaderboard" className="overflow-x-auto rounded-lg border p-6 shadow-sm">
-                <table className="my-0 w-full min-w-max text-left text-sm">
-                  <thead className="text-sm font-bold uppercase ">
-                    <tr>
-                      <td className="w-20 border-none">排名</td>
-                      <td className="border-none">用户</td>
-                      <td className="border-none">已邀请用户数</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {leaderboards.map((user, i) => (
-                      <tr key={user.id} className="border-t text-sm ">
-                        <td className="border-none">{i + 1}</td>
-                        <td className="border-none px-4 py-3">
-                          <UserCell user={user} />
-                        </td>
-                        <td className="border-none px-4 py-3">{user.referrals_count}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {leaderboards.length <= 0 && <EmptyState className="min-h-[100px]" />}
-                {leaderboards.length >= 100 && (
-                  <div className="text-sm text-muted-foreground">* 仅显示榜单前 100 名用户</div>
-                )}
+                <UserLeaderboard />
               </TabsContent>
 
               <TabsContent value="invitations" className="overflow-x-auto">
                 <UserInvitations user={user} />
+              </TabsContent>
+
+              <TabsContent value="rewards" className="overflow-x-auto">
+                <UserRewards user={user} />
               </TabsContent>
             </Tabs>
           </div>

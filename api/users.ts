@@ -12,6 +12,8 @@ export interface User {
   referrer_path?: string
   referral_code?: string
   referrals_count: number
+  rewards_total?: number
+  unwithdrawn_rewards_total?: number
   phone_number?: string
   email?: string
   is_admin?: boolean
@@ -24,6 +26,20 @@ export interface User {
   paid_total: number
   created_at?: string
   updated_at?: string
+}
+
+export interface Reward {
+  id: number
+  user_id: number
+  user: User
+  from_user_id: number
+  from_user: User
+  payment_id: number
+  amount: number
+  rate: number
+  state: string
+  withdrawn_at: string
+  created_at: string
 }
 
 export default class UserApi {
@@ -78,8 +94,12 @@ export default class UserApi {
     })
   }
 
-  static async getReferrals() {
-    return Request.getJson(`referrals`)
+  static async getReferrals(page: number) {
+    return Request.getJson(`referrals?page=${page}`)
+  }
+
+  static async getRewards(page: number) {
+    return Request.getJson(`rewards?page=${page}`)
   }
 
   static async getUsingQuota() {
