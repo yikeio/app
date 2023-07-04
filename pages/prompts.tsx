@@ -96,7 +96,7 @@ export default function PromptPage() {
             {prompts[tab].map((prompt) => (
               <Link
                 href={`/chat?prompt_id=${prompt.id}`}
-                className="group flex justify-between gap-2 rounded-xl border bg-primary-50 p-4 hover:bg-primary-100/30 hover:shadow-sm dark:border-primary-600/30 dark:bg-muted dark:hover:border-primary-600 md:flex-col md:justify-start lg:gap-4 xl:p-6"
+                className="group flex justify-between gap-2 rounded-xl border bg-muted p-4 hover:bg-secondary-50 hover:shadow-sm dark:border-primary-600/30 dark:bg-muted dark:hover:border-primary-600 md:flex-col md:justify-start lg:gap-4 xl:p-6"
                 key={prompt.id}
               >
                 <div className="flex items-center justify-between">
