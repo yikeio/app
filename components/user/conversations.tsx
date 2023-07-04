@@ -19,12 +19,12 @@ export default function UserConversations({ user }: { user: User }) {
       <table className="my-0 w-full min-w-max text-left text-sm ">
         <thead className="text-sm font-bold uppercase">
           <tr>
-            <td className="border-none">标题</td>
-            <td className="border-none">场景</td>
-            <td className="border-none">消息数</td>
-            <td className="border-none">使用的 tokens</td>
-            <td className="border-none">最后使用</td>
-            <td className="border-none">注册时间</td>
+            <td className="border-none px-4 py-3">标题</td>
+            <td className="border-none px-4 py-3">场景</td>
+            <td className="border-none px-4 py-3">消息数</td>
+            <td className="border-none px-4 py-3">使用的 tokens</td>
+            <td className="border-none px-4 py-3">最后使用</td>
+            <td className="border-none px-4 py-3">注册时间</td>
           </tr>
         </thead>
         <tbody>

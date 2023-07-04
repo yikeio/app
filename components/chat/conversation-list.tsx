@@ -18,14 +18,14 @@ export function ConversationItem(props: {
     <div
       className={` group relative rounded-lg border bg-background p-2 px-4 ${
         props.selected
-          ? "border-primary bg-gray-50 shadow-none dark:bg-background"
+          ? "border-primary text-foreground bg-primary-50 shadow-none dark:bg-background"
           : "border-slate-200 dark:border-muted"
       }`}
       onClick={props.onClick}
     >
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 overflow-hidden text-foreground">
-          <div className="truncate">{props.title}</div>
+        <div className="flex items-center gap-2 overflow-hidden text-muted-foreground">
+          <div className="truncate text-sm">{props.title}</div>
         </div>
         <div className="flex h-6 shrink-0 items-center text-muted-foreground">
           <div className="text-xs group-hover:hidden">{props.count} 条对话</div>

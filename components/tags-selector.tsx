@@ -56,8 +56,8 @@ export default function TagsSelector({
   }
 
   const tagBaseClassNames =
-    "rounded-full border bg-primary-50 px-4 py-1 text-sm text-primary-500 dark:bg-muted cursor-pointer"
-  const tagActiveClassNames = "border-primary-600 text-primary-600"
+    "rounded-full border bg-primary-50 px-4 py-1 text-sm text-muted-foreground dark:bg-muted cursor-pointer"
+  const tagActiveClassNames = "border-primary-600 text-foreground"
 
   return (
     <div className={cn("inline-flex flex-wrap items-center gap-4", className)}>
@@ -76,7 +76,7 @@ export default function TagsSelector({
         <PopoverTrigger>
           <a id="tag-selector-trigger">
             <MoreHorizontalIcon
-              className={cn("inline-block text-primary-500", {
+              className={cn("inline-block text-foreground", {
                 hidden: tags.length <= showCount,
               })}
             />

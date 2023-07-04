@@ -90,18 +90,18 @@ export default function PromptPage() {
             showCount={6}
           />
         </div>
-        {prompts[tab].length <= 0 && <EmptyState className="flex-1" message="暂无相关场景" />}
+        {prompts[tab].length <= 0 && <EmptyState className="flex-1 py-20" message="暂无相关场景" />}
         {prompts[tab].length > 0 && (
           <div className="grid flex-1 auto-rows-min grid-cols-1 justify-center gap-6 p-6 md:grid-cols-3 xl:grid-cols-4">
             {prompts[tab].map((prompt) => (
               <Link
                 href={`/chat?prompt_id=${prompt.id}`}
-                className="group flex justify-between gap-2 rounded-xl border border-primary-600/20 bg-primary-50 p-4 hover:bg-primary-100 hover:shadow-sm dark:border-primary-600/30 dark:bg-muted dark:hover:border-primary-600 md:flex-col md:justify-start lg:gap-4 xl:p-6"
+                className="group flex justify-between gap-2 rounded-xl border bg-primary-50 p-4 hover:bg-primary-100/30 hover:shadow-sm dark:border-primary-600/30 dark:bg-muted dark:hover:border-primary-600 md:flex-col md:justify-start lg:gap-4 xl:p-6"
                 key={prompt.id}
               >
                 <div className="flex items-center justify-between">
                   <div className="truncate">{prompt.name}</div>
-                  <div className="hidden text-primary-400  md:flex">
+                  <div className="hidden text-muted-foreground opacity-50 md:flex">
                     <ArrowRightCircleIcon size={24} strokeWidth={1.5} />
                   </div>
                 </div>

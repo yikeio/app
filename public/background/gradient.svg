@@ -9,8 +9,8 @@
   <g clip-path="url(#path1)">
     <linearGradient id="gradient_4" x1="-1.3965067801864512%" y1="-0.6082079179055302%"
       x2="100.00000000000007%" y2="100.00000000000004%">
-      <stop offset="10%" stop-opacity="1" style="stop-color:rgba(109, 40, 217, 0.1)" />
-      <stop offset="10000%" stop-opacity="1" style="stop-color:rgba(109, 40, 217, 0.3)" />
+      <stop offset="10%" stop-opacity="1" style="stop-color:rgba(109, 40, 217, 0.05)" />
+      <stop offset="10000%" stop-opacity="1" style="stop-color:rgba(109, 40, 217, 0.1)" />
     </linearGradient>
     <path d=" M 0 0 L 1920 0 L 1920 1080 L 0 1080 L 0 0 Z " fill="url(#gradient_4)" />
   </g>

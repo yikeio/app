@@ -5,6 +5,7 @@ import { CopyIcon } from "lucide-react"
 import { cn, copyToClipboard, formatDatetime } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { Card } from "../ui/card"
+import UserCell from "./cell"
 import UserReferralLink from "./referral-link"
 
 const Item = ({
@@ -20,7 +21,7 @@ const Item = ({
 }) => {
   return (
     <div className={cn("flex items-center gap-6", className)}>
-      <label className="text-muted-forground w-full max-w-[80px] text-right lg:max-w-[100px]">{label}</label>
+      <label className="text-muted-foreground w-full max-w-[80px] text-right lg:max-w-[100px]">{label}</label>
       <div className="flex flex-1 items-center text-foreground">
         {children}
         {copiable && (
@@ -42,7 +43,7 @@ export default function UserProfile({ user }: { user: User }) {
       <Item label="用户名">{user.name}</Item>
       <Item label="Email">{user.email || "无"}</Item>
       <Item label="手机号">{user.phone_number || "无"}</Item>
-      <Item label="推荐人">{user.referrer?.name || "无"}</Item>
+      <Item label="推荐人">{user.referrer ? <UserCell user={user.referrer}></UserCell> : "无"}</Item>
       <Item label="注册时间">{formatDatetime(user.created_at)}</Item>
       <Item label="推荐码" className="flex-col items-start md:flex-row md:items-center">
         <UserReferralLink user={user} />

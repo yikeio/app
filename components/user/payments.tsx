@@ -26,11 +26,11 @@ export default function UserPayments({ user }: { user: User }) {
         <table className="my-0 w-full min-w-max text-left text-sm">
           <thead className="text-sm font-bold uppercase">
             <tr>
-              <td className="border-none">订单号</td>
-              <td className="border-none">内容</td>
-              <td className="border-none">金额</td>
-              <td className="border-none">创建时间</td>
-              <td className="border-none">状态</td>
+              <td className="border-none px-4 py-3">订单号</td>
+              <td className="border-none px-4 py-3">内容</td>
+              <td className="border-none px-4 py-3">金额</td>
+              <td className="border-none px-4 py-3">创建时间</td>
+              <td className="border-none px-4 py-3">状态</td>
             </tr>
           </thead>
           <tbody>
