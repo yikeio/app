@@ -24,7 +24,7 @@ export default function UserRewards({ user }: { user: User }) {
 
   return (
     <Card className="text-muted-forground overflow-x-auto rounded-lg border p-6 shadow-sm">
-      <div className="my-4">
+      <div className="my-4 min-w-max">
         <div className="flex items-center gap-2">
           <GiftIcon />
           <h3 className="text-lg font-bold ">我的收益共 ￥{user.rewards_total}</h3>
