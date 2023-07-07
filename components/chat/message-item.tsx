@@ -40,10 +40,12 @@ export default function MessageBody({ message, className = "" }: { message: Part
         )}
         {
           <div
-            className={cn("markdown-body text-sm md:text-base prose break-words before:hidden after:hidden", {
-              "prose-invert": isUser,
-              "dark:prose-invert": isUser,
-            })}
+            className={cn(
+              "markdown-body text-sm md:text-base prose break-words before:hidden dark:prose-invert after:hidden",
+              {
+                "prose-invert": isUser,
+              }
+            )}
           >
             {message.isStreaming && message.content.length <= 0 && (
               <span className="animate-pulse cursor-default mt-1 duration-700 text-gray-600">▍</span>
