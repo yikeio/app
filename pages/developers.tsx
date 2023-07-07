@@ -1,4 +1,3 @@
-import ApiContents from "@/api/document.md"
 import useAuth from "@/hooks/use-auth"
 import { useQueryState } from "@/hooks/use-query-state"
 
@@ -8,6 +7,7 @@ import { Layout } from "@/components/layout"
 import { Markdown } from "@/components/markdown"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserTokens from "@/components/user/tokens"
+import ApiContents from "../api/document.md"
 
 export default function DevelopersPage() {
   const [tab, setTab] = useQueryState<string>("tab", { defaultValue: "documents" })

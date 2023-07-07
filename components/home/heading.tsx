@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { MenuIcon } from "lucide-react"
@@ -41,7 +41,7 @@ export default function HomeHeading() {
               <span className="sr-only">Toggle Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent size="lg" position="right">
+          <SheetContent side="right">
             <div className="flex flex-col gap-4">
               <Links />
             </div>
