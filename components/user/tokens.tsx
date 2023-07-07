@@ -7,6 +7,7 @@ import {
   AlertDialogDescription,
   AlertDialogTitle,
 } from "@radix-ui/react-alert-dialog"
+import { PlusIcon } from "@radix-ui/react-icons"
 import useSWR from "swr"
 
 import { copyToClipboard, formatDatetime } from "@/lib/utils"
@@ -57,6 +58,7 @@ export default function UserTokens({ user }: { user: User }) {
 
   const handleCreate = async () => {
     const token = await createToken(name)
+
     setNewToken(token)
     setFormVisible(false)
     mutate()
@@ -75,13 +77,13 @@ export default function UserTokens({ user }: { user: User }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col lg:flex-row lg:items-center gap-6 justify-between">
-        <div className="text-muted-foreground">
-          以下是您的 API tokens。包括当前登录会话的 token, 这些 tokens 可以用于访问 API。
-        </div>
+        <div className="text-muted-foreground">以下是您的 API tokens, 这些 tokens 可以用于访问 API。</div>
         <div className="flex items-center gap-6">
           <Dialog open={formVisible} onOpenChange={setFormVisible}>
             <DialogTrigger asChild>
-              <Button size="sm">新建 token</Button>
+              <Button className="flex items-center gap-2">
+                <PlusIcon /> 新建 token
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
@@ -121,7 +123,7 @@ export default function UserTokens({ user }: { user: User }) {
             </AlertDialogContent>
           </AlertDialog>
 
-          <AlertDialog>
+          {/* <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" size="sm">
                 清除全部
@@ -147,7 +149,7 @@ export default function UserTokens({ user }: { user: User }) {
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
-          </AlertDialog>
+          </AlertDialog> */}
         </div>
       </div>
       <Card className="text-muted-forground overflow-x-auto rounded-lg border p-6 shadow-sm">
@@ -162,7 +164,7 @@ export default function UserTokens({ user }: { user: User }) {
           <tbody>
             {tokens.map((token) => (
               <tr key={token.id} className="border-t text-sm">
-                <td className="border-none px-4 py-3">{token.name}</td>
+                <td className="border-none px-4 py-3">{token.name.replace("[API]", "")}</td>
                 <td className="border-none px-4 py-3">{formatDatetime(token.expires_at)}</td>
                 <td className="border-none px-4 py-3">
                   <AlertDialog>

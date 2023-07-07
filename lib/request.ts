@@ -103,6 +103,8 @@ export default class Request {
                     default:
                       break
                   }
+                } else {
+                  toast.error(result.message, { id: "forbidden" })
                 }
               })
             } else {
