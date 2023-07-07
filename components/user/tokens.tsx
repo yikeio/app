@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { createToken, getTokens, purgeTokens, revokeToken } from "@/api/auth"
+import { createToken, getTokens, revokeToken } from "@/api/auth"
 import { User } from "@/api/users"
 import {
   AlertDialogAction,
@@ -64,10 +64,10 @@ export default function UserTokens({ user }: { user: User }) {
     mutate()
   }
 
-  const handlePurge = async () => {
-    await purgeTokens()
-    mutate()
-  }
+  // const handlePurge = async () => {
+  //   await purgeTokens()
+  //   mutate()
+  // }
 
   const handleCopyNewToken = () => {
     copyToClipboard(newToken?.["value"] || "")
