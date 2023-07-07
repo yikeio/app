@@ -85,6 +85,9 @@ export default class Request {
           if (response.status === 401) {
             Cookies.remove("auth.token")
             toast.error("请登录", { id: "auth.login" })
+            if (window.location.pathname !== "/auth/login") {
+              window.location.href = "/auth/login"
+            }
           }
 
           if (response.status > 401) {

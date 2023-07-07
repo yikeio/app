@@ -19,3 +19,19 @@ export async function getTokenViaSms({ phoneNumber, code }: { phoneNumber: strin
     sms_verification_code: code,
   })
 }
+
+export async function createToken(name: string) {
+  return Request.postJson("auth/tokens", { name })
+}
+
+export async function getTokens(page: number) {
+  return Request.getJson("auth/tokens?page=" + page)
+}
+
+export async function revokeToken(id: string) {
+  return Request.deleteJson(`auth/tokens/${id}`)
+}
+
+export async function purgeTokens() {
+  return Request.deleteJson(`auth/tokens`)
+}

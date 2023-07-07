@@ -12,6 +12,11 @@ const nextConfig = {
       use: ["@svgr/webpack"],
     }); // 针对 SVG 的处理规则
 
+    config.module.rules.push({
+      test: /\.md$/,
+      use: ["raw-loader"],
+    });
+
     return config;
   },
 }

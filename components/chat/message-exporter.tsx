@@ -11,9 +11,9 @@ import QRCode from "react-qr-code"
 
 import { cn, isMobileScreen } from "@/lib/utils"
 import Loading from "../loading"
+import { Markdown } from "../markdown"
 import { AlertDialog, AlertDialogContent } from "../ui/alert-dialog"
 import { Button } from "../ui/button"
-import { Markdown } from "./markdown"
 
 export default function MessageExporter({
   messages,
@@ -107,7 +107,7 @@ export default function MessageExporter({
                       }
                     >
                       <div className="markdown-body before:hidden">
-                        <Markdown content={message.content} />
+                        <Markdown>{message.content}</Markdown>
                       </div>
                     </div>
                   </div>

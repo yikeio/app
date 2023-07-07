@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import qs from "qs"
 
 export type HistoryOptions = "replace" | "push"
@@ -17,15 +17,7 @@ export function useQueryState<T = string>(
     defaultValue: undefined,
   }
 ): [T | null, (value: T) => void] {
-  const getValue = React.useCallback((): T | null => {
-    if (typeof window === "undefined") {
-      return null
-    }
-
-    return qs.parse(window.location.search, { ignoreQueryPrefix: true })[key] ?? defaultValue ?? null
-  }, [defaultValue, key])
-
-  const [value, setValue] = React.useState<T | null>(getValue)
+  const [value, setValue] = React.useState<T | null>(defaultValue ?? null)
 
   const update = (newValue: T) => {
     const query = qs.parse(window.location.search, {
@@ -48,6 +40,16 @@ export function useQueryState<T = string>(
 
     setValue(newValue)
   }
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return null
+    }
+
+    const v = qs.parse(window.location.search, { ignoreQueryPrefix: true })[key] ?? defaultValue ?? null
+
+    value === v ? null : setValue(v)
+  }, [])
 
   return [value ?? defaultValue ?? null, update]
 }

@@ -31,7 +31,7 @@ export function PreCode(props: { children: any }) {
   )
 }
 
-export function Markdown(props: { content: string }) {
+export function Markdown({ children: contents }) {
   return (
     <ReactMarkdown
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
@@ -55,7 +55,7 @@ export function Markdown(props: { content: string }) {
         },
       }}
     >
-      {props.content}
+      {contents}
     </ReactMarkdown>
   )
 }

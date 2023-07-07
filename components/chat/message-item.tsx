@@ -6,7 +6,7 @@ import { CopyIcon, HeartIcon, HeartOffIcon, LanguagesIcon, Volume2Icon } from "l
 
 import { cn, copyToClipboard, speak } from "@/lib/utils"
 
-const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
+const Markdown = dynamic(async () => (await import("../markdown")).Markdown, {
   loading: () => <LoadingIcon width={24} height={24} />,
 })
 
@@ -48,7 +48,7 @@ export default function MessageBody({ message, className = "" }: { message: Part
             {message.isStreaming && message.content.length <= 0 && (
               <span className="animate-pulse cursor-default mt-1 duration-700 text-gray-600">▍</span>
             )}
-            <Markdown content={message.content} />
+            <Markdown>{message.content}</Markdown>
           </div>
         }
 
