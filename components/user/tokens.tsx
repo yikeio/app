@@ -81,14 +81,16 @@ export default function UserTokens({ user }: { user: User }) {
         <div className="flex items-center gap-6">
           <Dialog open={formVisible} onOpenChange={setFormVisible}>
             <DialogTrigger asChild>
-              <Button>新建 token</Button>
+              <Button size="sm">新建 token</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>创建新的 API token</DialogTitle>
                 <DialogDescription>请输入一个名称，用于标识这个 token 的用途。</DialogDescription>
               </DialogHeader>
-              <Input id="name" value={name} className="w-full" onChange={(e) => setName(e.target.value)} />
+              <div className="my-3">
+                <Input id="name" value={name} className="w-full" onChange={(e) => setName(e.target.value)} />
+              </div>
               <DialogFooter className="flex flex-col gap-2 md:flex-row">
                 <Button variant="secondary" onClick={() => setFormVisible(false)}>
                   取消
@@ -104,7 +106,9 @@ export default function UserTokens({ user }: { user: User }) {
                 <AlertDialogTitle className="font-bold">新 Token 已创建</AlertDialogTitle>
                 <AlertDialogDescription>
                   请复制下面的 Token 值，因为这是您唯一一次看到它的机会。
-                  <Textarea value={newToken?.["value"]}></Textarea>
+                  <div className="my-3">
+                    <Textarea value={newToken?.["value"]}></Textarea>
+                  </div>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className="flex flex-col gap-2 md:flex-row">

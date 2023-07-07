@@ -2,6 +2,7 @@ import ApiContents from "@/api/document.md"
 import useAuth from "@/hooks/use-auth"
 import { useQueryState } from "@/hooks/use-query-state"
 
+import GroupQrcode from "@/components/group-qrcode"
 import Head from "@/components/head"
 import { Layout } from "@/components/layout"
 import { Markdown } from "@/components/markdown"
@@ -37,6 +38,10 @@ export default function DevelopersPage() {
           <TabsContent value="documents">
             <div className="mt-6 markdown-body lg:max-w-3xl text-sm md:text-base prose prose-slate break-words before:hidden after:hidden dark:prose-invert prose-a:text-blue-600 prose-h4:text-slate-600">
               <Markdown>{ApiContents}</Markdown>
+
+              <div className="mt-6 border-t p-6">
+                <GroupQrcode />
+              </div>
             </div>
           </TabsContent>
           <TabsContent value="tokens">

@@ -31,7 +31,6 @@ export function Navbar(props) {
     return (
       <Button
         variant="ghost"
-        size="sm"
         className={cn(
           "h-10 items-center justify-start gap-4 rounded-xl text-slate-700 hover:bg-primary-200 hover:text-primary-700 dark:text-slate-400 dark:hover:bg-primary-50/10 lg:flex lg:w-full",
           {
