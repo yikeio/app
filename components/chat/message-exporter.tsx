@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import Image from "next/image"
 import { Message } from "@/api/conversations"
 import { User } from "@/api/users"
@@ -48,8 +48,13 @@ export default function MessageExporter({
 
   const handleFinish = () => {
     setOpen(false)
+    document.body.classList.remove("overflow-hidden")
     onCancel()
   }
+
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden")
+  }, [])
 
   return (
     <>
@@ -84,7 +89,7 @@ export default function MessageExporter({
         </AlertDialogContent>
       </AlertDialog>
 
-      <Portal.Root ref={chatRef} key={messagesId} className="max-w-xl bg-white opacity-0 dark:bg-background">
+      <Portal.Root ref={chatRef} key={messagesId} className="max-w-xl bg-white dark:bg-background">
         <div className="flex flex-col gap-6 px-4 py-6">
           {messages
             .sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at))

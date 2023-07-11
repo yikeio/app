@@ -48,7 +48,7 @@ GET /api/user
 ### 获取场景列表
 
 ```http
-GET /api/prompts
+GET /api/prompts?page=N
 ```
 
 #### 返回值
@@ -84,7 +84,7 @@ GET /api/prompts
 ### 获取对话历史
 
 ```http
-GET /api/conversations
+GET /api/conversations?page=N
 ```
 
 #### 返回值
@@ -137,7 +137,7 @@ GET /api/chat/conversations/:id
 ### 获取指定对话的消息列表
 
 ```http
-GET /api/chat/conversations/:id/messages
+GET /api/chat/conversations/:id/messages?page=N
 ```
 
 #### 返回值
