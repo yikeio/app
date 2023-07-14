@@ -86,7 +86,6 @@ GET /api/prompts?page=N
 ```http
 POST /api/chat/conversations
 
-```json
 {
   "title": "新的对话",
   "prompt_id": "0", // 可选，如果不指定场景，将使用默认场景
