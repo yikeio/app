@@ -2,13 +2,14 @@
 
 此项目为 <https://yike.io> 前端源码，项目基于 Nextjs 13 开发完成。
 
-> {Warning} 本项目当前版本出自开发者的业余时间，可能存在一些问题，如果你发现了任何问题，请提交 PR。本项目开源仅出于学习交流目的，不建议直接用于生产环境，不提供任何解答咨询服务。
+> **Warning**
+> 本项目当前版本出自开发者的业余时间，可能存在一些问题，如果你发现了任何问题，请提交 PR。本项目开源仅出于学习交流目的，不建议直接用于生产环境，不提供任何解答咨询服务。
 
 ## 项目源码
 
-- [yikeio/app](/yikeio/app) - 前端源码
-- [yikeio/server](/yikeio/server) - 服务端源码
-- [yikeio/dashboard](yikeio/dashboard) - 管理后台源码
+- [yikeio/app](https://github.com/yikeio/app) - 前端源码
+- [yikeio/server](https://github.com/yikeio/server) - 服务端源码
+- [yikeio/dashboard](https://github.com/yikeio/dashboard) - 管理后台源码
 
 ## 技术栈
 
@@ -29,13 +30,13 @@ pnpm install
 
 然后更新 `.env.production` 中的环境变量，或者创建一个 `.env.local` 来覆盖。
 
-2. 启动开发服务器：
+1. 启动开发服务器：
 
 ```bash
 pnpm dev
 ```
 
-3. 构建项目：
+1. 构建项目：
 
 ```bash
 pnpm build
@@ -43,7 +44,8 @@ pnpm build
 
 此步骤将会生成一个 `out` 目录，该目录为构建后的静态文件，你可以使用任何静态服务器来部署该目录。
 
-> {Warning} 请勿直接使用 `next start` 来启动项目，因为该命令会启动一个 Node 服务器，而不是静态服务器。
+> **Warning**
+> 请勿直接使用 `next start` 来启动项目，因为该命令会启动一个 Node 服务器，而不是静态服务器。
 
 ## 部署
 
@@ -81,11 +83,11 @@ server {
 
 ## 核心团队
 
-- [@overtrue](/overtrue) - 项目发起人，前端核心开发者，后端开发者
-- [@ranpro](/ranpro) - 后端核心开发者
-- [@PengYYYYY](/PengYYYYY) - 前端核心开发者
-- [@honkinglin](/honkinglin) - 前端核心开发者
-- [@xixileng](/xixileng) - 前端核心开发者
+- [@overtrue](https://github.com/overtrue) - 项目发起人，前端核心开发者，后端开发者
+- [@ranpro](https://github.com/ranpro) - 后端核心开发者
+- [@PengYYYYY](https://github.com/PengYYYYY) - 前端核心开发者
+- [@honkinglin](https://github.com/honkinglin) - 前端核心开发者
+- [@xixileng](https://github.com/xixileng) - 前端核心开发者
 
 ## License
 
