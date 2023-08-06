@@ -77,7 +77,7 @@ server {
 
 ## 合作
 
-如果你希望在此项目上合作，请联系我们：<anzhengchao@gmail.com>。
+如果你希望在此项目上合作或付费技术支持，请联系我们：<anzhengchao@gmail.com>。
 
 ## 核心团队
 
