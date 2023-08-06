@@ -1,78 +1,92 @@
-# next-template
+# 一刻
 
-A Next.js 13 template for building apps with Radix UI and Tailwind CSS.
+此项目为 <https://yike.io> 前端源码，项目基于 Nextjs 13 开发完成。
 
-## Features
+> {Warning} 本项目当前版本出自开发者的业余时间，可能存在一些问题，如果你发现了任何问题，请提交 PR。本项目开源仅出于学习交流目的，不建议直接用于生产环境，不提供任何解答咨询服务。
 
-- Radix UI Primitives
-- Tailwind CSS
-- Fonts with `@next/font`
-- Icons from [Lucide](https://lucide.dev)
-- Dark mode with `next-themes`
-- Automatic import sorting with `@ianvs/prettier-plugin-sort-imports`
+## 项目源码
 
-## Tailwind CSS Features
+- [yikeio/app](/yikeio/app) - 前端源码
+- [yikeio/server](/yikeio/server) - 服务端源码
+- [yikeio/dashboard](yikeio/dashboard) - 管理后台源码
 
-- Class merging with `taiwind-merge`
-- Animation with `tailwindcss-animate`
-- Conditional classes with `clsx`
-- Variants with `class-variance-authority`
-- Automatic class sorting with `eslint-plugin-tailwindcss`
+## 技术栈
 
-## Import Sort
+- 使用 [shadcn/ui](https://ui.shadcn.com/) 作为组件库；
+- 使用 Tailwind CSS 作为 CSS 框架；
+- 使用 `@next/font` 引入 Google Fonts；
+- 使用 [Lucide](https://lucide.dev) 图标；
+- 使用 `next-themes` 实现主题切换；
+- 使用 `@ianvs/prettier-plugin-sort-imports` 排序 import。
 
-The starter comes with `@ianvs/prettier-plugin-sort-imports` for automatically sort your imports.
+## 编译步骤
 
-### Input
+1. 安装依赖，本项目使用 pnpm 作为包管理器，你也可以使用 npm 或 yarn。
 
-```tsx
-import * as React from "react"
-import Link from "next/link"
-
-import { siteConfig } from "@/config/site"
-import { buttonVariants } from "@/components/ui/button"
-import "@/styles/globals.css"
-import { twMerge } from "tailwind-merge"
-
-import { NavItem } from "@/types/nav"
-import { cn } from "@/lib/utils"
+```bash
+pnpm install
 ```
 
-### Output
+然后更新 `.env.production` 中的环境变量，或者创建一个 `.env.local` 来覆盖。
 
-```tsx
-import * as React from "react"
-// React is always first.
-import Link from "next/link"
-// Followed by next modules.
-import { twMerge } from "tailwind-merge"
+2. 启动开发服务器：
 
-// Followed by third-party modules
-// Space
-import "@/styles/globals.css"
-// styles
-import { NavItem } from "@/types/nav"
-// types
-import { siteConfig } from "@/config/site"
-// config
-import { cn } from "@/lib/utils"
-// lib
-import { buttonVariants } from "@/components/ui/button"
-
-// components
+```bash
+pnpm dev
 ```
 
-### Class Merging
+3. 构建项目：
 
-The `cn` util handles conditional classes and class merging.
-
-### Input
-
-```ts
-cn("px-2 bg-slate-100 py-2 bg-slate-200")
-// Outputs `p-2 bg-slate-200`
+```bash
+pnpm build
 ```
+
+此步骤将会生成一个 `out` 目录，该目录为构建后的静态文件，你可以使用任何静态服务器来部署该目录。
+
+> {Warning} 请勿直接使用 `next start` 来启动项目，因为该命令会启动一个 Node 服务器，而不是静态服务器。
+
+## 部署
+
+你可以使用任何静态服务器来部署该项目，例如 nginx:
+
+```nginx
+server {
+    listen 80;
+    server_name admin.app.com;  # Update to your domain
+
+    root /var/www/out; # Update to your path
+
+    location / {
+        try_files $uri $uri.html $uri/ =404;
+    }
+
+    location ~* /(.*)/(\d+)$ {
+        try_files $1/[id].html /$1/[id].html /index.html;
+    }
+
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}
+```
+
+## 贡献
+
+欢迎任何形式的贡献，包括但不限于提交问题、需求、功能、文档、测试用例、演示等。
+
+## 合作
+
+如果你希望在此项目上合作，请联系我们：<anzhengchao@gmail.com>。
+
+## 核心团队
+
+- [@overtrue](/overtrue) - 项目发起人，前端核心开发者，后端开发者
+- [@ranpro](/ranpro) - 后端核心开发者
+- [@PengYYYYY](/PengYYYYY) - 前端核心开发者
+- [@honkinglin](/honkinglin) - 前端核心开发者
+- [@xixileng](/xixileng) - 前端核心开发者
 
 ## License
 
-Licensed under the [MIT license](https://github.com/shadcn/ui/blob/main/LICENSE.md).
+Licensed under the [MIT license](https://github.com/yikeio/app/blob/main/LICENSE.md).
