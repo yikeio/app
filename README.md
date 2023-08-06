@@ -24,23 +24,23 @@
 
 1. 安装依赖，本项目使用 pnpm 作为包管理器，你也可以使用 npm 或 yarn。
 
-  ```bash
-  pnpm install
-  ```
+    ```bash
+    pnpm install
+    ```
 
-  然后更新 `.env.production` 中的环境变量，或者创建一个 `.env.local` 来覆盖。
+    然后更新 `.env.production` 中的环境变量，或者创建一个 `.env.local` 来覆盖。
 
 1. 启动开发服务器：
 
-  ```bash
-  pnpm dev
-  ```
+    ```bash
+    pnpm dev
+    ```
 
 1. 构建项目：
 
-  ```bash
-  pnpm build
-  ```
+    ```bash
+    pnpm build
+    ```
 
 此步骤将会生成一个 `out` 目录，该目录为构建后的静态文件，你可以使用任何静态服务器来部署该目录。
 
