@@ -83,11 +83,11 @@ server {
 
 ## 核心团队
 
-- [@overtrue](https://github.com/overtrue) - 项目发起人，前端核心开发者，后端开发者
-- [@ranpro](https://github.com/ranpro) - 后端核心开发者
-- [@PengYYYYY](https://github.com/PengYYYYY) - 前端核心开发者
-- [@honkinglin](https://github.com/honkinglin) - 前端核心开发者
-- [@xixileng](https://github.com/xixileng) - 前端核心开发者
+- [@overtrue](https://github.com/overtrue) - 前端开发者，后端开发者
+- [@ranpro](https://github.com/ranpro) - 后端开发者
+- [@PengYYYYY](https://github.com/PengYYYYY) - 前端开发者
+- [@honkinglin](https://github.com/honkinglin) - 前端开发者
+- [@xixileng](https://github.com/xixileng) - 前端开发者
 
 ## License
 
