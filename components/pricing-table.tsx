@@ -58,8 +58,8 @@ export default function PricingTable({ onClick }: { onClick: (item: any) => void
               <CheckCircle2 className="text-green-500" size={16} />
               <span>24 小时客户服务</span>
             </div>
-            <Button className="mt-6 justify-between" onClick={() => onClick(item)}>
-              购买
+            <Button disabled className="mt-6 justify-between" onClick={() => onClick(item)}>
+              购买(已暂停)
               <ArrowRight size={16} />
             </Button>
           </div>
