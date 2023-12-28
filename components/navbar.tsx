@@ -90,9 +90,9 @@ export function Navbar(props) {
 
         <div className="hidden flex-1 lg:block"></div>
 
-        <div className="hidden lg:block p-6">
+{/*         <div className="hidden lg:block p-6">
           <GroupQrcode />
-        </div>
+        </div> */}
 
         {user && <UserDropdown user={user} />}
         {!user && (
