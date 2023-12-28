@@ -15,7 +15,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import GroupQrcode from "./group-qrcode"
+// import GroupQrcode from "./group-qrcode"
 import ShareModal from "./share-modal"
 import UserDropdown from "./user-dropdown"
 
